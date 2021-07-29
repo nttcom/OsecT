@@ -9,8 +9,8 @@ RUN mkdir /home/work
 COPY work/ /home/work
 WORKDIR /home/work
 
-RUN apt update \
- && apt install -y --no-install-recommends \
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
 #    build-essential \
 #    net-tools \
 #    libpq-dev \
@@ -23,7 +23,7 @@ RUN apt update \
     tcpdump \
     tzdata \
     vim \
- && apt -y clean \
+ && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/*
 
 RUN echo "${TZ}" > /etc/timezone \
@@ -33,8 +33,8 @@ RUN mkdir /opt/ot_tools
 
 RUN cp -p ot_tools/*.sh /opt/ot_tools/
 
-RUN python3.7 -m pip install --upgrade pip
-RUN python3.7 -m pip install -r requirements.txt
+RUN python3.7 -m pip install --upgrade pip --no-cache-dir
+RUN python3.7 -m pip install -r requirements.txt --no-cache-dir
 
 # RUN mv supervisord.conf /etc/supervisor/conf.d/
 WORKDIR /opt/edge_tcpdump
