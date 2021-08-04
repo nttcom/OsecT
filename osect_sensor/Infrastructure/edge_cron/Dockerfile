@@ -115,10 +115,14 @@ RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz
 RUN tar xvfJ glib-2.60.7.tar.xz
 RUN cd /home/work/glib-2.60.7/ && meson _build && ninja -C _build install && ldconfig
 # libfixbuf install
-RUN cd /home/work/ot_tools/ && tar xvzf libfixbuf-2.4.0.tar.gz
+RUN cd /home/work/ot_tools/
+RUN wget https://tools.netsa.cert.org/releases/libfixbuf-2.4.0.tar.gz
+RUN tar xvzf libfixbuf-2.4.0.tar.gz
 RUN cd /home/work/ot_tools/libfixbuf-2.4.0/ && ./configure && make && make install
 # yaf install
-RUN cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz
+RUN cd /home/work/ot_tools/
+RUN wget https://tools.netsa.cert.org/releases/yaf-2.11.0.tar.gz
+RUN tar xvzf yaf-2.11.0.tar.gz
 RUN cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
 
 
