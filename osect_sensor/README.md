@@ -72,43 +72,9 @@ Application  docker-compose.yml  Infrastructure  logs  tools
 $ mv ~/OsecT/osect_sensor ~/
 ```
 
-## 3 YAFのダウンロード
+## 3. OsecTセンサーの設定
 
-### 3.1 YAFのダウンロード
-
-YAFのソースコードを下記サイトからダウンロードし、指定のディレクトリに配置します。
-
-ダウンロードサイト:
-
-- https://tools.netsa.cert.org/yaf/download.html
-
-パッケージ:
-
-- `yaf-2.11.0.tar.gz`
-
-ダウンロードしたパッケージの配置ディレクトリ:
-
-- `~/osect_sensor/Infrastructure/edge_cron/work/ot_tools/`
-
-### 3.2 fixbufのダウンロード
-
-fixbufのソースコードを下記サイトからダウンロードし、指定のディレクトリに配置します。
-
-ダウンロードサイト:
-
-- https://tools.netsa.cert.org/fixbuf/download.html
-
-パッケージ:
-
-- `libfixbuf-2.4.0.tar.gz`
-
-ダウンロードしたパッケージの配置ディレクトリ:
-
-- `~/osect_sensor/Infrastructure/edge_cron/work/ot_tools/`
-
-## 4. OsecTセンサーの設定
-
-### 4.1. 監視ネットワークインタフェースの設定
+### 3.1. 監視ネットワークインタフェースの設定
 
 設定ファイルを編集し、監視ネットワークを指定します。
 
@@ -128,7 +94,7 @@ TCPDUMP_SHELL_COMMAND = ['/usr/sbin/tcpdump', '-w', 'realtime-%F-%T.pcap', '-G',
 TCPDUMP_SHELL_COMMAND = ['/usr/sbin/tcpdump', '-w', 'realtime-%F-%T.pcap', '-G', '60', '-ni', 'enp0s8', '-s', '0', '-z', '/opt/ot_tools/capture.sh']
 ```
 
-### 4.2. DjangoのSECRET_KEYの設定
+### 3.2. DjangoのSECRET_KEYの設定
 
 DjangoのSECRET_KEYの設定を設定します。
 
@@ -139,7 +105,7 @@ $ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; echo "SECRET_KEY='$SK
 （何も表示されません。）
 ```
 
-### 4.3. データ送信用URLの設定
+### 3.3. データ送信用URLの設定
 
 NTT Comから提供されたデータ送信用URLを設定ファイルに記載します。
 
@@ -159,7 +125,7 @@ API_URL = ''
 API_URL = 'https://xxxxx.osect.ntt.com/paper/api/v1/createlogdata/post'
 ```
 
-### 4.4. OAuth 2.0 クライアント IDの設定
+### 3.4. OAuth 2.0 クライアント IDの設定
 
 NTT Comから提供されたOAuth 2.0 クライアント IDを設定ファイルに記載します。
 
@@ -179,7 +145,7 @@ IAP_CLIENT_ID = ''
 IAP_CLIENT_ID = 'xxxxxxxxxxxxxxxxx.apps.googleusercontent.com'
 ```
 
-### 4.5. サービスアカウントキーファイルの配置
+### 3.5. サービスアカウントキーファイルの配置
 
 NTT Comから提供されたサービスアカウントキーファイルを所定のディレクトリに配置します。
 
@@ -191,7 +157,7 @@ NTT Comから提供されたサービスアカウントキーファイルを所�
 
 - `~/osect_sensor/Application/edge_cron/auth/`
 
-## 5. コンテナの構築・起動
+## 4. コンテナの構築・起動
 
 コンテナを構築、起動します。
 
