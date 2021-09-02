@@ -59,23 +59,23 @@ RUN apt-get update \
 RUN echo "${TZ}" > /etc/timezone \
    && dpkg-reconfigure -f noninteractive tzdata
 
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/libbroker-dev_4.0.3-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-btest_4.0.3-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-core-dev_4.0.3-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-core_4.0.3-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-libcaf-dev_4.0.3-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-zkg_4.0.3-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek_4.0.3-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeekctl_4.0.3-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/libbroker-lts-dev_4.0.3-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-btest_4.0.3-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-core-dev_4.0.3-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-core_4.0.3-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-libcaf-dev_4.0.3-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-zkg_4.0.3-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts_4.0.3-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeekctl-lts_4.0.3-0_amd64.deb
 
-RUN apt-get install -y ./ot_tools/bro/zeek-core_4.0.3-0_amd64.deb --no-install-recommends
-RUN apt-get install -y ./ot_tools/bro/zeek-btest_4.0.3-0_amd64.deb --no-install-recommends
-RUN apt-get install -y ./ot_tools/bro/zeekctl_4.0.3-0_amd64.deb --no-install-recommends
-RUN apt-get install -y ./ot_tools/bro/libbroker-dev_4.0.3-0_amd64.deb --no-install-recommends
-RUN apt-get install -y ./ot_tools/bro/zeek-libcaf-dev_4.0.3-0_amd64.deb --no-install-recommends
-RUN apt-get install -y ./ot_tools/bro/zeek-core-dev_4.0.3-0_amd64.deb --no-install-recommends
-RUN apt-get install -y ./ot_tools/bro/zeek-zkg_4.0.3-0_amd64.deb --no-install-recommends
-RUN apt-get install -y ./ot_tools/bro/zeek_4.0.3-0_amd64.deb --no-install-recommends
+RUN apt-get install -y ./ot_tools/bro/zeek-lts-core_4.0.3-0_amd64.deb --no-install-recommends
+RUN apt-get install -y ./ot_tools/bro/zeek-lts-btest_4.0.3-0_amd64.deb --no-install-recommends
+RUN apt-get install -y ./ot_tools/bro/zeekctl-lts_4.0.3-0_amd64.deb --no-install-recommends
+RUN apt-get install -y ./ot_tools/bro/libbroker-lts-dev_4.0.3-0_amd64.deb --no-install-recommends
+RUN apt-get install -y ./ot_tools/bro/zeek-lts-libcaf-dev_4.0.3-0_amd64.deb --no-install-recommends
+RUN apt-get install -y ./ot_tools/bro/zeek-lts-core-dev_4.0.3-0_amd64.deb --no-install-recommends
+RUN apt-get install -y ./ot_tools/bro/zeek-lts-zkg_4.0.3-0_amd64.deb --no-install-recommends
+RUN apt-get install -y ./ot_tools/bro/zeek-lts_4.0.3-0_amd64.deb --no-install-recommends
 
 RUN mkdir /opt/ot_tools
 
