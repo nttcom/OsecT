@@ -41,7 +41,8 @@ RUN apt-get update \
     rustc \
 #    sqlite3 \
     supervisor \
-    tshark \
+#    tshark \
+#    zkg \
     tzdata \
     vim \
     wget \
@@ -53,6 +54,15 @@ RUN apt-get update \
     python3-git \
 #    python3-gitdb \
 #    python3-smmap \
+    cmake \
+    make \
+    gcc \
+    g++ \
+    flex \
+    bison \
+    libpcap-dev \
+    python3-dev \
+    swig \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/*
 
@@ -77,6 +87,11 @@ RUN apt-get install -y ./ot_tools/bro/zeek-lts-core-dev_4.0.3-0_amd64.deb --no-i
 RUN apt-get install -y ./ot_tools/bro/zeek-lts-zkg_4.0.3-0_amd64.deb --no-install-recommends
 RUN apt-get install -y ./ot_tools/bro/zeek-lts_4.0.3-0_amd64.deb --no-install-recommends
 
+RUN python3.7 -m pip install gitpython semantic-version wheel tornado zkg --no-cache-dir
+ENV PATH $PATH:/opt/zeek/bin
+RUN zkg autoconfig && zkg install --force zeek-plugin-bacnet
+RUN git clone https://github.com/cisagov/icsnpp-bacnet.git
+
 RUN mkdir /opt/ot_tools
 
 RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.2.tar.gz
@@ -94,6 +109,8 @@ RUN cp -p ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protoc
 RUN cp -p ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/http/
 RUN cp -p ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/
 RUN cp -p ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/
+RUN cp -p ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/base/protocols/
+RUN cp -p ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/base/protocols/
 RUN cp -p ot_tools/*.sh /opt/ot_tools/
 RUN cp -p ot_tools/suricata.yaml /opt/ot_tools/
 RUN cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/
@@ -103,6 +120,8 @@ RUN cp -pr ot_tools/p0f /opt/
 
 RUN python3.7 -m pip install --upgrade pip --no-cache-dir
 RUN python3.7 -m pip install -r requirements.txt --no-cache-dir
+
+
 RUN mkdir /var/log/ot_tools
 
 # Installation of yaf dependent packages
