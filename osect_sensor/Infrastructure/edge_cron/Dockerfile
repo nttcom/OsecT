@@ -87,6 +87,12 @@ RUN apt-get install -y ./ot_tools/bro/zeek-lts-core-dev_4.0.4-0_amd64.deb --no-i
 RUN apt-get install -y ./ot_tools/bro/zeek-lts-zkg_4.0.4-0_amd64.deb --no-install-recommends
 RUN apt-get install -y ./ot_tools/bro/zeek-lts_4.0.4-0_amd64.deb --no-install-recommends
 
+
+RUN echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/ /' | tee /etc/apt/sources.list.d/security:zeek.list
+RUN curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_20.04/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
+RUN apt update
+RUN apt install zeek
+
 RUN mkdir /opt/ot_tools
 
 RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.2.tar.gz
