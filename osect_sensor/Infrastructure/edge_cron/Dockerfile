@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 ENV DEBIAN_FRONTEND noninteractive
@@ -9,8 +9,14 @@ RUN mkdir /home/work/uwsgi
 COPY work/ /home/work
 WORKDIR /home/work
 
-RUN apt-get update \
- && apt-get install -y --no-install-recommends \
+RUN apt update && apt upgrade -y\
+ && apt install -y --no-install-recommends \
+    gcc \
+    cmake \
+    g++ \
+    flex \
+    bison \
+    swig \
     cron \
     cargo \
     build-essential \
@@ -20,6 +26,18 @@ RUN apt-get update \
 #    gperf \
 #    libsystemd-dev \
 #    libffi-dev \
+#    libpcap0.8 \
+#    libmaxminddb0 \
+#    libatomic1 \
+#    libc6=2.31 \
+#    libgcc1 \
+#    libssl1.1 \
+    libstdc++6=10.3.0-1ubuntu1~20.04 \
+#    libgcc-s1-amd64-cross \
+#    libc6-amd64-cross \
+    libc6-dev \
+    libc6-dev-amd64-cross \
+#    libstdc++6-10-dbg-amd64-cross \
     libmount-dev \
     libpcre3-dev \
     libyaml-dev \
@@ -34,15 +52,14 @@ RUN apt-get update \
     ninja-build \
 #    python3.7-dev \
     pkg-config \
-    python3.7 \
+    python3.8 \
     python3-pip \
     python3-setuptools \
     python3-yaml \
     rustc \
 #    sqlite3 \
     supervisor \
-#    tshark \
-#    zkg \
+    tshark \
     tzdata \
     vim \
     wget \
@@ -52,46 +69,32 @@ RUN apt-get update \
     libmaxminddb-dev \
     python3-semantic-version \
     python3-git \
+    libpcap-dev \
 #    python3-gitdb \
 #    python3-smmap \
-    cmake \
-    make \
-    gcc \
-    g++ \
-    flex \
-    bison \
-    libpcap-dev \
-    python3-dev \
-    swig \
- && apt-get -y clean \
+ && apt -y clean \
  && rm -rf /var/lib/apt/lists/*
 
 RUN echo "${TZ}" > /etc/timezone \
    && dpkg-reconfigure -f noninteractive tzdata
 
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/libbroker-lts-dev_4.0.4-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-btest_4.0.4-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-core-dev_4.0.4-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-core_4.0.4-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-libcaf-dev_4.0.4-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts-zkg_4.0.4-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeek-lts_4.0.4-0_amd64.deb
-RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_18.04/amd64/zeekctl-lts_4.0.4-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/amd64/libbroker-lts-dev_4.0.4-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/amd64/zeek-lts-btest_4.0.4-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/amd64/zeek-lts-core-dev_4.0.4-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/amd64/zeek-lts-core_4.0.4-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/amd64/zeek-lts-libcaf-dev_4.0.4-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/amd64/zeek-lts-zkg_4.0.4-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/amd64/zeek-lts_4.0.4-0_amd64.deb
+RUN wget -P ./ot_tools/bro/ https://provo-mirror.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/amd64/zeekctl-lts_4.0.4-0_amd64.deb
 
-RUN apt-get install -y ./ot_tools/bro/zeek-lts-core_4.0.4-0_amd64.deb --no-install-recommends
-RUN apt-get install -y ./ot_tools/bro/zeek-lts-btest_4.0.4-0_amd64.deb --no-install-recommends
-RUN apt-get install -y ./ot_tools/bro/zeekctl-lts_4.0.4-0_amd64.deb --no-install-recommends
 RUN apt-get install -y ./ot_tools/bro/libbroker-lts-dev_4.0.4-0_amd64.deb --no-install-recommends
 RUN apt-get install -y ./ot_tools/bro/zeek-lts-libcaf-dev_4.0.4-0_amd64.deb --no-install-recommends
 RUN apt-get install -y ./ot_tools/bro/zeek-lts-core-dev_4.0.4-0_amd64.deb --no-install-recommends
+RUN apt-get install -y ./ot_tools/bro/zeek-lts-core_4.0.4-0_amd64.deb
+RUN apt-get install -y ./ot_tools/bro/zeek-lts-btest_4.0.4-0_amd64.deb
+RUN apt-get install -y ./ot_tools/bro/zeekctl-lts_4.0.4-0_amd64.deb --no-install-recommends
 RUN apt-get install -y ./ot_tools/bro/zeek-lts-zkg_4.0.4-0_amd64.deb --no-install-recommends
 RUN apt-get install -y ./ot_tools/bro/zeek-lts_4.0.4-0_amd64.deb --no-install-recommends
-
-
-RUN echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_20.04/ /' | tee /etc/apt/sources.list.d/security:zeek.list
-RUN curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_20.04/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
-RUN apt update
-RUN apt install zeek
 
 RUN mkdir /opt/ot_tools
 
@@ -119,18 +122,17 @@ RUN cp -p ot_tools/yaf.awk /opt/ot_tools/
 
 RUN cp -pr ot_tools/p0f /opt/
 
-RUN python3.7 -m pip install --upgrade pip --no-cache-dir
-RUN python3.7 -m pip install -r requirements.txt --no-cache-dir
+RUN python3.8 -m pip install --upgrade pip --no-cache-dir
+RUN python3.8 -m pip install -r requirements.txt --no-cache-dir
 ENV PATH $PATH:/opt/zeek/bin
 RUN zkg autoconfig && zkg install --force zeek-plugin-bacnet
-
 RUN mkdir /var/log/ot_tools
 
 # Installation of yaf dependent packages
 # meson install
 RUN wget https://github.com/mesonbuild/meson/releases/download/0.56.0/meson-0.56.0.tar.gz
 RUN tar xvfz meson-0.56.0.tar.gz
-RUN cd /home/work/meson-0.56.0/ && python3.7 setup.py install
+RUN cd /home/work/meson-0.56.0/ && python3.8 setup.py install
 # glib install
 RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz
 RUN tar xvfJ glib-2.60.7.tar.xz
