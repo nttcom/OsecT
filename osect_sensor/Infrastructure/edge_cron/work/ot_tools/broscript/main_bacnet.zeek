@@ -69,7 +69,7 @@ event zeek_init() &priority=5 {
     Log::create_stream(BACnet::Log_BACnet,
                         [$columns=BACnet,
                         $ev=log_bacnet,
-                        $path="bacnet_service"]);
+                        $path="bacnet"]);
     Analyzer::register_for_ports(Analyzer::ANALYZER_BACNET, ports);
     }
 
