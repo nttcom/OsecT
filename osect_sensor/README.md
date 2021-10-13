@@ -4,8 +4,7 @@
 
 動作確認済の機種は以下の通りです。
 
-- OKI AIエッジコンピューター「AE2100」
-  - リンク先：https://www.oki.com/jp/AIedge/
+- [OKI AIエッジコンピューター「AE2100」](https://www.oki.com/jp/AIedge/)
 
 また、Ubuntu 18.04.5 LTSで動作確認済みです。
 
