@@ -87,9 +87,9 @@ RUN apt -y install zeek
 
 RUN mkdir /opt/ot_tools
 
-RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.2.tar.gz
-RUN tar -xf suricata-6.0.2.tar.gz
-RUN cd /home/work/suricata-6.0.2 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full
+RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.4.tar.gz
+RUN tar -xf suricata-6.0.4.tar.gz
+RUN cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full
 RUN cd ~/ || exit
 RUN wget http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz
 RUN tar -xzvf emerging.rules.tar.gz
