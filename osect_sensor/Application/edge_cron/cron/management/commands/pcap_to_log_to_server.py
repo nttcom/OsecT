@@ -7,20 +7,23 @@ import logging
 import zipfile
 import mimetypes
 import gc
+import requests
+import time
+import random
+import math
 from subprocess import Popen
 
 from django.core.management.base import BaseCommand
 
-from common.common_config import  PCAP_UPLOADED_FILE_PATH, BRO_SHELL_COMMAND, PCAP_ANALYZE_FILE_PATH, \
+from common.common_config import PCAP_UPLOADED_FILE_PATH, BRO_SHELL_COMMAND, PCAP_ANALYZE_FILE_PATH, \
     PCAP_COMPLETE_FILE_PATH, P0F_SHELL_COMMAND, ALLOWED_PCAP_EXT, SURICATA_SHELL_COMMAND, SURICATA_YAML, \
     SURICATA_ENABLE, FUNC_RESTRICTION, BACNET_SHELL_COMMAND, YAF_ENABLE, YAF_SHELL_COMMAND, \
-    BACNET_ENABLE, PCAP_TO_DB_CPU, PCAP_SERVER_UPLOADING_FILE_PATH, API_URL
+    BACNET_ENABLE, PCAP_TO_DB_CPU, PCAP_SERVER_UPLOADING_FILE_PATH, API_URL, LABEL_ID, \
+    CLIENT_CERTIFICATE_PATH
 
 from common.common_fonction import pcap2log
 from edge_cron.settings import BASE_DIR
 from multiprocessing import Pool
-from auth.make_iap_request import make_iap_request
-from auth.google_account import IAP_CLIENT_ID
 
 
 logger = logging.getLogger('edge_cron')
@@ -39,6 +42,7 @@ class Command(BaseCommand):
         :param options:
         """
         logger.info('pcap to log to server start')
+        start_time = time.perf_counter()
 
         # プラットフォームの取得
         os_name = platform.system()
@@ -53,7 +57,8 @@ class Command(BaseCommand):
         logger.debug(str(pcap_list))
 
         if pcap_num == 0:
-            logger.info('There is no target file [' + ', '.join(allowed_ext_list) + ']')
+            logger.info(
+                'There is no target file [' + ', '.join(allowed_ext_list) + ']')
             return
 
         start = time.time()
@@ -72,7 +77,8 @@ class Command(BaseCommand):
         # 圧縮対象のログが含まれるディレクトリを取得
         complete_dir_list = []
         for dir_path in analyze_pcap_dir_list:
-            complete_dir_list.append(PCAP_COMPLETE_FILE_PATH + os.path.basename(dir_path))
+            complete_dir_list.append(
+                PCAP_COMPLETE_FILE_PATH + os.path.basename(dir_path))
 
         # ログファイルを圧縮する
         for log_dir in complete_dir_list:
@@ -81,10 +87,20 @@ class Command(BaseCommand):
             with zipfile.ZipFile(PCAP_SERVER_UPLOADING_FILE_PATH + zip_name, 'w',
                                  compression=zipfile.ZIP_DEFLATED) as new_zip:
                 for file_name in os.listdir(log_dir):
-                    new_zip.write(log_dir + os.sep + file_name, arcname=file_name)
+                    new_zip.write(log_dir + os.sep +
+                                  file_name, arcname=file_name)
 
         # 送信するログファイルのリストを作成する。送信漏れを考慮しディレクトリ内にあるzipファイルすべてを探索する
-        zip_list = sorted(glob.glob(PCAP_SERVER_UPLOADING_FILE_PATH + '**/*.zip', recursive=True))
+        zip_list = sorted(
+            glob.glob(PCAP_SERVER_UPLOADING_FILE_PATH + '**/*.zip', recursive=True))
+        end_time = time.perf_counter()
+
+        # 乱数 < 処理時間の場合はsleepしない
+
+        processing_time = math.ceil(end_time - start_time)
+        sleep_time = max(0, (random.randrange(1, 60, 1) - processing_time))
+        time.sleep(sleep_time)
+        logger.info('sleep ' + str(sleep_time) + 's')
 
         try:
             send_server(zip_list)
@@ -100,17 +116,21 @@ def wrapper_log_function(func_type, analyze_full_path, dir_name, pcap_name):
     if func_type == 0:
         # broログの処理
         logger.info('execute: ' + BRO_SHELL_COMMAND)
-        proc = Popen(BRO_SHELL_COMMAND + ' ' + analyze_full_path + ' ' + dir_name + ' ' + pcap_name, shell=True)
+        proc = Popen(BRO_SHELL_COMMAND + ' ' + analyze_full_path +
+                     ' ' + dir_name + ' ' + pcap_name, shell=True)
         proc.wait()
     elif func_type == 1:
         # p0fのログ作成処理
         logger.info('execute: ' + P0F_SHELL_COMMAND)
-        proc = Popen(P0F_SHELL_COMMAND + ' ' + analyze_full_path + ' ' + dir_name + ' ' + pcap_name, shell=True)
+        proc = Popen(P0F_SHELL_COMMAND + ' ' + analyze_full_path +
+                     ' ' + dir_name + ' ' + pcap_name, shell=True)
+
         proc.wait()
     elif func_type == 2:
         # pcap2logのログ作成処理
         logger.info('pcap to log')
-        pcap2log(PCAP_ANALYZE_FILE_PATH + pcap_name, PCAP_ANALYZE_FILE_PATH + dir_name)
+        pcap2log(PCAP_ANALYZE_FILE_PATH + pcap_name,
+                 PCAP_ANALYZE_FILE_PATH + dir_name)
     elif func_type == 3:
         if FUNC_RESTRICTION is False:
             # bacnet用ログの作成処理
@@ -155,7 +175,8 @@ def get_pcap_list():
     pcap_list = []
     extend_pcap_list = pcap_list.extend
     for ext in allowed_ext_list:
-        extend_pcap_list(sorted(glob.glob(PCAP_UPLOADED_FILE_PATH + '**/*' + ext, recursive=True)))
+        extend_pcap_list(
+            sorted(glob.glob(PCAP_UPLOADED_FILE_PATH + '**/*' + ext, recursive=True)))
 
     return pcap_list, allowed_ext_list
 
@@ -197,15 +218,18 @@ def pcap_to_log(pcap_list):
 
         try:
             if YAF_ENABLE:
-                func_type_list = [0, 1, 2, 3, 4, 5] if BACNET_ENABLE else [0, 1, 2, 4, 5]
+                func_type_list = [0, 1, 2, 3, 4,
+                                  5] if BACNET_ENABLE else [0, 1, 2, 4, 5]
             else:
-                func_type_list = [0, 1, 2, 3, 4] if BACNET_ENABLE else [0, 1, 2, 4]
+                func_type_list = [0, 1, 2, 3,
+                                  4] if BACNET_ENABLE else [0, 1, 2, 4]
             analyze_full_path_list = [analyze_full_path] * len(func_type_list)
             dir_name_list = [dir_name] * len(func_type_list)
             pcap_name_list = [pcap_name] * len(func_type_list)
 
             with Pool(PCAP_TO_DB_CPU) as pool:
-                args = list(zip(func_type_list, analyze_full_path_list, dir_name_list, pcap_name_list))
+                args = list(
+                    zip(func_type_list, analyze_full_path_list, dir_name_list, pcap_name_list))
                 pool.starmap(wrapper_log_function, args)
 
         except Exception as e:
@@ -246,7 +270,8 @@ def move_pcap_dir(log_dir_list, dst_dir):
             logger.info('move analyzed log directory [' + pcap_dir + ']')
             shutil.move(pcap_dir, dst_dir)
         except Exception as e:
-            logger.error('log directory move error (to ' + dst_dir + '): ' + str(e))
+            logger.error(
+                'log directory move error (to ' + dst_dir + '): ' + str(e))
             continue
 
 
@@ -261,12 +286,15 @@ def send_server(zip_list):
         file_data_binary = open(zip_file, 'rb').read()
         mime_type = mimetypes.guess_type(file_name)[0]
         files = {'file_uploaded': (zip_file, file_data_binary, mime_type)}
+        data = {'label_id': LABEL_ID}
 
-        make_iap_request(API_URL, IAP_CLIENT_ID, files=files)
+        resp = requests.post(API_URL, cert=CLIENT_CERTIFICATE_PATH, verify=False,
+                             files=files, data=data)
+        if resp.status_code != 200:
+            raise Exception(
+                'Bad response from application: {!r} / {!r} / {!r}'.format(
+                    resp.status_code, resp.headers, resp.text))
 
         logger.info('send zip file: ' + file_name)
         # ファイルが正常に送信できた場合は、zipファイルを削除する
         os.remove(zip_file)
-
-
-

@@ -54,17 +54,9 @@ event icmp_neighbor_solicitation(c: connection, info: icmp_info, tgt: addr, opti
 event icmp_neighbor_advertisement(c: connection, info: icmp_info, router: bool, solicited: bool, override: bool, tgt: addr, options: icmp6_nd_options)
 	{
 	local request: Info;
+	local multicast_subnet: subnet = [ff00::]/8;
 
-	if ( c$id$orig_p == 136/icmp )
-		{
-			request$ts = network_time();
-			request$orig_mac = c$resp$l2_addr;
-			request$resp_mac = c$orig$l2_addr;
-			request$orig_ip = c$id$resp_h;
-			request$resp_ip = tgt;
-			log_request(request);
-        	}
-	else if ( c$id$resp_p == 136/icmp )
+	if ( c$id$resp_p == 136/icmp )
 		{
 			request$ts = network_time();
 			request$orig_mac = c$orig$l2_addr;
@@ -73,4 +65,14 @@ event icmp_neighbor_advertisement(c: connection, info: icmp_info, router: bool, 
 			request$resp_ip = tgt;
 			log_request(request);
 		}
+
+	else if (( c$id$orig_p == 136/icmp ) && ( c$id$resp_h !in multicast_subnet ))
+		{
+			request$ts = network_time();
+			request$orig_mac = c$resp$l2_addr;
+			request$resp_mac = c$orig$l2_addr;
+			request$orig_ip = c$id$resp_h;
+			request$resp_ip = tgt;
+			log_request(request);
+        	}
 	}

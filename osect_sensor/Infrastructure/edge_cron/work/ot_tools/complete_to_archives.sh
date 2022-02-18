@@ -7,4 +7,4 @@ if [ $$ != $OLDEST ] && [ $PPID != $OLDEST ]; then
 fi
 
 cd /opt/edge_cron/
-python3 /opt/edge_cron/manage.py complete_to_archives
+python3.8 /opt/edge_cron/manage.py complete_to_archives

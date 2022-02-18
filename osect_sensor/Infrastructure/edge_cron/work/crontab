@@ -1,3 +1,6 @@
-@reboot /bin/bash -c 'echo export RANDOM_TIME=$(($RANDOM\%60)) >> /root/.profile'
-* * * * * /bin/bash -c 'source /root/.profile; sleep $RANDOM_TIME'; /opt/ot_tools/ot_cron.sh > /dev/null 2>&1
+@reboot /bin/bash -c 'echo export RANDOM_TIME=$(($RANDOM%60)) >> /root/.profile'
+@reboot /opt/ot_tools/suricata_update.sh > /dev/null 2>&1
+* * * * * /opt/ot_tools/ot_cron.sh > /dev/null 2>&1
 0 3 * * * /opt/ot_tools/complete_to_archives.sh > /dev/null 2>&1
+0 0 * * * /bin/bash -c 'source /root/.profile; sleep $RANDOM_TIME'; /opt/ot_tools/suricata_update.sh > /dev/null 2>&1
+
