@@ -1,3 +1,6 @@
+LABEL_ID = ''
+""" 複数スイッチ対応用のラベルID """
+
 PCAP_UPLOADING_FILE_PATH = 'paper/sc_src/input/pcap/uploading/'
 """pcapのアップロード先の配置パス"""
 
@@ -46,6 +49,10 @@ SURICATA_YAML = '/opt/ot_tools/suricata.yaml'
 """ SURICATAの設定ファイル保存場所 """
 
 ALLOWED_PCAP_EXT = '.pcap,.cap,.pkt'
+""" アップロード出来るPCAPファイルの拡張子 """
+
+ALLOWED_LOG_EXT = '.zip'
+""" アップロード出来るログファイルの拡張子 """
 
 PCAP_TO_DB_CPU = 5
 """ PCAPをログ化する際に使用するCPU数 """
@@ -56,11 +63,23 @@ API_URL = 'https://your url/paper/api/v1/createlogdata/post'
 TIME_OUT_VAL = 120
 """ API接続時のタイムアウト値 """
 
-PCAP_COMPLETE_COMPRESSION_LIMIT_DATE = 30
+PCAP_COMPLETE_COMPRESSION_LIMIT_DATE = 365
 """complete配下の保持期限切れファイルとディレクトリを圧縮対象にする日付（日）"""
 
-PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_DATE = 30
+PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_DATE = 365
 """complete_archives配下の保持期限切れファイルの削除対象にする日付（日）"""
 
-PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 100
+PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 250
 """completeとcomplete_archivesの保持容量上限値（GB）"""
+
+CLIENT_CERTIFICATE_PATH = '/etc/ssl/private/client.pem'
+"""クライアント認証のための証明書・秘密鍵"""
+
+ALLOWABLE_DELAY_TIME = 3600
+"""センサーから送られるログの許容遅延時間（秒）"""
+
+SURICATA_SIGNATURE_VERSION_URL = 'https://rules.emergingthreats.net/open/suricata-6.0.4/version.txt'
+"""Suricataのシグネチャのバージョン数を取得するURL"""
+
+SEND_VERSION_API_URL = 'https://your url/paper/api/v1/sensor_status/post'
+"""Suricataシグネチャのバージョンを送るURL"""

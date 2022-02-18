@@ -212,7 +212,10 @@ BEGIN {
         proto_str = PROTO_DICT[trim(proto)]
     }
 
+    if(proto_str == "") {
+        proto_str = "Unassigned Protocol("trim(proto)")"
 
+    }
     split(trim(start_time), date_time_millisecond, ".")
     split(date_time_millisecond[1], date_time, " ")
     split(date_time[1], date, "-")

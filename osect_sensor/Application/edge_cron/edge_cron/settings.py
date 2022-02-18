@@ -18,10 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -152,6 +150,14 @@ LOGGING = {
             # 'interval': 1,
             'formatter': 'text_format',
         },
+        'edge_send_version_log': {
+            'level': 'INFO',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': '/var/log/ot_tools/edge_send_version.log',
+            'when': 'midnight',
+            # 'interval': 1,
+            'formatter': 'text_format',
+        }
     },
     'loggers': {
         'edge_cron': {
@@ -163,6 +169,12 @@ LOGGING = {
         'edge_complete_to_archives': {
             'handlers': ['edge_complete_to_archives_log'],
             'FIELD3': 'edge_complete_to_archives',
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'edge_send_version': {
+            'handlers': ['edge_send_version_log'],
+            'FIELD3': 'edge_send_version',
             'level': 'DEBUG',
             'propagate': False,
         },
