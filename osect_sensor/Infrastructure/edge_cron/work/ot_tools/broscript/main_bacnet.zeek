@@ -28,7 +28,7 @@ redef record connection += {
 
 ## define listening ports
 const ports = {
-    47808/udp
+    47808/udp, 20108/udp 
     };
 redef likely_server_ports += {
     ports
