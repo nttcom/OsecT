@@ -1,1 +1,8 @@
+# MacOS
 .DS_Store
+
+# Security
+*.key
+*.cert
+*.crt
+*.pem
