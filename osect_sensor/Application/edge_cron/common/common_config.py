@@ -1,4 +1,4 @@
-LABEL_ID = ''
+LABEL_ID = '08:00:27:ca:86:cc'
 """ 複数スイッチ対応用のラベルID """
 
 PCAP_UPLOADING_FILE_PATH = 'paper/sc_src/input/pcap/uploading/'
