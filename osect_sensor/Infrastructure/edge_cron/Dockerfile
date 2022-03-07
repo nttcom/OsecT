@@ -191,6 +191,8 @@ RUN python3.8 -m pip install --upgrade pip --no-cache-dir \
  && pip install django
 # && zkg autoconfig && zkg install --force zeek-plugin-bacnet
 
+COPY --from=build-env /usr/local/bin/zkg  /usr/local/bin/zkg
+
 ENV PATH $PATH:/opt/zeek/bin
 
 #Yafバイナリファイルのコピー。
