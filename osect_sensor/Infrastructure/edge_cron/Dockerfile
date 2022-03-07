@@ -188,8 +188,8 @@ RUN python3.8 -m pip install --upgrade pip --no-cache-dir \
  && python3.8 -m pip install setuptools==59.8.0 \
  && python3.8 -m pip install -r requirements.txt --no-cache-dir \
  && mkdir /var/log/ot_tools  \
- && pip install django \
- && zkg autoconfig && zkg install --force zeek-plugin-bacnet
+ && pip install django
+# && zkg autoconfig && zkg install --force zeek-plugin-bacnet
 
 ENV PATH $PATH:/opt/zeek/bin
 
