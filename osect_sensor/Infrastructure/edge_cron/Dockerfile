@@ -43,12 +43,6 @@ RUN apt-get update \
     vim \
     wget \
     zlib1g-dev\
-    libpcre3\
-    libpcre3-dbg\
-    libyaml-0-2\
-    zlib1g\
-    libmagic-dev\
-#    libjansson \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
@@ -72,22 +66,8 @@ RUN wget http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz \
  && mkdir -p /var/lib/suricata \
  && cp -pr rules /var/lib/suricata/
 
-# Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
-RUN cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/
-RUN cp -p ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/conn/
-RUN cp -p ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protocols/http/
-RUN cp -p ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/http/
-RUN cp -p ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/
-RUN cp -p ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/
-RUN cp -p ot_tools/*.sh /opt/ot_tools/
-RUN cp -p ot_tools/suricata.yaml /opt/ot_tools/
-RUN cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/
-RUN cp -p ot_tools/yaf.awk /opt/ot_tools/
-
-RUN cp -pr ot_tools/p0f /opt/
-
+WORKDIR /home/work
 RUN apt purge -y python3-yaml
-
 
 RUN python3.8 -m pip install --upgrade pip --no-cache-dir
 RUN python3.8 -m pip install setuptools==59.8.0
@@ -104,15 +84,6 @@ RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
  && cd /home/work/ot_tools/libfixbuf-2.4.0/ && ./configure && make && make install \
  && cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz \
  && cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
-
-RUN mv crontab /root/crontab
-RUN crontab /root/crontab
-
-RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt
-
-RUN mv supervisord.conf /etc/supervisor/conf.d/
-
-
 
 #本番イメージ
 FROM ubuntu:20.04
@@ -159,11 +130,6 @@ RUN apt-get update \
 #    vim \
 #   wget \
 #    zlib1g-dev\
-    libpcre3\
-    libpcre3-dbg\
-    libyaml-0-2\
-    zlib1g\
-    libmagic-dev\
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
@@ -222,10 +188,8 @@ RUN python3.8 -m pip install --upgrade pip --no-cache-dir \
  && python3.8 -m pip install setuptools==59.8.0 \
  && python3.8 -m pip install -r requirements.txt --no-cache-dir \
  && mkdir /var/log/ot_tools  \
- && pip install django 
-# && zkg autoconfig && zkg install --force zeek-plugin-bacnet
-
-COPY --from=build-env /usr/local/bin/zkg  /usr/local/bin/zkg
+ && pip install django \
+ && zkg autoconfig && zkg install --force zeek-plugin-bacnet
 
 ENV PATH $PATH:/opt/zeek/bin
 
@@ -235,10 +199,8 @@ COPY --from=build-env /usr/local/bin/yaf /usr/local/bin/yaf
 #COPY --from=build-env /usr/local/bin/yafcollect /usr/local/bin/yafcollect
 COPY --from=build-env /usr/local/bin/yafscii /usr/local/bin/yafscii
 RUN ldconfig
-#COPY --from=build-env /opt/ot_tools/proxy_env.txt /opt/ot_tools/proxy_env.txt
+
 RUN mv crontab /root/crontab \
- && crontab /root/crontab 
-RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt 
-RUN echo "export NO_PROXY=.osect.ntt.com,10.146.0.0/20" >> /opt/ot_tools/proxy_env.txt
-RUN echo "export no_proxy=.osect.ntt.com,10.146.0.0/20" >> /opt/ot_tools/proxy_env.txt
-RUN mv supervisord.conf /etc/supervisor/conf.d/
+ && crontab /root/crontab \
+ && printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
+ && mv supervisord.conf /etc/supervisor/conf.d/
