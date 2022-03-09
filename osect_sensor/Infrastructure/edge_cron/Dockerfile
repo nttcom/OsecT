@@ -235,8 +235,10 @@ COPY --from=build-env /usr/local/bin/yaf /usr/local/bin/yaf
 #COPY --from=build-env /usr/local/bin/yafcollect /usr/local/bin/yafcollect
 COPY --from=build-env /usr/local/bin/yafscii /usr/local/bin/yafscii
 RUN ldconfig
-
+#COPY --from=build-env /opt/ot_tools/proxy_env.txt /opt/ot_tools/proxy_env.txt
 RUN mv crontab /root/crontab \
- && crontab /root/crontab \
- && printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
- && mv supervisord.conf /etc/supervisor/conf.d/
+ && crontab /root/crontab 
+RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt 
+RUN echo "export NO_PROXY=.osect.ntt.com,10.146.0.0/20" >> /opt/ot_tools/proxy_env.txt
+RUN echo "export no_proxy=.osect.ntt.com,10.146.0.0/20" >> /opt/ot_tools/proxy_env.txt
+RUN mv supervisord.conf /etc/supervisor/conf.d/
