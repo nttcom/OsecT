@@ -368,7 +368,6 @@ def send_server(zip_list):
         resp = requests.post(
             API_URL,
             cert=CLIENT_CERTIFICATE_PATH,
-            verify=False,
             files=files,
             data=data,
         )
