@@ -34,7 +34,6 @@ class Command(BaseCommand):
         resp = requests.post(
             SEND_VERSION_API_URL,
             cert=CLIENT_CERTIFICATE_PATH,
-            verify=False,
             data=data,
         )
         if resp.status_code != 200:
