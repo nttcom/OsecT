@@ -48,6 +48,7 @@ RUN apt-get update \
     libyaml-0-2 \
     zlib1g \
     libmagic-dev \
+    python3-git \
 #    libjansson \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
@@ -210,3 +211,6 @@ RUN mv crontab /root/crontab \
  && crontab /root/crontab \
  && printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
  && mv supervisord.conf /etc/supervisor/conf.d/
+
+RUN /opt/zeek/bin/zkg refresh
+RUN echo y | /opt/zeek/bin/zkg install icsnpp-modbus
