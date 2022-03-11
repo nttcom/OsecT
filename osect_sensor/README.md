@@ -103,9 +103,9 @@ TCPDUMP_SHELL_COMMAND = ['/usr/sbin/tcpdump', '-w', 'realtime-%F-%T.pcap', '-G',
 DjangoのSECRET_KEYの設定を設定します。
 
 ```bash
-$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; echo "SECRET_KEY='$SK'" > ~/osect_sensor/Application/edge_cron/edge_cron/local_settings.py
+$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's/SECRET_KEY = ""/SECRET_KEY = "'$SK'"/g' ~/osect_sensor/Application/edge_cron/edge_cron/settings.py
 （何も表示されません。）
-$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; echo "SECRET_KEY='$SK'" > ~/osect_sensor/Application/edge_tcpdump/sc_tcpdump/local_settings.py
+$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's/SECRET_KEY = ""/SECRET_KEY = "'$SK'"/g' ~/osect_sensor/Application/edge_tcpdump/sc_tcpdump/settings.py
 （何も表示されません。）
 ```
 
@@ -127,6 +127,14 @@ API_URL = 'https://your url/paper/api/v1/createlogdata/post'
 
 ```python
 API_URL = 'https://xxxxx.osect.ntt.com/paper/api/v1/createlogdata/post'
+```
+
+### 3.4. クライアント証明書の設定
+
+NTT Comから提供されたクライアント証明書を以下に格納します（ファイル名は変更しません）。
+
+```bash
+$ ~/~/osect_sensor/keys/client.pem
 ```
 
 ## 4. コンテナの構築・起動
