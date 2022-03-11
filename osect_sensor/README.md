@@ -103,9 +103,9 @@ TCPDUMP_SHELL_COMMAND = ['/usr/sbin/tcpdump', '-w', 'realtime-%F-%T.pcap', '-G',
 DjangoのSECRET_KEYの設定を設定します。
 
 ```bash
-$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's/SECRET_KEY = ""/SECRET_KEY = "'$SK'"/g' ~/osect_sensor/Application/edge_cron/edge_cron/settings.py
+$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's@SECRET_KEY = ""@SECRET_KEY = "'$SK'"@g' ~/osect_sensor/Application/edge_cron/edge_cron/settings.py
 （何も表示されません。）
-$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's/SECRET_KEY = ""/SECRET_KEY = "'$SK'"/g' ~/osect_sensor/Application/edge_tcpdump/sc_tcpdump/settings.py
+$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's@SECRET_KEY = ""@SECRET_KEY = "'$SK'"@g' ~/osect_sensor/Application/edge_tcpdump/sc_tcpdump/settings.py
 （何も表示されません。）
 ```
 
