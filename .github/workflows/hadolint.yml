@@ -8,6 +8,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Hadolint
-        uses: brpaz/hadolint-action@master
+        uses: hadolint/hadolint-action@v1.6.0
         with:
           recursive: true
