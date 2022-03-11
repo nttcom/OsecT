@@ -134,7 +134,7 @@ API_URL = 'https://xxxxx.osect.ntt.com/paper/api/v1/createlogdata/post'
 NTT Comから提供されたクライアント証明書を以下に格納します（ファイル名は変更しません）。
 
 ```bash
-$ ~/~/osect_sensor/keys/client.pem
+$ ~/osect_sensor/keys/client.pem
 ```
 
 ## 4. コンテナの構築・起動
