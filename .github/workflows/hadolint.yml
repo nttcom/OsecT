@@ -9,3 +9,5 @@ jobs:
         uses: actions/checkout@v2
       - name: Hadolint
         uses: brpaz/hadolint-action@master
+        with:
+          recursive: true
