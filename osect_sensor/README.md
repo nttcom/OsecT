@@ -120,7 +120,7 @@ $ vi Application/edge_cron/common/common_config.py
 記載箇所:
 
 ```python
-API_URL = ''
+API_URL = 'https://your url/paper/api/v1/createlogdata/post'
 ```
 
 記載例:
@@ -128,38 +128,6 @@ API_URL = ''
 ```python
 API_URL = 'https://xxxxx.osect.ntt.com/paper/api/v1/createlogdata/post'
 ```
-
-### 3.4. OAuth 2.0 クライアント IDの設定
-
-NTT Comから提供されたOAuth 2.0 クライアント IDを設定ファイルに記載します。
-
-```bash
-$ vi ~/osect_sensor/Application/edge_cron/auth/google_account.py
-```
-
-記載箇所:
-
-```python
-IAP_CLIENT_ID = ''
-```
-
-記載例:
-
-```python
-IAP_CLIENT_ID = 'xxxxxxxxxxxxxxxxx.apps.googleusercontent.com'
-```
-
-### 3.5. サービスアカウントキーファイルの配置
-
-NTT Comから提供されたサービスアカウントキーファイルを所定のディレクトリに配置します。
-
-ファイル名:
-
-- `service_account.json`　（提供時から変更しない）
-
-配置ディレクトリ:
-
-- `~/osect_sensor/Application/edge_cron/auth/`
 
 ## 4. コンテナの構築・起動
 
