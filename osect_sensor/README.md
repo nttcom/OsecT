@@ -103,9 +103,9 @@ TCPDUMP_SHELL_COMMAND = ['/usr/sbin/tcpdump', '-w', 'realtime-%F-%T.pcap', '-G',
 DjangoのSECRET_KEYの設定を設定します。
 
 ```bash
-$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; echo "SECRET_KEY='$SK'" > ~/osect_sensor/Application/edge_cron/edge_cron/local_settings.py
+$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's@SECRET_KEY = ""@SECRET_KEY = "'$SK'"@g' ~/osect_sensor/Application/edge_cron/edge_cron/settings.py
 （何も表示されません。）
-$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; echo "SECRET_KEY='$SK'" > ~/osect_sensor/Application/edge_tcpdump/sc_tcpdump/local_settings.py
+$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's@SECRET_KEY = ""@SECRET_KEY = "'$SK'"@g' ~/osect_sensor/Application/edge_tcpdump/sc_tcpdump/settings.py
 （何も表示されません。）
 ```
 
@@ -120,7 +120,7 @@ $ vi Application/edge_cron/common/common_config.py
 記載箇所:
 
 ```python
-API_URL = ''
+API_URL = 'https://your url/paper/api/v1/createlogdata/post'
 ```
 
 記載例:
@@ -129,37 +129,13 @@ API_URL = ''
 API_URL = 'https://xxxxx.osect.ntt.com/paper/api/v1/createlogdata/post'
 ```
 
-### 3.4. OAuth 2.0 クライアント IDの設定
+### 3.4. クライアント証明書の設定
 
-NTT Comから提供されたOAuth 2.0 クライアント IDを設定ファイルに記載します。
+NTT Comから提供されたクライアント証明書を以下に格納します（ファイル名は変更しません）。
 
 ```bash
-$ vi ~/osect_sensor/Application/edge_cron/auth/google_account.py
+$ ~/osect_sensor/keys/client.pem
 ```
-
-記載箇所:
-
-```python
-IAP_CLIENT_ID = ''
-```
-
-記載例:
-
-```python
-IAP_CLIENT_ID = 'xxxxxxxxxxxxxxxxx.apps.googleusercontent.com'
-```
-
-### 3.5. サービスアカウントキーファイルの配置
-
-NTT Comから提供されたサービスアカウントキーファイルを所定のディレクトリに配置します。
-
-ファイル名:
-
-- `service_account.json`　（提供時から変更しない）
-
-配置ディレクトリ:
-
-- `~/osect_sensor/Application/edge_cron/auth/`
 
 ## 4. コンテナの構築・起動
 
