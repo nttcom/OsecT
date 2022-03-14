@@ -43,7 +43,7 @@ fi
 rm -rf rules
 tar -xzf $DOWNLOAD_SIG_FILE
 rm rules/emerging-ja3.rules
-grep -hv ^# rules/*.rules | grep -v ^$ > /var/lib/suricata/rules/suricata.rules
+grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 mv $DOWNLOAD_VER_FILE current_version
 
 # Set versions

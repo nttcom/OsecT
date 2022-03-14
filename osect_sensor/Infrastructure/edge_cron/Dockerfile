@@ -70,7 +70,7 @@ WORKDIR /home/work
 RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
  && tar -xzvf emerging.rules.tar.gz \
  && mkdir -p /var/lib/suricata/rules \
- && grep -hv ^# rules/*.rules | grep -v ^$ > /var/lib/suricata/rules/suricata.rules
+ && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
 RUN cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/
