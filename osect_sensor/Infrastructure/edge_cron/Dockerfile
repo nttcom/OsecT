@@ -137,6 +137,13 @@ RUN apt-get update \
     libyaml-0-2 \
     zlib1g \
     libmagic-dev \
+    libpcre3-dev \
+    build-essential \
+    libyaml-dev \
+    pkg-config \
+    zlib1g-dev \
+    make \
+    libjansson \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
