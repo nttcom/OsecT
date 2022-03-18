@@ -143,7 +143,9 @@ RUN apt-get update \
     pkg-config \
     zlib1g-dev \
     make \
-    libjansson \
+    wget \
+    rustc \
+    cargo \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
