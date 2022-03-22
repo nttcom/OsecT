@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /opt/ot_tools/proxy_env.txt
+
 export SURICATA_VERSION=`suricata -V | grep -o "[0-9]\.[0-9]\.[0-9]"`
 DOWNLOAD_URL_PREFIX=https://rules.emergingthreats.net/open/suricata-${SURICATA_VERSION}/
 DOWNLOAD_SIG_FILE=emerging.rules.tar.gz
