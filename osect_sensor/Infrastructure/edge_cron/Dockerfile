@@ -61,16 +61,17 @@ RUN cd zeek && ./configure --prefix=/opt/zeek && make && make install
 WORKDIR /
 RUN mkdir /opt/ot_tools
 
+
+WORKDIR /home/work
 #suricataのインストール
-WORKDIR /home/work
-RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.4.tar.gz \
- && tar -xf suricata-6.0.4.tar.gz \
- && cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full 
-WORKDIR /home/work
-RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
- && tar -xzvf emerging.rules.tar.gz \
- && mkdir -p /var/lib/suricata/rules \
- && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
+#RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.4.tar.gz \
+# && tar -xf suricata-6.0.4.tar.gz \
+# && cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full 
+#WORKDIR /home/work
+#RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
+# && tar -xzvf emerging.rules.tar.gz \
+# && mkdir -p /var/lib/suricata/rules \
+# && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
 RUN cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/
@@ -138,6 +139,7 @@ RUN apt-get update \
     libyaml-0-2 \
     zlib1g \
     libmagic-dev \
+    software-properties-common \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
@@ -157,19 +159,20 @@ WORKDIR /home/work
 RUN mkdir /opt/ot_tools
 
 #suricataバイナリファイルのコピー
-COPY --from=build-env /usr/bin/suricata /usr/bin/suricata
-COPY --from=build-env /usr/bin/suricata-update /usr/bin/suricata-update
-COPY --from=build-env /usr/bin/suricatactl /usr/bin/suricatactl
-COPY --from=build-env /usr/bin/suricatasc /usr/bin/suricatasc
-COPY --from=build-env /etc/suricata /etc/suricata
-COPY --from=build-env /var/log/suricata /var/log/suricata
-COPY --from=build-env /var/lib/suricata /var/lib/suricata
+#COPY --from=build-env /usr/bin/suricata /usr/bin/suricata
+#COPY --from=build-env /usr/bin/suricata-update /usr/bin/suricata-update
+#COPY --from=build-env /usr/bin/suricatactl /usr/bin/suricatactl
+#COPY --from=build-env /usr/bin/suricatasc /usr/bin/suricatasc
+#COPY --from=build-env /etc/suricata /etc/suricata
+#COPY --from=build-env /var/log/suricata /var/log/suricata
+#COPY --from=build-env /var/lib/suricata /var/lib/suricata
 
-COPY --from=build-env /usr/lib/python3.8/site-packages/suricata /usr/lib/python3.8/site-packages/suricata
-COPY --from=build-env /usr/share/doc/suricata /usr/share/doc/suricata
-COPY --from=build-env /usr/share/suricata /usr/share/suricata
-COPY --from=build-env /run/suricata /run/suricata
-COPY --from=build-env /home/work/suricata-6.0.4/libhtp/htp/.libs/libhtp.so.2.0.0 /lib
+#COPY --from=build-env /usr/lib/python3.8/site-packages/suricata /usr/lib/python3.8/site-packages/suricata
+#COPY --from=build-env /usr/share/doc/suricata /usr/share/doc/suricata
+#COPY --from=build-env /usr/share/suricata /usr/share/suricata
+#COPY --from=build-env /run/suricata /run/suricata
+#COPY --from=build-env /home/work/suricata-6.0.4/libhtp/htp/.libs/libhtp.so.2.0.0 /lib
+
 # Zeel、Suricata、Yafの資材配置。
 WORKDIR /
 COPY --from=build-env /home/work/ot_tools /home/work/ot_tools
@@ -206,6 +209,9 @@ ENV PATH $PATH:/opt/zeek/bin
 COPY --from=build-env /usr/local/bin/yaf /usr/local/bin/yaf
 COPY --from=build-env /usr/local/bin/yafscii /usr/local/bin/yafscii
 RUN ldconfig
+
+RUN add-apt-repository ppa:oisf/suricata-stable
+RUN apt-get update && apt-get install -y suricata
 
 RUN mv crontab /root/crontab \
  && crontab /root/crontab \
