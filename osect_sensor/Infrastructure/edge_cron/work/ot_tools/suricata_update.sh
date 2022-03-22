@@ -2,15 +2,17 @@
 
 source /opt/ot_tools/proxy_env.txt
 
-export SURICATA_VERSION=`suricata -V | grep -o "[0-9]\.[0-9]\.[0-9]"`
+SURICATA_VERSION=`suricata -V | grep -o "[0-9]\.[0-9]\.[0-9]"`
+export SURICATA_VERSION
 DOWNLOAD_URL_PREFIX=https://rules.emergingthreats.net/open/suricata-${SURICATA_VERSION}/
 DOWNLOAD_SIG_FILE=emerging.rules.tar.gz
 DOWNLOAD_VER_FILE=version.txt
 
-cd /home/work/
+cd /home/work/ || exit
 
 if [ -e current_version ]; then
-    export SIGNATURE_VERSION=`cat current_version`
+    SIGNATURE_VERSION=`cat current_version`
+    export SIGNATURE_VERSION
 else
     export SIGNATURE_VERSION=
 fi
