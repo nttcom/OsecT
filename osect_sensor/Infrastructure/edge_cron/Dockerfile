@@ -68,10 +68,7 @@ WORKDIR /home/work
 # && tar -xf suricata-6.0.4.tar.gz \
 # && cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full 
 #WORKDIR /home/work
-#RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
-# && tar -xzvf emerging.rules.tar.gz \
-# && mkdir -p /var/lib/suricata/rules \
-# && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
+
 
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
 RUN cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/
@@ -210,8 +207,15 @@ COPY --from=build-env /usr/local/bin/yaf /usr/local/bin/yaf
 COPY --from=build-env /usr/local/bin/yafscii /usr/local/bin/yafscii
 RUN ldconfig
 
+# suricata
 RUN add-apt-repository ppa:oisf/suricata-stable
 RUN apt-get update && apt-get install -y suricata
+
+# suricata rules
+RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
+ && tar -xzvf emerging.rules.tar.gz \
+ && mkdir -p /var/lib/suricata/rules \
+ && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
 RUN mv crontab /root/crontab \
  && crontab /root/crontab \
