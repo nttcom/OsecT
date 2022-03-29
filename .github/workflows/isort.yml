@@ -1,9 +1,9 @@
-name: Run isort
+name: isort
 on:
   - push
 
 jobs:
-  build:
+  Static Analysis:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
