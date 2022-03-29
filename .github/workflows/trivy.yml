@@ -22,4 +22,4 @@ jobs:
           
       - name: Build an image from Dockerfile
         run: |
-          trivy fs /home/runner/work/OsecT/osect_sensor/
+          trivy fs /home/runner/work/OsecT/OsecT/osect_sensor/
