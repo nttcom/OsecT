@@ -1,8 +1,6 @@
 # シェルスクリプトをチェック
 on:
   push:
-    branch:
-      - master
 
 name: Shellcheck
 
