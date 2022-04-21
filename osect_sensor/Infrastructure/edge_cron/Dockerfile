@@ -61,16 +61,14 @@ RUN cd zeek && ./configure --prefix=/opt/zeek && make && make install
 WORKDIR /
 RUN mkdir /opt/ot_tools
 
+
+WORKDIR /home/work
 #suricataのインストール
-WORKDIR /home/work
-RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.4.tar.gz \
- && tar -xf suricata-6.0.4.tar.gz \
- && cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full 
-WORKDIR /home/work
-RUN wget http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz \
- && tar -xzvf emerging.rules.tar.gz \
- && mkdir -p /var/lib/suricata \
- && cp -pr rules /var/lib/suricata/
+#RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.4.tar.gz \
+# && tar -xf suricata-6.0.4.tar.gz \
+# && cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full
+#WORKDIR /home/work
+
 
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
 RUN cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/
@@ -123,20 +121,33 @@ RUN mkdir /home/work/django && mkdir /home/work/uwsgi
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
+    build-essential \
     cron \
+    cmake \
     gawk \
+    gcc \
+    g++ \
+    libmount-dev \
     libyaml-dev \
     libjansson-dev \
     libpcap-dev \
+    make \
+    ninja-build \
     python3-pip \
+    python3-yaml \
+    python3-git \
+    pkg-config \
     supervisor \
     tshark \
     tzdata \
+    wget \
     libpcre3 \
     libpcre3-dbg \
     libyaml-0-2 \
     zlib1g \
     libmagic-dev \
+    software-properties-common \
+    zlib1g-dev\
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
@@ -156,19 +167,20 @@ WORKDIR /home/work
 RUN mkdir /opt/ot_tools
 
 #suricataバイナリファイルのコピー
-COPY --from=build-env /usr/bin/suricata /usr/bin/suricata
-COPY --from=build-env /usr/bin/suricata-update /usr/bin/suricata-update
-COPY --from=build-env /usr/bin/suricatactl /usr/bin/suricatactl
-COPY --from=build-env /usr/bin/suricatasc /usr/bin/suricatasc
-COPY --from=build-env /etc/suricata /etc/suricata
-COPY --from=build-env /var/log/suricata /var/log/suricata
-COPY --from=build-env /var/lib/suricata /var/lib/suricata
+#COPY --from=build-env /usr/bin/suricata /usr/bin/suricata
+#COPY --from=build-env /usr/bin/suricata-update /usr/bin/suricata-update
+#COPY --from=build-env /usr/bin/suricatactl /usr/bin/suricatactl
+#COPY --from=build-env /usr/bin/suricatasc /usr/bin/suricatasc
+#COPY --from=build-env /etc/suricata /etc/suricata
+#COPY --from=build-env /var/log/suricata /var/log/suricata
+#COPY --from=build-env /var/lib/suricata /var/lib/suricata
 
-COPY --from=build-env /usr/lib/python3.8/site-packages/suricata /usr/lib/python3.8/site-packages/suricata
-COPY --from=build-env /usr/share/doc/suricata /usr/share/doc/suricata
-COPY --from=build-env /usr/share/suricata /usr/share/suricata
-COPY --from=build-env /run/suricata /run/suricata
-COPY --from=build-env /home/work/suricata-6.0.4/libhtp/htp/.libs/libhtp.so.2.0.0 /lib
+#COPY --from=build-env /usr/lib/python3.8/site-packages/suricata /usr/lib/python3.8/site-packages/suricata
+#COPY --from=build-env /usr/share/doc/suricata /usr/share/doc/suricata
+#COPY --from=build-env /usr/share/suricata /usr/share/suricata
+#COPY --from=build-env /run/suricata /run/suricata
+#COPY --from=build-env /home/work/suricata-6.0.4/libhtp/htp/.libs/libhtp.so.2.0.0 /lib
+
 # Zeel、Suricata、Yafの資材配置。
 WORKDIR /
 COPY --from=build-env /home/work/ot_tools /home/work/ot_tools
@@ -190,21 +202,41 @@ RUN cp -pr /home/work/ot_tools/p0f /opt/
 
 WORKDIR /home/work
 
-# RUN apt purge -y python3-yaml \
-RUN python3.8 -m pip install --upgrade pip --no-cache-dir \
- && python3.8 -m pip install setuptools==59.8.0 \
- && python3.8 -m pip install -r requirements.txt --no-cache-dir \
- && mkdir /var/log/ot_tools  \
- && pip install django 
+RUN apt purge -y python3-yaml
+
+RUN python3.8 -m pip install --upgrade pip --no-cache-dir
+RUN python3.8 -m pip install setuptools==59.8.0
+RUN python3.8 -m pip install -r requirements.txt --no-cache-dir
+RUN mkdir /var/log/ot_tools
+RUN pip install django
 
 COPY --from=build-env /usr/local/bin/zkg  /usr/local/bin/zkg
 
 ENV PATH $PATH:/opt/zeek/bin
 
 # Yafバイナリファイルのコピー。
-COPY --from=build-env /usr/local/bin/yaf /usr/local/bin/yaf
-COPY --from=build-env /usr/local/bin/yafscii /usr/local/bin/yafscii
-RUN ldconfig
+#COPY --from=build-env /usr/local/bin/yaf /usr/local/bin/yaf
+#COPY --from=build-env /usr/local/bin/yafscii /usr/local/bin/yafscii
+#RUN ldconfig
+
+# Yafのインストール。バイナリファイルのコピーでは動作確認とれなかったため。
+RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz
+RUN tar xvfJ glib-2.60.7.tar.xz
+RUN cd /home/work/glib-2.60.7/ && meson _build && ninja -C _build install && ldconfig
+RUN cd /home/work/ot_tools/ && tar xvzf libfixbuf-2.4.0.tar.gz
+RUN cd /home/work/ot_tools/libfixbuf-2.4.0/ && ./configure && make && make install
+RUN cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz
+RUN cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
+
+# suricata
+RUN add-apt-repository ppa:oisf/suricata-stable
+RUN apt-get update && apt-get install -y suricata
+
+# suricata rules
+RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
+ && tar -xzvf emerging.rules.tar.gz \
+ && mkdir -p /var/lib/suricata/rules \
+ && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
 RUN mv crontab /root/crontab \
  && crontab /root/crontab \
