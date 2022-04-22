@@ -26,15 +26,17 @@ class Command(BaseCommand):
 
         suricata = os.environ.get("SURICATA_VERSION", None)
         signature = os.environ.get("SIGNATURE_VERSION", None)
+        status = os.environ.get("SURICATA_UPDATE_STATUS", "")
+
         data = {
             "label_id": LABEL_ID,
             "suricata": suricata,
             "signature": signature,
+            "message": status,
         }
         resp = requests.post(
             SEND_VERSION_API_URL,
             cert=CLIENT_CERTIFICATE_PATH,
-            verify=False,
             data=data,
         )
         if resp.status_code != 200:
@@ -44,7 +46,7 @@ class Command(BaseCommand):
                 )
             )
         logger.info(
-            "send suricata signature version: {}, {}".format(
-                suricata, signature
+            "send suricata signature version: {}, {}, {}".format(
+                suricata, signature, status
             )
         )
