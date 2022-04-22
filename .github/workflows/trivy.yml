@@ -1,0 +1,24 @@
+name: trivy
+on:
+  push:
+    branches:
+      - master
+      - linter
+  schedule:
+    - cron: '0 0 * * 1'
+jobs:
+  build:
+    name: Static Analysis
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: get trivy
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.19.2/trivy_0.19.2_Linux-64bit.deb
+          sudo dpkg -i trivy_0.19.2_Linux-64bit.deb
+          
+      - name: Build an image from Dockerfile
+        run: |
+          trivy fs /home/runner/work/OsecT/OsecT/osect_sensor/

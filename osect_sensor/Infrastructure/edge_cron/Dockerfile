@@ -238,6 +238,16 @@ RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar
  && mkdir -p /var/lib/suricata/rules \
  && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
+# suricata
+RUN add-apt-repository ppa:oisf/suricata-stable
+RUN apt-get update && apt-get install -y suricata
+
+# suricata rules
+RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
+ && tar -xzvf emerging.rules.tar.gz \
+ && mkdir -p /var/lib/suricata/rules \
+ && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
+
 RUN mv crontab /root/crontab \
  && crontab /root/crontab \
  && printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
