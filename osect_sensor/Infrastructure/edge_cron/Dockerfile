@@ -208,7 +208,7 @@ RUN python3.8 -m pip install --upgrade pip --no-cache-dir
 RUN python3.8 -m pip install setuptools==59.8.0
 RUN python3.8 -m pip install -r requirements.txt --no-cache-dir
 RUN mkdir /var/log/ot_tools
-RUN pip install django
+#RUN pip install django
 
 COPY --from=build-env /usr/local/bin/zkg  /usr/local/bin/zkg
 
