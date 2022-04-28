@@ -66,7 +66,7 @@ WORKDIR /home/work
 #suricataのインストール
 #RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.4.tar.gz \
 # && tar -xf suricata-6.0.4.tar.gz \
-# && cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full 
+# && cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full
 #WORKDIR /home/work
 
 
@@ -121,12 +121,22 @@ RUN mkdir /home/work/django && mkdir /home/work/uwsgi
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
+    build-essential \
     cron \
+    cmake \
     gawk \
+    gcc \
+    g++ \
+    libmount-dev \
     libyaml-dev \
     libjansson-dev \
     libpcap-dev \
+    make \
+    ninja-build \
     python3-pip \
+    python3-yaml \
+    python3-git \
+    pkg-config \
     supervisor \
     tshark \
     tzdata \
@@ -137,6 +147,7 @@ RUN apt-get update \
     zlib1g \
     libmagic-dev \
     software-properties-common \
+    zlib1g-dev\
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
@@ -191,21 +202,41 @@ RUN cp -pr /home/work/ot_tools/p0f /opt/
 
 WORKDIR /home/work
 
-# RUN apt purge -y python3-yaml \
-RUN python3.8 -m pip install --upgrade pip --no-cache-dir \
- && python3.8 -m pip install setuptools==59.8.0 \
- && python3.8 -m pip install -r requirements.txt --no-cache-dir \
- && mkdir /var/log/ot_tools  \
- && pip install django 
+RUN apt purge -y python3-yaml
+
+RUN python3.8 -m pip install --upgrade pip --no-cache-dir
+RUN python3.8 -m pip install setuptools==59.8.0
+RUN python3.8 -m pip install -r requirements.txt --no-cache-dir
+RUN mkdir /var/log/ot_tools
+#RUN pip install django
 
 COPY --from=build-env /usr/local/bin/zkg  /usr/local/bin/zkg
 
 ENV PATH $PATH:/opt/zeek/bin
 
 # Yafバイナリファイルのコピー。
-COPY --from=build-env /usr/local/bin/yaf /usr/local/bin/yaf
-COPY --from=build-env /usr/local/bin/yafscii /usr/local/bin/yafscii
-RUN ldconfig
+#COPY --from=build-env /usr/local/bin/yaf /usr/local/bin/yaf
+#COPY --from=build-env /usr/local/bin/yafscii /usr/local/bin/yafscii
+#RUN ldconfig
+
+# Yafのインストール。バイナリファイルのコピーでは動作確認とれなかったため。
+RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz
+RUN tar xvfJ glib-2.60.7.tar.xz
+RUN cd /home/work/glib-2.60.7/ && meson _build && ninja -C _build install && ldconfig
+RUN cd /home/work/ot_tools/ && tar xvzf libfixbuf-2.4.0.tar.gz
+RUN cd /home/work/ot_tools/libfixbuf-2.4.0/ && ./configure && make && make install
+RUN cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz
+RUN cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
+
+# suricata
+RUN add-apt-repository ppa:oisf/suricata-stable
+RUN apt-get update && apt-get install -y suricata
+
+# suricata rules
+RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
+ && tar -xzvf emerging.rules.tar.gz \
+ && mkdir -p /var/lib/suricata/rules \
+ && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
 # suricata
 RUN add-apt-repository ppa:oisf/suricata-stable
