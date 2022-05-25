@@ -5,7 +5,7 @@ source /opt/ot_tools/proxy_env.txt
 source /etc/suricata_update.conf
 
 if [ -z "$DOWNLOAD_URL_PREFIX"]; then
-    DOWNLOAD_URL_PREFIX=https://rules.emergingthreats.net/open/suricata-6.0.4/
+    DOWNLOAD_URL_PREFIX=https://rules.emergingthreats.net/open/suricata-6.0/
 fi
 
 if [ -z "$DOWNLOAD_SIG_FILE"]; then
@@ -71,7 +71,7 @@ fi
 # Extract signature rules
 rm -rf rules
 tar -xzf $DOWNLOAD_SIG_FILE
-rm rules/emerging-ja3.rules
+rm rules/*ja3.rules
 grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 mv $DOWNLOAD_VER_FILE current_version
 
