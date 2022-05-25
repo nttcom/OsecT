@@ -833,7 +833,7 @@ app-layer:
       # If the limit is reached, app-layer-event:modbus.flooded; will match.
       #request-flood: 500
 
-      enabled: no
+      enabled: yes
       detection-ports:
         dp: 502
       # According to MODBUS Messaging on TCP/IP Implementation Guide V1.0b, it
@@ -847,13 +847,13 @@ app-layer:
 
     # DNP3
     dnp3:
-      enabled: no
+      enabled: yes
       detection-ports:
         dp: 20000
 
     # SCADA EtherNet/IP and CIP protocol support
     enip:
-      enabled: no
+      enabled: yes
       detection-ports:
         dp: 44818
         sp: 44818
@@ -862,6 +862,36 @@ app-layer:
     # with --enable-rust-experimental passed to configure
     ntp:
       enabled: no
+
+    tftp:
+      enabled: yes
+
+    ikev2:
+      enabled: yes
+
+    krb5:
+      enabled: yes
+
+    dhcp:
+      enabled: yes
+
+    snmp:
+      enabled: yes
+
+    sip:
+      enabled: yes
+
+    rfb:
+      enabled: yes
+
+    mqtt:
+      enabled: yes
+
+    rdp:
+      enabled: yes
+
+    http2:
+      enabled: yes
 
 # Limit for the maximum number of asn1 frames to decode (default 256)
 asn1-max-frames: 256
