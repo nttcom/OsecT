@@ -236,7 +236,7 @@ RUN apt-get update && apt-get install -y suricata
 RUN wget http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.tar.gz \
  && tar -xzvf emerging.rules.tar.gz \
  && mkdir -p /var/lib/suricata/rules \
- && rm rules/*ja3.rules
+ && rm rules/*ja3.rules \
  && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
 # suricata
