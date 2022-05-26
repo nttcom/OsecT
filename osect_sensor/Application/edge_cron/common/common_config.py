@@ -75,11 +75,5 @@ PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 250
 CLIENT_CERTIFICATE_PATH = '/etc/ssl/private/client.pem'
 """クライアント認証のための証明書・秘密鍵"""
 
-ALLOWABLE_DELAY_TIME = 3600
-"""センサーから送られるログの許容遅延時間（秒）"""
-
-SURICATA_SIGNATURE_VERSION_URL = 'https://rules.emergingthreats.net/open/suricata-6.0.4/version.txt'
-"""Suricataのシグネチャのバージョン数を取得するURL"""
-
 SEND_VERSION_API_URL = 'https://your url/paper/api/v1/sensor_status/post'
 """Suricataシグネチャのバージョンを送るURL"""
