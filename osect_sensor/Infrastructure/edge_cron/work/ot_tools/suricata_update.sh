@@ -2,11 +2,22 @@
 
 source /opt/ot_tools/proxy_env.txt
 
-SURICATA_VERSION=`suricata -V | grep -o "[0-9]\.[0-9]\.[0-9]"`
+source /etc/suricata_update.conf
+
+if [ -z "$DOWNLOAD_URL_PREFIX"]; then
+    DOWNLOAD_URL_PREFIX=https://rules.emergingthreats.net/open/suricata-6.0/
+fi
+
+if [ -z "$DOWNLOAD_SIG_FILE"]; then
+    DOWNLOAD_SIG_FILE=emerging.rules.tar.gz
+fi
+
+if [ -z "$DOWNLOAD_VER_FILE"]; then
+    DOWNLOAD_VER_FILE=version.txt
+fi
+
+SURICATA_VERSION=`suricata -V | grep -o "[0-9]\.[0-9]\.[0-9]"`-${DOWNLOAD_SIG_FILE}
 export SURICATA_VERSION
-DOWNLOAD_URL_PREFIX=https://rules.emergingthreats.net/open/suricata-${SURICATA_VERSION}/
-DOWNLOAD_SIG_FILE=emerging.rules.tar.gz
-DOWNLOAD_VER_FILE=version.txt
 
 cd /home/work/ || exit
 
@@ -60,7 +71,7 @@ fi
 # Extract signature rules
 rm -rf rules
 tar -xzf $DOWNLOAD_SIG_FILE
-rm rules/emerging-ja3.rules
+rm rules/*ja3.rules
 grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 mv $DOWNLOAD_VER_FILE current_version
 
