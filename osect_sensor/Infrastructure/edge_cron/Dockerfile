@@ -229,13 +229,14 @@ RUN cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz
 RUN cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
 
 # suricata
-RUN add-apt-repository ppa:oisf/suricata-stable
+RUN add-apt-repository ppa:oisf/suricata-6.0
 RUN apt-get update && apt-get install -y suricata
 
 # suricata rules
-RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
+RUN wget http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.tar.gz \
  && tar -xzvf emerging.rules.tar.gz \
  && mkdir -p /var/lib/suricata/rules \
+ && rm rules/*ja3.rules \
  && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
 # suricata

@@ -18,6 +18,7 @@ services:
       - pcap-logs-volume:/opt/edge_cron/paper/sc_src/input/pcap/complete/
       - logs-volume:/var/log/ot_tools/
       - ./keys/client.pem:/etc/ssl/private/client.pem
+      - ./conf/suricata_update.conf:/etc/suricata_update.conf
     networks:
       edge-network:
         ipv4_address: 172.24.0.6
