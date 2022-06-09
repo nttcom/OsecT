@@ -103,9 +103,6 @@ RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
  && cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz \
  && cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
 
-RUN mv crontab /root/crontab
-RUN crontab /root/crontab
-
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt
 RUN mv supervisord.conf /etc/supervisor/conf.d/
 
@@ -249,7 +246,5 @@ RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar
  && mkdir -p /var/lib/suricata/rules \
  && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
-RUN mv crontab /root/crontab \
- && crontab /root/crontab \
- && printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
- && mv supervisord.conf /etc/supervisor/conf.d/
+RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
+    && mv supervisord.conf /etc/supervisor/conf.d/

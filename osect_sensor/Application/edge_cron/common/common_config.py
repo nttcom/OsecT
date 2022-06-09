@@ -1,4 +1,4 @@
-LABEL_ID = ''
+LABEL_ID = 'suricata'
 """ 複数スイッチ対応用のラベルID """
 
 PCAP_UPLOADING_FILE_PATH = 'paper/sc_src/input/pcap/uploading/'
@@ -20,7 +20,7 @@ PCAP_SERVER_UPLOADING_FILE_PATH = 'paper/sc_src/input/pcap/server_uploading/'
 """ ログ解析が終わったディレクトリをuploadするための一時領域 """
 
 SURICATA_ENABLE = True
-""" SURICATA使用フラグ """
+""" SURICATA使用フラグ（リアルタイム処理の場合はログを転送） """
 
 FUNC_RESTRICTION = False
 """ 機能制限版（建設版）フラグ。Trueの場合機能制限 """
@@ -57,7 +57,7 @@ ALLOWED_LOG_EXT = '.zip'
 PCAP_TO_DB_CPU = 5
 """ PCAPをログ化する際に使用するCPU数 """
 
-API_URL = 'https://your url/paper/api/v1/createlogdata/post'
+API_URL = 'https://coe01.internal.osect.ntt.com/paper/api/v1/createlogdata/post'
 """ SaaS連携用APIのURL """
 
 TIME_OUT_VAL = 120
@@ -69,11 +69,11 @@ PCAP_COMPLETE_COMPRESSION_LIMIT_DATE = 365
 PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_DATE = 365
 """complete_archives配下の保持期限切れファイルの削除対象にする日付（日）"""
 
-PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 250
+PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 180
 """completeとcomplete_archivesの保持容量上限値（GB）"""
 
 CLIENT_CERTIFICATE_PATH = '/etc/ssl/private/client.pem'
 """クライアント認証のための証明書・秘密鍵"""
 
-SEND_VERSION_API_URL = 'https://your url/paper/api/v1/sensor_status/post'
+SEND_VERSION_API_URL = 'https://coe01.internal.osect.ntt.com/paper/api/v1/sensor_status/post'
 """Suricataシグネチャのバージョンを送るURL"""
