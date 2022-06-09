@@ -19,10 +19,15 @@ services:
       - logs-volume:/var/log/ot_tools/
       - ./keys/client.pem:/etc/ssl/private/client.pem
       - ./conf/suricata_update.conf:/etc/suricata_update.conf
-    networks:
-      edge-network:
-        ipv4_address: 172.24.0.6
-    command: ["/usr/bin/supervisord","--configuration=/etc/supervisor/conf.d/supervisord.conf"]
+      - ./conf/crontab:/root/crontab
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+    command: >
+      sh -c '
+        crontab /root/crontab
+        /usr/bin/supervisord --configuration=/etc/supervisor/conf.d/supervisord.conf
+      '
     restart: always
 networks:
   edge-network:
