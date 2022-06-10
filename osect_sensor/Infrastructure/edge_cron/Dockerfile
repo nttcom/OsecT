@@ -92,7 +92,14 @@ RUN python3.8 -m pip install setuptools==59.8.0
 RUN python3.8 -m pip install -r requirements.txt --no-cache-dir
 RUN mkdir /var/log/ot_tools
 ENV PATH $PATH:/opt/zeek/bin
-RUN zkg autoconfig && zkg install --force zeek-plugin-bacnet
+RUN zkg autoconfig && zkg install --force --skiptest \
+    zeek-plugin-bacnet \
+    zeek-plugin-enip \
+    zeek-plugin-profinet \
+    zeek-plugin-s7comm \
+    icsnpp-ethercat \
+    icsnpp-opcua-binary \
+    icsnpp-modbus
 
 # Yafのインストール。
 RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
