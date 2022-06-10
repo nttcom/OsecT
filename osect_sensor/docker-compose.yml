@@ -29,13 +29,13 @@ services:
         /usr/bin/supervisord --configuration=/etc/supervisor/conf.d/supervisord.conf
       '
     restart: always
-networks:
-  edge-network:
-    driver: bridge
-    ipam:
-     driver: default
-     config:
-       - subnet: 172.24.0.0/24
+#networks:
+#  edge-network:
+#    driver: bridge
+#    ipam:
+#     driver: default
+#     config:
+#       - subnet: 172.24.0.0/24
 volumes:
   pcap-volume:
       driver_opts:
