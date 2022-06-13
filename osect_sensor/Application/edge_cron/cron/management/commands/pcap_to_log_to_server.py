@@ -29,6 +29,7 @@ from common.common_config import (
     YAF_ENABLE,
     YAF_SHELL_COMMAND,
     BACNET_ENABLE,
+    MODBUS_ENABLE,
     PCAP_TO_DB_CPU,
     PCAP_SERVER_UPLOADING_FILE_PATH,
     API_URL,
@@ -145,7 +146,9 @@ def wrapper_log_function(func_type, analyze_full_path, dir_name, pcap_name):
             + " "
             + dir_name
             + " "
-            + pcap_name,
+            + pcap_name
+            + " "
+            + str(MODBUS_ENABLE),
             shell=True,
         )
         proc.wait()
