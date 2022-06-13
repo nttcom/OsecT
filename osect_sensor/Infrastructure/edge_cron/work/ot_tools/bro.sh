@@ -1,21 +1,17 @@
 #!/bin/bash
 
+merge_log () {
+    cat $1 > $2
+    sed -i '/^#/d' $2
+    sed -i '1i #\n#\n#\n#\n#\n#\n#\n#' $2
+    sed -i '$a #close' $2
+}
+
 cd $1/$2 || exit
-mkdir tmp
-cd tmp || exit
-/opt/zeek/bin/zeek -r $1/$3 \
-		   /opt/zeek/share/zeek/base/protocols/arp.zeek \
-		   /opt/zeek/share/zeek/base/protocols/ns.zeek \
-		   /opt/zeek/share/zeek/base/protocols/consts_bacnet.zeek \
-		   /opt/zeek/share/zeek/base/protocols/main_bacnet.zeek \
-		   zeek-plugin-enip \
-		   zeek-plugin-profinet \
-		   zeek-plugin-s7comm \
-		   icsnpp-ethercat \
-		   icsnpp-opcua-binary \
-		   icsnpp-modbus
-# 新しいOTプロトコルに対応する場合は、以下にログを追記
-mv {conn,arp,ns,dns,http}.log ../
-cd $1/$2 || exit
-rm -rf tmp
-# rm packet_filter.log weird.log ssl.log
+DATE=$(date "+%Y-%m-%d")
+merge_log "/opt/zeek/logs/${DATE}/conn.*.log" "conn.log"
+merge_log "/opt/zeek/logs/${DATE}/arp.*.log" "arp.log"
+merge_log "/opt/zeek/logs/${DATE}/ns.*.log" "ns.log"
+merge_log "/opt/zeek/logs/${DATE}/dns.*.log" "dns.log"
+merge_log "/opt/zeek/logs/${DATE}/http.*.log" "http.log"
+rm /opt/zeek/logs/${DATE}/*.log

@@ -92,14 +92,6 @@ RUN python3.8 -m pip install setuptools==59.8.0
 RUN python3.8 -m pip install -r requirements.txt --no-cache-dir
 RUN mkdir /var/log/ot_tools
 ENV PATH $PATH:/opt/zeek/bin
-RUN zkg autoconfig && zkg install --force --skiptest \
-    zeek-plugin-bacnet \
-    zeek-plugin-enip \
-    zeek-plugin-profinet \
-    zeek-plugin-s7comm \
-    icsnpp-ethercat \
-    icsnpp-opcua-binary \
-    icsnpp-modbus
 
 # Yafのインストール。
 RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
@@ -192,10 +184,10 @@ COPY --from=build-env /home/work/ot_tools/broscript/conn/__load__.zeek /opt/zeek
 COPY --from=build-env /home/work/ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/conn/
 COPY --from=build-env /home/work/ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protocols/http/
 COPY --from=build-env /home/work/ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/http/
-COPY --from=build-env /home/work/ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/
-COPY --from=build-env /home/work/ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/
-COPY --from=build-env /home/work/ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/base/protocols/
-COPY --from=build-env /home/work/ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/base/protocols/
+COPY --from=build-env /home/work/ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/site/arp.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/site/ns.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/site/main_bacnet.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/site/consts_bacnet.zeek
 COPY --from=build-env /home/work/ot_tools/*.sh /opt/ot_tools/
 COPY --from=build-env /home/work/ot_tools/suricata.yaml /opt/ot_tools/
 COPY --from=build-env /home/work/ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/
@@ -255,3 +247,12 @@ RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar
 
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
     && mv supervisord.conf /etc/supervisor/conf.d/
+
+RUN zkg autoconfig && zkg install --force --skiptest \
+    zeek-plugin-bacnet \
+    zeek-plugin-enip \
+    zeek-plugin-profinet \
+    zeek-plugin-s7comm \
+    icsnpp-ethercat \
+    icsnpp-opcua-binary \
+    icsnpp-modbus

@@ -80,7 +80,7 @@ $ mv ~/OsecT/osect_sensor ~/
 
 ### 3.1. 監視ネットワークインタフェースの設定
 
-設定箇所は2箇所です。
+設定箇所は3箇所です。
 
 1箇所目：設定ファイルを編集し、監視ネットワークを指定します。
 
@@ -116,6 +116,24 @@ $ vi ~/osect_sensor/conf/crontab
 
 ```bash
 @reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i enp0s8 > /dev/null 2>&1
+```
+
+3箇所目：node.cfgを編集し、監視ネットワークを指定します。
+
+```bash
+$ vi ~/osect_sensor/conf/node.cfg
+```
+
+編集箇所
+
+```bash
+interface=eth1
+```
+
+編集例：監視ネットワークインタフェースがenp0s8の場合
+
+```bash
+interface=enp0s8
 ```
 
 ### 3.2. DjangoのSECRET_KEYの設定
