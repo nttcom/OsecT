@@ -20,6 +20,9 @@ services:
       - ./keys/client.pem:/etc/ssl/private/client.pem
       - ./conf/suricata_update.conf:/etc/suricata_update.conf
       - ./conf/crontab:/root/crontab
+      - ./conf/zeekctl.cfg:/opt/zeek/etc/zeekctl.cfg
+      - ./conf/node.cfg:/opt/zeek/etc/node.cfg
+      - ./conf/local.zeek:/opt/zeek/share/zeek/site/local.zeek
     network_mode: host
     cap_add:
       - NET_ADMIN
