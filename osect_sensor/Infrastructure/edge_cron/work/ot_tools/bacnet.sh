@@ -1,9 +1,4 @@
 #!/bin/bash
 
-cd $1/$2
-mkdir tmp
-cd tmp
-/opt/zeek/bin/zeek /opt/zeek/share/zeek/base/protocols/consts_bacnet.zeek /opt/zeek/share/zeek/base/protocols/main_bacnet.zeek -r ../../$3
-mv bacnet_service.log ../
-cd ../
-rm -rf tmp
+cd $1/$2 || exit
+/usr/bin/tshark -l -n -T fields  -e frame.time_epoch -e ip.src -e ip.dst -e ipv6.src -e ipv6.dst -e udp.dstport -e bacapp.type -e bacapp.confirmed_service -e bacapp.unconfirmed_service -e bacapp.objectType -Y 'bacapp and udp and not icmp and not icmpv6' -r ../$3 | /opt/ot_tools/tsharkfields2bacnetservicelog_dict.awk > ./bacnet_service.log

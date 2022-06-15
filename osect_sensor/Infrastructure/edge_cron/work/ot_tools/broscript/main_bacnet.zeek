@@ -33,7 +33,7 @@ redef record connection += {
 
 ## define listening ports
 const ports = {
-    47808/udp
+    47808/udp, 20108/udp
     };
 redef likely_server_ports += {
     ports
@@ -228,7 +228,12 @@ event bacnet(c:connection, is_orig:bool,
             	    c$bacnet$service_choice += ")";
 
                     switch(serviceChoice) {
-                        case 0x00:  ##! i am
+                        case 0x00,  ##! i am
+			    0x01,   ##! i have
+			    0x07:   ##! who has
+			    if (serviceChoice == 0x07 && apduType == 1) {
+                                break;
+                                }
                             len = bytestring_to_count(rest_of_data[rest_of_data_index]) % 8;
                             rest_of_data_index += 1;
                             identifier_info = bytes_to_count(len, rest_of_data[rest_of_data_index:rest_of_data_index+len]);
@@ -343,8 +348,12 @@ event bacnet(c:connection, is_orig:bool,
 
                     switch(serviceChoice) {
                         case 0x02,  ##! event notification
+			    0x06,   ##! atomicReadFile
+			    0x07,   ##! atomicWriteFile
                             0x0c,   ##! read property
+			    0x0e,   ##! read property multiple
                             0x0f,   ##! write property
+			    0x10,   ##! write property multiple
                             0x1a:   ##! read range
                             if (rest_of_data_index >= rest_of_data_len || apduFlags > 2) {
                                 break;
@@ -355,6 +364,9 @@ event bacnet(c:connection, is_orig:bool,
                                 rest_of_data_index += 1;
                                 rest_of_data_index += len; ##! PID
                                 }
+                            if ((serviceChoice == 0x06 || serviceChoice == 0x07) && (apduType > 1 && apduType < 5)) {
+			        break;
+				}
                             ##! object identifier
                             len = bytestring_to_count(rest_of_data[rest_of_data_index]) % 8;
                             rest_of_data_index += 1;
@@ -439,8 +451,8 @@ event bacnet(c:connection, is_orig:bool,
                                     }
                                 }
                             break;
-                        case 0x0e: ##! read property multiple
-                            break;
+                        #case 0x0e: ##! read property multiple
+                        #    break;
                         }
                     break;
                 }
