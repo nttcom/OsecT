@@ -63,12 +63,6 @@ RUN mkdir /opt/ot_tools
 
 
 WORKDIR /home/work
-#suricataのインストール
-#RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.4.tar.gz \
-# && tar -xf suricata-6.0.4.tar.gz \
-# && cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full
-#WORKDIR /home/work
-
 
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
 RUN cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/
@@ -105,7 +99,7 @@ RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt
 RUN mv supervisord.conf /etc/supervisor/conf.d/
 
-#本番イメージ
+# 本番イメージ
 FROM ubuntu:20.04
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
@@ -118,12 +112,21 @@ RUN mkdir /home/work/django && mkdir /home/work/uwsgi
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     build-essential \
+    cargo \
+    clang \
     cron \
     cmake \
     gawk \
     gcc \
     g++ \
+    git \
+    libelf-dev \
+    emacs \
+    m4 \
+    libjansson-dev \
     libmount-dev \
+    libtool \
+    libpcre2-dev \
     libyaml-dev \
     libjansson-dev \
     libpcap-dev \
@@ -133,6 +136,7 @@ RUN apt-get update \
     python3-yaml \
     python3-git \
     pkg-config \
+    rustc \
     supervisor \
     tshark \
     tzdata \
@@ -147,7 +151,10 @@ RUN apt-get update \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
- && dpkg-reconfigure -f noninteractive tzdata
+ && dpkg-reconfigure -f noninteractive tzdata \
+ && cargo install --force cbindgen
+
+ENV PATH $PATH:/root/.cargo/bin
 
 #zeekのバイナリファイルをコピー
 COPY --from=build-env /opt/zeek/bin /opt/zeek/bin
@@ -184,10 +191,10 @@ COPY --from=build-env /home/work/ot_tools/broscript/conn/__load__.zeek /opt/zeek
 COPY --from=build-env /home/work/ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/conn/
 COPY --from=build-env /home/work/ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protocols/http/
 COPY --from=build-env /home/work/ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/http/
-COPY --from=build-env /home/work/ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/site/arp.zeek
-COPY --from=build-env /home/work/ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/site/ns.zeek
-COPY --from=build-env /home/work/ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/site/main_bacnet.zeek
-COPY --from=build-env /home/work/ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/site/consts_bacnet.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/arp.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/ns.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/base/protocols/main_bacnet.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/base/protocols/consts_bacnet.zeek
 COPY --from=build-env /home/work/ot_tools/*.sh /opt/ot_tools/
 COPY --from=build-env /home/work/ot_tools/suricata.yaml /opt/ot_tools/
 COPY --from=build-env /home/work/ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/
@@ -228,21 +235,28 @@ RUN cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install &&
 RUN add-apt-repository ppa:oisf/suricata-6.0
 RUN apt-get update && apt-get install -y suricata
 
+# suricataのインストール（eBPF利用のため）
+#RUN git clone https://github.com/libbpf/libbpf.git \
+#    && cd libbpf/src/ \
+#    && make && make install \
+#    && make install_headers \
+#    && ldconfig \
+#    && git clone https://github.com/OISF/suricata.git \
+#    && cd suricata && git clone https://github.com/OISF/libhtp.git -b 0.5.x \
+#    && ./autogen.sh \
+#    && CC=clang ./configure --prefix=/usr/ --sysconfdir=/etc/ --localstatedir=/var/ --enable-ebpf --enable-ebpf-build \
+#    && make clean && make \
+#    && make install-full \
+#    && ldconfig \
+#    && mkdir -p /usr/libexec/suricata/ebpf/ \
+#    && ./configure --prefix=/usr/ --sysconfdir=/etc/ --localstatedir=/var/ --enable-ebpf --enable-ebpf-build --with-clang=/usr/bin/clang
+
+
 # suricata rules
 RUN wget http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.tar.gz \
  && tar -xzvf emerging.rules.tar.gz \
  && mkdir -p /var/lib/suricata/rules \
  && rm rules/*ja3.rules \
- && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
-
-# suricata
-RUN add-apt-repository ppa:oisf/suricata-stable
-RUN apt-get update && apt-get install -y suricata
-
-# suricata rules
-RUN wget http://rules.emergingthreats.net/open/suricata-6.0.4/emerging.rules.tar.gz \
- && tar -xzvf emerging.rules.tar.gz \
- && mkdir -p /var/lib/suricata/rules \
  && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
