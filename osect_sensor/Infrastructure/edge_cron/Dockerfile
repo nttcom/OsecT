@@ -48,11 +48,10 @@ RUN apt-get update \
     libyaml-0-2 \
     zlib1g \
     libmagic-dev \
-#    libjansson \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
-  && dpkg-reconfigure -f noninteractive tzdata
+ && dpkg-reconfigure -f noninteractive tzdata
 
 # Zeekのインストール。
 RUN git clone --recursive https://github.com/zeek/zeek -b v4.0.5
@@ -71,6 +70,8 @@ RUN cp -p ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protoc
 RUN cp -p ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/http/
 RUN cp -p ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/
 RUN cp -p ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/
+RUN cp -p ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/base/protocols/
+RUN cp -p ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/base/protocols/
 RUN cp -p ot_tools/*.sh /opt/ot_tools/
 RUN cp -p ot_tools/suricata.yaml /opt/ot_tools/
 RUN cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/
@@ -79,7 +80,6 @@ RUN cp -p ot_tools/yaf.awk /opt/ot_tools/
 RUN cp -pr ot_tools/p0f /opt/
 
 RUN apt purge -y python3-yaml
-
 
 RUN python3.8 -m pip install --upgrade pip --no-cache-dir
 RUN python3.8 -m pip install setuptools==59.8.0
