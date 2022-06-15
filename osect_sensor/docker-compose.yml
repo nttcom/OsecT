@@ -17,18 +17,27 @@ services:
       - pcap-volume:/opt/edge_cron/paper/sc_src/input/pcap/uploaded/
       - pcap-logs-volume:/opt/edge_cron/paper/sc_src/input/pcap/complete/
       - logs-volume:/var/log/ot_tools/
-    networks:
-      edge-network:
-        ipv4_address: 172.24.0.6
-    command: ["/usr/bin/supervisord","--configuration=/etc/supervisor/conf.d/supervisord.conf"]
+      - ./keys/client.pem:/etc/ssl/private/client.pem
+      - ./conf/suricata_update.conf:/etc/suricata_update.conf
+      - ./conf/crontab:/root/crontab
+    network_mode: host
+    ulimits:
+      memlock: -1
+    cap_add:
+      - NET_ADMIN
+    command: >
+      sh -c '
+        crontab /root/crontab
+        /usr/bin/supervisord --configuration=/etc/supervisor/conf.d/supervisord.conf
+      '
     restart: always
-networks:
-  edge-network:
-    driver: bridge
-    ipam:
-     driver: default
-     config:
-       - subnet: 172.24.0.0/24
+#networks:
+#  edge-network:
+#    driver: bridge
+#    ipam:
+#     driver: default
+#     config:
+#       - subnet: 172.24.0.0/24
 volumes:
   pcap-volume:
       driver_opts:

@@ -8,5 +8,5 @@ fi
 
 source /opt/ot_tools/proxy_env.txt
 
-cd /opt/edge_cron/
-python3.7 /opt/edge_cron/manage.py pcap_to_log_to_server
+cd /opt/edge_cron/ || exit
+python3.8 /opt/edge_cron/manage.py pcap_to_log_to_server
