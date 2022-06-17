@@ -502,7 +502,7 @@ logging:
 
 # Linux high speed capture support
 af-packet:
-  - interface: eth0
+  - interface: eth1
     # Number of receive threads. "auto" uses the number of cores
     #threads: auto
     # Default clusterid. AF_PACKET will load balance packets based on flow.
@@ -529,8 +529,9 @@ af-packet:
     # full then kernel will send the packet on the next socket with room available. This option
     # can minimize packet drop and increase the treated bandwidth on single intensive flow.
     #rollover: yes
+    ebpf-filter-file: /usr/libexec/suricata/ebpf/vlan_filter.bpf
     # To use the ring feature of AF_PACKET, set 'use-mmap' to yes
-    #use-mmap: yes
+    use-mmap: yes
     # Lock memory map to avoid it goes to swap. Be careful that over suscribing could lock
     # your system
     #mmap-locked: yes
@@ -542,7 +543,7 @@ af-packet:
     # the following value. If you are using flow cluster-type and have really network
     # intensive single-flow you could want to set the ring-size independently of the number
     # of threads:
-    #ring-size: 2048
+    # ring-size: 2000000
     # Block size is used by tpacket_v3 only. It should set to a value high enough to contain
     # a decent number of packets. Size is in bytes so please consider your MTU. It should be
     # a power of 2 and it must be multiple of page size (usually 4096).
@@ -1222,6 +1223,7 @@ flow-timeouts:
 #                               # is used in a rule.
 #
 stream:
+  bypass: true
   memcap: 64mb
   checksum-validation: yes      # reject wrong csums
   inline: auto                  # auto will use inline mode in IPS mode, yes or no set it statically
