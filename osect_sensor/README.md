@@ -118,22 +118,26 @@ $ vi ~/osect_sensor/conf/crontab
 @reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i enp0s8 > /dev/null 2>&1
 ```
 
-3箇所目：node.cfgを編集し、監視ネットワークを指定します。
+3箇所目：suricata.yamlを編集し、監視ネットワークを指定します。
 
 ```bash
-$ vi ~/osect_sensor/conf/node.cfg
+$ vi ~/osect_sensor/conf/suricata.yaml
 ```
 
 編集箇所
 
 ```bash
-interface=eth1
+# Linux high speed capture support
+af-packet:
+  - interface: eth1
 ```
 
 編集例：監視ネットワークインタフェースがenp0s8の場合
 
 ```bash
-interface=enp0s8
+# Linux high speed capture support
+af-packet:
+  - interface: enp0s8
 ```
 
 ### 3.2. DjangoのSECRET_KEYの設定
