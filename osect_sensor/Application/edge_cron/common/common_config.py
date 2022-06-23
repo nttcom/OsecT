@@ -60,7 +60,7 @@ ALLOWED_LOG_EXT = '.zip'
 PCAP_TO_DB_CPU = 5
 """ PCAPをログ化する際に使用するCPU数 """
 
-API_URL = 'https://coe01.internal.osect.ntt.com/paper/api/v1/createlogdata/post'
+API_URL = 'https://your url/paper/api/v1/createlogdata/post'
 """ SaaS連携用APIのURL """
 
 TIME_OUT_VAL = 120
@@ -78,5 +78,5 @@ PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 150
 CLIENT_CERTIFICATE_PATH = '/etc/ssl/private/client.pem'
 """クライアント認証のための証明書・秘密鍵"""
 
-SEND_VERSION_API_URL = 'https://coe01.internal.osect.ntt.com/paper/api/v1/sensor_status/post'
+SEND_VERSION_API_URL = 'https://your url/paper/api/v1/sensor_status/post'
 """Suricataシグネチャのバージョンを送るURL"""
