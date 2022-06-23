@@ -1,4 +1,4 @@
-From ubuntu:20.04 As build-env
+FROM ubuntu:20.04 As build-env
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 ENV DEBIAN_FRONTEND noninteractive
