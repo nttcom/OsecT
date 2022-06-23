@@ -529,7 +529,8 @@ af-packet:
     # full then kernel will send the packet on the next socket with room available. This option
     # can minimize packet drop and increase the treated bandwidth on single intensive flow.
     #rollover: yes
-    ebpf-filter-file: /usr/libexec/suricata/ebpf/vlan_filter.bpf
+    #ebpf-filter-file: /usr/libexec/suricata/ebpf/vlan_filter.bpf
+    ebpf-filter-file: /usr/libexec/suricata/ebpf/bypass_filter.bpf
     # To use the ring feature of AF_PACKET, set 'use-mmap' to yes
     use-mmap: yes
     # Lock memory map to avoid it goes to swap. Be careful that over suscribing could lock

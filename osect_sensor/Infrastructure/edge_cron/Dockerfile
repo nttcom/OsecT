@@ -68,7 +68,6 @@ RUN cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protoc
     && cp -p ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/ \
     && cp -p ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/ \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
-#    && cp -p ot_tools/suricata.yaml /opt/ot_tools/ \
     && cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/ \
     && cp -p ot_tools/yaf.awk /opt/ot_tools/
 
@@ -218,25 +217,26 @@ RUN tar xvzf libfixbuf-2.4.0.tar.gz \
     && ldconfig
 
 # suricata
-#RUN add-apt-repository ppa:oisf/suricata-6.0
-#RUN apt-get update && apt-get install -y suricata
+RUN add-apt-repository ppa:oisf/suricata-6.0
+RUN apt-get update && apt-get install -y suricata
 
 # suricataのインストール（eBPF利用のため）
-RUN git clone https://github.com/libbpf/libbpf.git \
-    && cd libbpf/src/ \
-    && echo "/usr/lib64" >> /etc/ld.so.conf.d/suricata.conf \
-    && make && make install \
-    && make install_headers \
-    && ldconfig
-RUN git clone https://github.com/OISF/suricata.git \
-    && cd suricata && git clone https://github.com/OISF/libhtp.git -b 0.5.x \
-    && ./autogen.sh \
-    && CC=clang ./configure --prefix=/usr/ --sysconfdir=/etc/ --localstatedir=/var/ --enable-ebpf --enable-ebpf-build \
-    && make clean && make \
-    && make install-full \
-    && ldconfig \
-    && mkdir -p /usr/libexec/suricata/ebpf/ \
-    && cp ebpf/vlan_filter.bpf /usr/libexec/suricata/ebpf/
+#RUN git clone https://github.com/libbpf/libbpf.git \
+#    && cd libbpf/src/ \
+#    && echo "/usr/lib64" >> /etc/ld.so.conf.d/suricata.conf \
+#    && make && make install \
+#    && make install_headers \
+#    && ldconfig
+#RUN git clone https://github.com/OISF/suricata.git \
+#    && cd suricata && git clone https://github.com/OISF/libhtp.git -b 0.5.x \
+#    && ./autogen.sh \
+#    && CC=clang ./configure --prefix=/usr/ --sysconfdir=/etc/ --localstatedir=/var/ --enable-ebpf --enable-ebpf-build \
+#    && make clean && make \
+#    && make install-full \
+#    && ldconfig \
+#    && mkdir -p /usr/libexec/suricata/ebpf/ \
+#    && cp ebpf/vlan_filter.bpf /usr/libexec/suricata/ebpf/ \
+#    && cp ebpf/bypass_filter.bpf /usr/libexec/suricata/ebpf/
 
 # suricata rules
 RUN wget -q http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.tar.gz \
