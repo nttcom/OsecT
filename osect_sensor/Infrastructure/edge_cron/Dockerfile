@@ -40,7 +40,6 @@ RUN apt-get update \
     swig \
     tshark \
     tzdata \
-    vim \
     wget \
     zlib1g-dev \
     libpcre3 \
@@ -48,54 +47,42 @@ RUN apt-get update \
     libyaml-0-2 \
     zlib1g \
     libmagic-dev \
-#    libjansson \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
-  && dpkg-reconfigure -f noninteractive tzdata
+ && dpkg-reconfigure -f noninteractive tzdata
 
 # Zeekのインストール。
 RUN git clone --recursive https://github.com/zeek/zeek -b v4.0.5
-#WORKDIR /home/work/zeek
 RUN cd zeek && ./configure --prefix=/opt/zeek && make && make install
 WORKDIR /
 RUN mkdir /opt/ot_tools
 
-
 WORKDIR /home/work
-#suricataのインストール
-#RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.4.tar.gz \
-# && tar -xf suricata-6.0.4.tar.gz \
-# && cd /home/work/suricata-6.0.4 && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && make && make install-full
-#WORKDIR /home/work
-
 
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
-RUN cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/
-RUN cp -p ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/conn/
-RUN cp -p ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protocols/http/
-RUN cp -p ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/http/
-RUN cp -p ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/
-RUN cp -p ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/
-RUN cp -p ot_tools/*.sh /opt/ot_tools/
-RUN cp -p ot_tools/suricata.yaml /opt/ot_tools/
-RUN cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/
-RUN cp -p ot_tools/yaf.awk /opt/ot_tools/
+RUN cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/ \
+    && cp -p ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/conn/ \
+    && cp -p ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protocols/http/ \
+    && cp -p ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/http/ \
+    && cp -p ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/ \
+    && cp -p ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/ \
+    && cp -p ot_tools/*.sh /opt/ot_tools/ \
+    && cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/ \
+    && cp -p ot_tools/yaf.awk /opt/ot_tools/
 
 RUN cp -pr ot_tools/p0f /opt/
 
-RUN apt purge -y python3-yaml
+RUN apt-get purge -y python3-yaml
 
-
-RUN python3.8 -m pip install --upgrade pip --no-cache-dir
-RUN python3.8 -m pip install setuptools==59.8.0
-RUN python3.8 -m pip install -r requirements.txt --no-cache-dir
-RUN mkdir /var/log/ot_tools
+RUN python3.8 -m pip install --upgrade pip --no-cache-dir \
+    && python3.8 -m pip install setuptools==59.8.0 --no-cache-dir \
+    && python3.8 -m pip install -r requirements.txt --no-cache-dir \
+    && mkdir /var/log/ot_tools
 ENV PATH $PATH:/opt/zeek/bin
-RUN zkg autoconfig && zkg install --force zeek-plugin-bacnet
 
 # Yafのインストール。
-RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
+RUN wget -q https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
  && tar xvfJ glib-2.60.7.tar.xz \
  && cd /home/work/glib-2.60.7/ && meson _build && ninja -C _build install && ldconfig \
  && cd /home/work/ot_tools/ && tar xvzf libfixbuf-2.4.0.tar.gz \
@@ -103,13 +90,10 @@ RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
  && cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz \
  && cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
 
-RUN mv crontab /root/crontab
-RUN crontab /root/crontab
-
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt
 RUN mv supervisord.conf /etc/supervisor/conf.d/
 
-#本番イメージ
+# 本番イメージ
 FROM ubuntu:20.04
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
@@ -122,12 +106,21 @@ RUN mkdir /home/work/django && mkdir /home/work/uwsgi
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     build-essential \
+    cargo \
+    clang \
     cron \
     cmake \
     gawk \
     gcc \
     g++ \
+    git \
+    libelf-dev \
+    emacs \
+    m4 \
+    libjansson-dev \
     libmount-dev \
+    libtool \
+    libpcre2-dev \
     libyaml-dev \
     libjansson-dev \
     libpcap-dev \
@@ -137,6 +130,7 @@ RUN apt-get update \
     python3-yaml \
     python3-git \
     pkg-config \
+    rustc \
     supervisor \
     tshark \
     tzdata \
@@ -148,12 +142,19 @@ RUN apt-get update \
     libmagic-dev \
     software-properties-common \
     zlib1g-dev\
+    dh-autoreconf \
+    llvm \
+    libcap-ng-dev \
+    libunwind-dev \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
- && dpkg-reconfigure -f noninteractive tzdata
+ && dpkg-reconfigure -f noninteractive tzdata \
+ && cargo install --force cbindgen
 
-#zeekのバイナリファイルをコピー
+ENV PATH $PATH:/root/.cargo/bin
+
+# zeekのバイナリファイルをコピー
 COPY --from=build-env /opt/zeek/bin /opt/zeek/bin
 COPY --from=build-env /opt/zeek/lib /opt/zeek/lib
 COPY --from=build-env /opt/zeek/etc /opt/zeek/etc
@@ -166,34 +167,19 @@ COPY --from=build-env /opt/zeek/var /opt/zeek/var
 WORKDIR /home/work
 RUN mkdir /opt/ot_tools
 
-#suricataバイナリファイルのコピー
-#COPY --from=build-env /usr/bin/suricata /usr/bin/suricata
-#COPY --from=build-env /usr/bin/suricata-update /usr/bin/suricata-update
-#COPY --from=build-env /usr/bin/suricatactl /usr/bin/suricatactl
-#COPY --from=build-env /usr/bin/suricatasc /usr/bin/suricatasc
-#COPY --from=build-env /etc/suricata /etc/suricata
-#COPY --from=build-env /var/log/suricata /var/log/suricata
-#COPY --from=build-env /var/lib/suricata /var/lib/suricata
-
-#COPY --from=build-env /usr/lib/python3.8/site-packages/suricata /usr/lib/python3.8/site-packages/suricata
-#COPY --from=build-env /usr/share/doc/suricata /usr/share/doc/suricata
-#COPY --from=build-env /usr/share/suricata /usr/share/suricata
-#COPY --from=build-env /run/suricata /run/suricata
-#COPY --from=build-env /home/work/suricata-6.0.4/libhtp/htp/.libs/libhtp.so.2.0.0 /lib
-
-# Zeel、Suricata、Yafの資材配置。
+# Zeel、Suricata、Yafの資材配置
 WORKDIR /
 COPY --from=build-env /home/work/ot_tools /home/work/ot_tools
 COPY --from=build-env /home/work/ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/
 COPY --from=build-env /home/work/ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/conn/
 COPY --from=build-env /home/work/ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protocols/http/
 COPY --from=build-env /home/work/ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/http/
-COPY --from=build-env /home/work/ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/
-COPY --from=build-env /home/work/ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/
-COPY --from=build-env /home/work/ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/base/protocols/
-COPY --from=build-env /home/work/ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/base/protocols/
+COPY --from=build-env /home/work/ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/base/protocols/arp.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/ns.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/base/protocols/main_bacnet.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/base/protocols/consts_bacnet.zeek
 COPY --from=build-env /home/work/ot_tools/*.sh /opt/ot_tools/
-COPY --from=build-env /home/work/ot_tools/suricata.yaml /opt/ot_tools/
+# COPY --from=build-env /home/work/ot_tools/suricata.yaml /opt/ot_tools/
 COPY --from=build-env /home/work/ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/
 COPY --from=build-env /home/work/ot_tools/yaf.awk /opt/ot_tools/
 COPY --from=build-env /home/work/ot_tools/p0f /home/work/ot_tools/
@@ -202,47 +188,72 @@ RUN cp -pr /home/work/ot_tools/p0f /opt/
 
 WORKDIR /home/work
 
-RUN apt purge -y python3-yaml
+RUN apt-get purge -y python3-yaml
 
-RUN python3.8 -m pip install --upgrade pip --no-cache-dir
-RUN python3.8 -m pip install setuptools==59.8.0
-RUN python3.8 -m pip install -r requirements.txt --no-cache-dir
-RUN mkdir /var/log/ot_tools
-#RUN pip install django
+RUN python3.8 -m pip install --upgrade pip --no-cache-dir \
+    && python3.8 -m pip install setuptools==59.8.0 --no-cache-dir \
+    && python3.8 -m pip install -r requirements.txt --no-cache-dir \
+    && mkdir /var/log/ot_tools
 
+# zkgのバイナリをコピー
 COPY --from=build-env /usr/local/bin/zkg  /usr/local/bin/zkg
-
 ENV PATH $PATH:/opt/zeek/bin
 
-# Yafバイナリファイルのコピー。
-#COPY --from=build-env /usr/local/bin/yaf /usr/local/bin/yaf
-#COPY --from=build-env /usr/local/bin/yafscii /usr/local/bin/yafscii
-#RUN ldconfig
-
-# Yafのインストール。バイナリファイルのコピーでは動作確認とれなかったため。
-RUN wget https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz
+# Yafのインストール（バイナリファイルのコピーでは動作確認とれなかったため）
+RUN wget -q https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz
 RUN tar xvfJ glib-2.60.7.tar.xz
-RUN cd /home/work/glib-2.60.7/ && meson _build && ninja -C _build install && ldconfig
-RUN cd /home/work/ot_tools/ && tar xvzf libfixbuf-2.4.0.tar.gz
-RUN cd /home/work/ot_tools/libfixbuf-2.4.0/ && ./configure && make && make install
-RUN cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz
-RUN cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
+WORKDIR /home/work/glib-2.60.7/
+RUN meson _build \
+    && ninja -C _build install \
+    && ldconfig
+WORKDIR /home/work/ot_tools/
+RUN tar xvzf libfixbuf-2.4.0.tar.gz \
+    && cd /home/work/ot_tools/libfixbuf-2.4.0/ \
+    && ./configure && make && make install \
+    && cd /home/work/ot_tools/ \
+    && tar xvzf yaf-2.11.0.tar.gz \
+    && cd /home/work/ot_tools/yaf-2.11.0/ \
+    && ./configure && make && make install \
+    && ldconfig
 
 # suricata
 RUN add-apt-repository ppa:oisf/suricata-6.0
 RUN apt-get update && apt-get install -y suricata
 
+# suricataのインストール（eBPF利用のため）
+#RUN git clone https://github.com/libbpf/libbpf.git \
+#    && cd libbpf/src/ \
+#    && echo "/usr/lib64" >> /etc/ld.so.conf.d/suricata.conf \
+#    && make && make install \
+#    && make install_headers \
+#    && ldconfig
+#RUN git clone https://github.com/OISF/suricata.git \
+#    && cd suricata && git clone https://github.com/OISF/libhtp.git -b 0.5.x \
+#    && ./autogen.sh \
+#    && CC=clang ./configure --prefix=/usr/ --sysconfdir=/etc/ --localstatedir=/var/ --enable-ebpf --enable-ebpf-build \
+#    && make clean && make \
+#    && make install-full \
+#    && ldconfig \
+#    && mkdir -p /usr/libexec/suricata/ebpf/ \
+#    && cp ebpf/vlan_filter.bpf /usr/libexec/suricata/ebpf/ \
+#    && cp ebpf/bypass_filter.bpf /usr/libexec/suricata/ebpf/
+
 # suricata rules
-RUN wget http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.tar.gz \
- && tar -xzvf emerging.rules.tar.gz \
- && mkdir -p /var/lib/suricata/rules \
- && rm rules/*ja3.rules \
- && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
+RUN wget -q http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.tar.gz \
+    && tar -xzvf emerging.rules.tar.gz \
+    && mkdir -p /var/lib/suricata/rules \
+    && rm rules/*ja3.rules \
+    && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
-RUN mv crontab /root/crontab \
- && crontab /root/crontab \
- && printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
- && mv supervisord.conf /etc/supervisor/conf.d/
+WORKDIR /home/work
+RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
+    && mv supervisord.conf /etc/supervisor/conf.d/
 
-RUN /opt/zeek/bin/zkg refresh
-RUN /opt/zeek/bin/zkg install icsnpp-modbus --force
+RUN zkg autoconfig && zkg install --force --skiptest \
+    zeek-plugin-bacnet \
+    zeek-plugin-enip \
+    zeek-plugin-profinet \
+    zeek-plugin-s7comm \
+    icsnpp-ethercat \
+    icsnpp-opcua-binary \
+    icsnpp-modbus

@@ -80,7 +80,9 @@ $ mv ~/OsecT/osect_sensor ~/
 
 ### 3.1. 監視ネットワークインタフェースの設定
 
-設定ファイルを編集し、監視ネットワークを指定します。
+設定箇所は3箇所です。
+
+1箇所目：設定ファイルを編集し、監視ネットワークを指定します。
 
 ```bash
 $ vi ~/osect_sensor/Application/edge_tcpdump/common/app_config.py
@@ -96,6 +98,46 @@ TCPDUMP_SHELL_COMMAND = ['/usr/sbin/tcpdump', '-w', 'realtime-%F-%T.pcap', '-G',
 
 ```python
 TCPDUMP_SHELL_COMMAND = ['/usr/sbin/tcpdump', '-w', 'realtime-%F-%T.pcap', '-G', '60', '-ni', 'enp0s8', '-s', '0', '-z', '/opt/ot_tools/capture.sh']
+```
+
+2箇所目：crontabを編集し、監視ネットワークを指定します。
+
+```bash
+$ vi ~/osect_sensor/conf/crontab
+```
+
+編集箇所
+
+```bash
+@reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i eth1 > /dev/null 2>&1
+```
+
+編集例：監視ネットワークインタフェースがenp0s8の場合
+
+```bash
+@reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i enp0s8 > /dev/null 2>&1
+```
+
+3箇所目：suricata.yamlを編集し、監視ネットワークを指定します。
+
+```bash
+$ vi ~/osect_sensor/conf/suricata.yaml
+```
+
+編集箇所
+
+```bash
+# Linux high speed capture support
+af-packet:
+  - interface: eth1
+```
+
+編集例：監視ネットワークインタフェースがenp0s8の場合
+
+```bash
+# Linux high speed capture support
+af-packet:
+  - interface: enp0s8
 ```
 
 ### 3.2. DjangoのSECRET_KEYの設定

@@ -6,3 +6,6 @@
 *.cert
 *.crt
 *.pem
+*.log
+*.pcap
+*~
