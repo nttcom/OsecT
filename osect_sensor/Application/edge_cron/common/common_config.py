@@ -1,4 +1,4 @@
-LABEL_ID = 'suricata'
+LABEL_ID = ''
 """ 複数スイッチ対応用のラベルID """
 
 PCAP_UPLOADING_FILE_PATH = 'paper/sc_src/input/pcap/uploading/'
