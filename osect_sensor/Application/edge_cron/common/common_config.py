@@ -20,7 +20,7 @@ PCAP_SERVER_UPLOADING_FILE_PATH = 'paper/sc_src/input/pcap/server_uploading/'
 """ ログ解析が終わったディレクトリをuploadするための一時領域 """
 
 SURICATA_ENABLE = True
-""" SURICATA使用フラグ """
+""" SURICATA使用フラグ（リアルタイム処理の場合はログを転送） """
 
 FUNC_RESTRICTION = False
 """ 機能制限版（建設版）フラグ。Trueの場合機能制限 """

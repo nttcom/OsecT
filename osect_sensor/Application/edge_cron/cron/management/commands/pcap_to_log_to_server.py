@@ -25,7 +25,7 @@ from common.common_config import (
     SURICATA_YAML,
     SURICATA_ENABLE,
     FUNC_RESTRICTION,
-    BACNET_SHELL_COMMAND,
+    #    BACNET_SHELL_COMMAND,
     YAF_ENABLE,
     YAF_SHELL_COMMAND,
     BACNET_ENABLE,
@@ -148,6 +148,8 @@ def wrapper_log_function(func_type, analyze_full_path, dir_name, pcap_name):
             + " "
             + pcap_name
             + " "
+            + str(BACNET_ENABLE),
+            + " "
             + str(MODBUS_ENABLE),
             shell=True,
         )
@@ -173,21 +175,22 @@ def wrapper_log_function(func_type, analyze_full_path, dir_name, pcap_name):
             PCAP_ANALYZE_FILE_PATH + pcap_name,
             PCAP_ANALYZE_FILE_PATH + dir_name,
         )
-    elif func_type == 3:
-        if FUNC_RESTRICTION is False:
-            # bacnet用ログの作成処理
-            logger.info("execute: " + BACNET_SHELL_COMMAND)
-            proc = Popen(
-                BACNET_SHELL_COMMAND
-                + " "
-                + analyze_full_path
-                + " "
-                + dir_name
-                + " "
-                + pcap_name,
-                shell=True,
-            )
-            proc.wait()
+# tshark -> zeek-plugin-bacnetに移行したため
+#    elif func_type == 3:
+#        if FUNC_RESTRICTION is False:
+#            # bacnet用ログの作成処理
+#            logger.info("execute: " + BACNET_SHELL_COMMAND)
+#            proc = Popen(
+#                BACNET_SHELL_COMMAND
+#                + " "
+#                + analyze_full_path
+#                + " "
+#                + dir_name
+#                + " "
+#                + pcap_name,
+#                shell=True,
+#            )
+#            proc.wait()
     elif func_type == 4:
         if SURICATA_ENABLE:
             # suricataログの処理
@@ -290,11 +293,11 @@ def pcap_to_log(pcap_list):
         try:
             if YAF_ENABLE:
                 func_type_list = (
-                    [0, 1, 2, 3, 4, 5] if BACNET_ENABLE else [0, 1, 2, 4, 5]
+                    [0, 1, 2, 4, 5]
                 )
             else:
                 func_type_list = (
-                    [0, 1, 2, 3, 4] if BACNET_ENABLE else [0, 1, 2, 4]
+                    [0, 1, 2, 4]
                 )
             analyze_full_path_list = [analyze_full_path] * len(func_type_list)
             dir_name_list = [dir_name] * len(func_type_list)
