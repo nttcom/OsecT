@@ -31,6 +31,9 @@ YAF_ENABLE = True
 BACNET_ENABLE = True
 """ Bacnetトラフィックを取り込むか否か """
 
+MODBUS_ENABLE = False
+""" Modbusトラフィックを取り込むか否か """
+
 BRO_SHELL_COMMAND = '/opt/ot_tools/bro.sh'
 """broのログ取得コマンド"""
 
@@ -69,7 +72,7 @@ PCAP_COMPLETE_COMPRESSION_LIMIT_DATE = 365
 PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_DATE = 365
 """complete_archives配下の保持期限切れファイルの削除対象にする日付（日）"""
 
-PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 180
+PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 150
 """completeとcomplete_archivesの保持容量上限値（GB）"""
 
 CLIENT_CERTIFICATE_PATH = '/etc/ssl/private/client.pem'
