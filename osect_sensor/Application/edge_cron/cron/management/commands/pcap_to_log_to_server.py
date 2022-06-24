@@ -1,5 +1,6 @@
 import gc
 import glob
+import io
 import logging
 import math
 import mimetypes
@@ -7,18 +8,21 @@ import os
 import platform
 import random
 import shutil
+import tarfile
 import time
-import zipfile
 from multiprocessing import Pool
 from subprocess import Popen
 
 import requests
+import zstandard as zstd
 from common.common_config import (
-    ALLOWED_PCAP_EXT,  # BACNET_SHELL_COMMAND,
+    ALLOWED_LOG_EXT,  # BACNET_SHELL_COMMAND,
+    ALLOWED_PCAP_EXT,
     API_URL,
     BACNET_ENABLE,
     BRO_SHELL_COMMAND,
     CLIENT_CERTIFICATE_PATH,
+    COMPRESS_LEVEL,
     FUNC_RESTRICTION,
     LABEL_ID,
     MODBUS_ENABLE,
@@ -96,21 +100,33 @@ class Command(BaseCommand):
         # ログファイルを圧縮する
         for log_dir in complete_dir_list:
             dir_name = os.path.basename(log_dir)
-            zip_name = dir_name + ".zip"
-            with zipfile.ZipFile(
-                PCAP_SERVER_UPLOADING_FILE_PATH + zip_name,
-                "w",
-                compression=zipfile.ZIP_DEFLATED,
-            ) as new_zip:
+
+            bio = io.BytesIO()
+            # アーカイブ (tar)
+            with tarfile.open(
+                fileobj=bio,
+                mode="w",
+            ) as tar:
                 for file_name in os.listdir(log_dir):
-                    new_zip.write(
-                        log_dir + os.sep + file_name, arcname=file_name
+                    tar.add(
+                        os.path.join(log_dir, file_name), arcname=file_name
                     )
 
+            # 圧縮 (zstandard)
+            compress_name = dir_name + ALLOWED_LOG_EXT
+            cctx = zstd.ZstdCompressor(level=COMPRESS_LEVEL)
+            with zstd.open(
+                PCAP_SERVER_UPLOADING_FILE_PATH + compress_name,
+                "wb",
+                cctx=cctx,
+            ) as zst:
+                zst.write(bio.getvalue())
+
         # 送信するログファイルのリストを作成する。送信漏れを考慮しディレクトリ内にあるzipファイルすべてを探索する
-        zip_list = sorted(
+        tar_list = sorted(
             glob.glob(
-                PCAP_SERVER_UPLOADING_FILE_PATH + "**/*.zip", recursive=True
+                PCAP_SERVER_UPLOADING_FILE_PATH + "**/*" + ALLOWED_LOG_EXT,
+                recursive=True,
             )
         )
         end_time = time.perf_counter()
@@ -122,12 +138,12 @@ class Command(BaseCommand):
         logger.info("sleep " + str(sleep_time) + "s")
 
         try:
-            send_server(zip_list)
+            send_server(tar_list)
         except Exception as e:
-            logger.error("can not send zip file. " + str(e))
+            logger.error("can not send compressed file. " + str(e))
 
         gc.collect()
-        log_info(start, "end send log zip")
+        log_info(start, "end send compressed log")
         logger.info("pcap to log done")
 
 
@@ -357,7 +373,7 @@ def move_pcap_dir(log_dir_list, dst_dir):
 def send_server(zip_list):
     """
     ログファイルをサーバーに送付する。
-    :param zip_list: 送付対象のZIPファイルのlist
+    :param zip_list: 送付対象のtar.zstファイルのlist
     """
 
     for zip_file in zip_list:
@@ -380,6 +396,6 @@ def send_server(zip_list):
                 )
             )
 
-        logger.info("send zip file: " + file_name)
-        # ファイルが正常に送信できた場合は、zipファイルを削除する
+        logger.info("send compressed file: " + file_name)
+        # ファイルが正常に送信できた場合は、tar.zstファイルを削除する
         os.remove(zip_file)
