@@ -1,46 +1,42 @@
+import gc
 import glob
+import logging
+import math
+import mimetypes
 import os
 import platform
+import random
 import shutil
 import time
-import logging
 import zipfile
-import mimetypes
-import gc
-import requests
-import random
-import math
+from multiprocessing import Pool
 from subprocess import Popen
 
-from django.core.management.base import BaseCommand
-
+import requests
 from common.common_config import (
-    PCAP_UPLOADED_FILE_PATH,
+    ALLOWED_PCAP_EXT,  # BACNET_SHELL_COMMAND,
+    API_URL,
+    BACNET_ENABLE,
     BRO_SHELL_COMMAND,
+    CLIENT_CERTIFICATE_PATH,
+    FUNC_RESTRICTION,
+    LABEL_ID,
+    MODBUS_ENABLE,
+    P0F_SHELL_COMMAND,
     PCAP_ANALYZE_FILE_PATH,
     PCAP_COMPLETE_FILE_PATH,
-    P0F_SHELL_COMMAND,
-    ALLOWED_PCAP_EXT,
+    PCAP_SERVER_UPLOADING_FILE_PATH,
+    PCAP_TO_DB_CPU,
+    PCAP_UPLOADED_FILE_PATH,
+    SURICATA_ENABLE,
     SURICATA_SHELL_COMMAND,
     SURICATA_YAML,
-    SURICATA_ENABLE,
-    FUNC_RESTRICTION,
-    #    BACNET_SHELL_COMMAND,
     YAF_ENABLE,
     YAF_SHELL_COMMAND,
-    BACNET_ENABLE,
-    MODBUS_ENABLE,
-    PCAP_TO_DB_CPU,
-    PCAP_SERVER_UPLOADING_FILE_PATH,
-    API_URL,
-    LABEL_ID,
-    CLIENT_CERTIFICATE_PATH,
 )
-
 from common.common_function import pcap2log
+from django.core.management.base import BaseCommand
 from edge_cron.settings import BASE_DIR
-from multiprocessing import Pool
-
 
 logger = logging.getLogger("edge_cron")
 
@@ -123,7 +119,7 @@ class Command(BaseCommand):
         processing_time = math.ceil(end_time - start_time)
         sleep_time = max(0, (random.randrange(1, 60, 1) - processing_time))
         time.sleep(sleep_time)
-        logger.info('sleep ' + str(sleep_time) + 's')
+        logger.info("sleep " + str(sleep_time) + "s")
 
         try:
             send_server(zip_list)
