@@ -148,7 +148,7 @@ def wrapper_log_function(func_type, analyze_full_path, dir_name, pcap_name):
             + " "
             + pcap_name
             + " "
-            + str(BACNET_ENABLE),
+            + str(BACNET_ENABLE)
             + " "
             + str(MODBUS_ENABLE),
             shell=True,
