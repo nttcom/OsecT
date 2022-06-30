@@ -31,6 +31,9 @@ YAF_ENABLE = True
 BACNET_ENABLE = True
 """ Bacnetトラフィックを取り込むか否か """
 
+MODBUS_ENABLE = False
+""" Modbusトラフィックを取り込むか否か """
+
 BRO_SHELL_COMMAND = '/opt/ot_tools/bro.sh'
 """broのログ取得コマンド"""
 
@@ -57,7 +60,7 @@ ALLOWED_LOG_EXT = '.zip'
 PCAP_TO_DB_CPU = 5
 """ PCAPをログ化する際に使用するCPU数 """
 
-API_URL = 'https://coe01.internal.osect.ntt.com/paper/api/v1/createlogdata/post'
+API_URL = 'https://l5g.internal.osect.ntt.com/paper/api/v1/createlogdata/post'
 """ SaaS連携用APIのURL """
 
 TIME_OUT_VAL = 120
@@ -69,11 +72,11 @@ PCAP_COMPLETE_COMPRESSION_LIMIT_DATE = 365
 PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_DATE = 365
 """complete_archives配下の保持期限切れファイルの削除対象にする日付（日）"""
 
-PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 180
+PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 150
 """completeとcomplete_archivesの保持容量上限値（GB）"""
 
 CLIENT_CERTIFICATE_PATH = '/etc/ssl/private/client.pem'
 """クライアント認証のための証明書・秘密鍵"""
 
-SEND_VERSION_API_URL = 'https://coe01.internal.osect.ntt.com/paper/api/v1/sensor_status/post'
+SEND_VERSION_API_URL = 'https://l5g.internal.osect.ntt.com/paper/api/v1/sensor_status/post'
 """Suricataシグネチャのバージョンを送るURL"""

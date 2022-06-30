@@ -29,6 +29,7 @@ from common.common_config import (
     YAF_ENABLE,
     YAF_SHELL_COMMAND,
     BACNET_ENABLE,
+    MODBUS_ENABLE,
     PCAP_TO_DB_CPU,
     PCAP_SERVER_UPLOADING_FILE_PATH,
     API_URL,
