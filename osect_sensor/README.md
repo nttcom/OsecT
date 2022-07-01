@@ -110,12 +110,14 @@ $ vi ~/osect_sensor/conf/crontab
 
 ```bash
 @reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i eth1 > /dev/null 2>&1
+@reboot /usr/local/bin/yaf --mac --live pcap --in eth1 --rotate 60 --out /var/log/yaf/flow
 ```
 
 編集例：監視ネットワークインタフェースがenp0s8の場合
 
 ```bash
 @reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i enp0s8 > /dev/null 2>&1
+@reboot /usr/local/bin/yaf --mac --live pcap --in enp0s8 --rotate 60 --out /var/log/yaf/flow
 ```
 
 3箇所目：suricata.yamlを編集し、監視ネットワークを指定します。

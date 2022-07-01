@@ -170,6 +170,7 @@ RUN mkdir /opt/ot_tools
 # Zeel、Suricata、Yafの資材配置
 WORKDIR /
 COPY --from=build-env /home/work/ot_tools /home/work/ot_tools
+# バッチ処理の場合
 COPY --from=build-env /home/work/ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/
 COPY --from=build-env /home/work/ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/conn/
 COPY --from=build-env /home/work/ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protocols/http/
@@ -178,6 +179,15 @@ COPY --from=build-env /home/work/ot_tools/broscript/arp.zeek /opt/zeek/share/zee
 COPY --from=build-env /home/work/ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/base/protocols/ns.zeek
 COPY --from=build-env /home/work/ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/base/protocols/main_bacnet.zeek
 COPY --from=build-env /home/work/ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/base/protocols/consts_bacnet.zeek
+# リアルタイム処理の場合
+COPY --from=build-env /home/work/ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/site/protocols/conn/
+COPY --from=build-env /home/work/ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/site/protocols/conn/
+COPY --from=build-env /home/work/ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/site/protocols/http/
+COPY --from=build-env /home/work/ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/site/protocols/http/
+COPY --from=build-env /home/work/ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/site/arp.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/site/ns.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/site/main_bacnet.zeek
+COPY --from=build-env /home/work/ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/site/consts_bacnet.zeek
 COPY --from=build-env /home/work/ot_tools/*.sh /opt/ot_tools/
 # COPY --from=build-env /home/work/ot_tools/suricata.yaml /opt/ot_tools/
 COPY --from=build-env /home/work/ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/
@@ -185,6 +195,7 @@ COPY --from=build-env /home/work/ot_tools/yaf.awk /opt/ot_tools/
 COPY --from=build-env /home/work/ot_tools/p0f /home/work/ot_tools/
 
 RUN cp -pr /home/work/ot_tools/p0f /opt/
+RUN mkdir /var/log/yaf
 
 WORKDIR /home/work
 
@@ -256,4 +267,5 @@ RUN zkg autoconfig && zkg install --force --skiptest \
     zeek-plugin-s7comm \
     icsnpp-ethercat \
     icsnpp-opcua-binary \
-    icsnpp-modbus
+    icsnpp-modbus \
+    zeek/corelight/zeek-long-connections
