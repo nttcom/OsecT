@@ -79,7 +79,7 @@ def exec_complete_to_archives(logger):
             logger.info("capacity over: %s" % (target_capacity_over))
     else:
         logger.info(
-            "There is no capacity over file. %s/%s GB"
+            "There is no capacity over file. %.9g/%s GB"
             % (total_size, PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY)
         )
 
