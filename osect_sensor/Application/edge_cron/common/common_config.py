@@ -54,8 +54,11 @@ SURICATA_YAML = '/opt/ot_tools/suricata.yaml'
 ALLOWED_PCAP_EXT = '.pcap,.cap,.pkt'
 """ アップロード出来るPCAPファイルの拡張子 """
 
-ALLOWED_LOG_EXT = '.zip'
+ALLOWED_LOG_EXT = ".tar.zst"
 """ アップロード出来るログファイルの拡張子 """
+
+COMPRESS_LEVEL = 10
+""" アップロードする圧縮ファイルの圧縮レベル """
 
 PCAP_TO_DB_CPU = 5
 """ PCAPをログ化する際に使用するCPU数 """
