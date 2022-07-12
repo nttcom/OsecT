@@ -1,6 +1,17 @@
 LABEL_ID = ''
 """ 複数スイッチ対応用のラベルID """
 
+# ---
+TUNNEL_ENABLE = True
+""" カプセル化解除機能のon/off """
+
+SURICATA_CAP_IF = 'enp1s0'
+""" リアルタイム処理でキャプチャするIF """
+
+PCAP_BEFORE_FILE_PATH = 'paper/sc_src/input/pcap/before_uploaded/'
+""" カプセル化されたpcapを配置するパス"""
+# ---
+
 PCAP_UPLOADING_FILE_PATH = 'paper/sc_src/input/pcap/uploading/'
 """pcapのアップロード先の配置パス"""
 

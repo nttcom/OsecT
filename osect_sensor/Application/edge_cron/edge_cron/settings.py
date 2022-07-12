@@ -153,6 +153,19 @@ LOGGING = {
             # 'interval': 1,
             "formatter": "text_format",
         },
+        "tunnel_batch_log": {
+            "level": "INFO",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": "/var/log/ot_tools/tunnel_batch.log",
+            "when": "midnight",
+            # 'interval': 1,
+            "formatter": "text_format",
+        },
+        "tunnel_realtime_log": {
+            "level": "INFO",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": "/var/log/ot_tools/tunnel_realtime.log",
+        },
     },
     "loggers": {
         "edge_cron": {
@@ -170,6 +183,18 @@ LOGGING = {
         "edge_send_version": {
             "handlers": ["edge_send_version_log"],
             "FIELD3": "edge_send_version",
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        "tunnel_batch": {
+            "handlers": ["tunnel_batch_log"],
+            "FIELD3": "tunnel_batch",
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        "tunnel_realtime": {
+            "handlers": ["tunnel_realtime_log"],
+            "FIELD3": "tunnel_realtime",
             "level": "DEBUG",
             "propagate": False,
         },
