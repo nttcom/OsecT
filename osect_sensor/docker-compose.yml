@@ -12,7 +12,7 @@ services:
   #  mem_limit: 128g
   #  oom_kill_disable: true
   edge_cron:
-    image: cron:zeek_realtime_reduce
+    image: cron:zeek_realtime_reduce_basechange
     build: "./Infrastructure/edge_cron/"
     volumes:
       - ./Application/edge_cron:/opt/edge_cron

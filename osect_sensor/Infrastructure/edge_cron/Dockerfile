@@ -55,7 +55,7 @@ RUN apt-get update \
 
 # Zeekのインストール
 RUN git clone --recursive https://github.com/zeek/zeek -b v4.0.5
-RUN cd zeek && ./configure --prefix=/opt/zeek && make && make install
+RUN cd zeek && ./configure --prefix=/opt/zeek --build-type=Release && make && make install
 
 # pip関係のインストール
 WORKDIR /home/work
@@ -75,11 +75,11 @@ RUN wget -q https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
  && cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
 
 # suricataのインストール（eBPFなし）
-#RUN add-apt-repository ppa:oisf/suricata-6.0 \
-#    &&  apt-get update \
-#    && 	apt-get install -y --no-install-recommends suricata \
-#    && 	apt-get -y clean \
-#    && rm -rf /var/lib/apt/lists/*
+RUN add-apt-repository ppa:oisf/suricata-6.0 \
+    &&  apt-get update \
+    && 	apt-get install -y --no-install-recommends suricata \
+    && 	apt-get -y clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # suricata rules
 RUN wget -q http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.tar.gz \
@@ -115,7 +115,7 @@ RUN apt-get update \
 #    bison \
 #    cmake \
     cron \
-    cargo \
+#    cargo \
 #    build-essential \
 #    flex \
 #    gawk \
@@ -132,8 +132,8 @@ RUN apt-get update \
 #    ninja-build \
 #    make \
 #    pkg-config \
-    python3-dev \
-    python3-pip \
+#    python3-dev \
+#    python3-pip \
 #    python3-yaml \
     python3-semantic-version \
 #    python3-setuptools \
@@ -148,7 +148,7 @@ RUN apt-get update \
 #    libpcre3-dbg \
 #    libyaml-0-2 \
 #    zlib1g \
-    software-properties-common \
+#    software-properties-common \
 #    libmagic-dev \
 #    linux-headers-$(uname -r) \
 #    kmod \
@@ -161,10 +161,10 @@ RUN apt-get update \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
- && dpkg-reconfigure -f noninteractive tzdata \
- && cargo install --force cbindgen
+ && dpkg-reconfigure -f noninteractive tzdata
+# && cargo install --force cbindgen
 
-ENV PATH $PATH:/root/.cargo/bin
+#ENV PATH $PATH:/root/.cargo/bin
 
 # PF_RINGのインストール
 #WORKDIR /usr/src
@@ -181,15 +181,21 @@ ENV PATH $PATH:/root/.cargo/bin
 
 # Zeekのバイナリファイルをコピー
 COPY --from=build-env /opt/zeek /opt/zeek
-WORKDIR /
 ENV PATH $PATH:/opt/zeek/bin
+#WORKDIR /
 
 # Yafを含むバイナリファイルをコピー
 COPY --from=build-env /usr/local/bin /usr/local/bin
 COPY --from=build-env /usr/local/lib /usr/local/lib
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/lib
 RUN mkdir /var/log/yaf
 
-# Suricataはほぼ無駄がないためそのままインストール
+# Suricataのバイナリファイルをコピー
+COPY --from=build-env /usr/bin/suricata /usr/bin/suricata
+#COPY --from=build-env /usr/bin/suricata-update /usr/bin/suricata-update
+COPY --from=build-env /usr/bin/suricatactl /usr/bin/suricatactl
+COPY --from=build-env /usr/bin/suricatasc /usr/bin/suricasc
+COPY --from=build-env /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
 # Suricata rulesをコピー
 RUN mkdir -p /var/lib/suricata/rules
 COPY --from=build-env /var/lib/suricata/rules/suricata.rules /var/lib/suricata/rules/suricata.rules
@@ -201,39 +207,13 @@ COPY --from=build-env /var/lib/suricata/rules/suricata.rules /var/lib/suricata/r
 #RUN mkdir /opt/ot_tools
 #ENV PATH $PATH:/opt/zeek/bin
 
-# Zeekのインストール（PF_RINGなし）
-#RUN git clone --recursive https://github.com/zeek/zeek -b v4.0.5
-#RUN cd zeek && ./configure --prefix=/opt/zeek && make && make install
-#WORKDIR /
-#RUN mkdir /opt/ot_tools
-#ENV PATH $PATH:/opt/zeek/bin
-
-# これが発生するためやむなしでインストール
-# ModuleNotFoundError: No module named 'zeekpkg'
-#WORKDIR /home/work
-#RUN apt-get purge -y python3-yaml \
-#&&  python3.8 -m pip install --upgrade pip --no-cache-dir \
-#    && python3.8 -m pip install setuptools==59.8.0 --no-cache-dir \
-#    && python3.8 -m pip install -r requirements.txt --no-cache-dir \
-#    && mkdir /var/log/ot_tools
-
-WORKDIR /home/work
-# Yafのインストール
-#RUN wget -q https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
-# && tar xvfJ glib-2.60.7.tar.xz \
-# && cd /home/work/glib-2.60.7/ && meson _build && ninja -C _build install && ldconfig \
-# && cd /home/work/ot_tools/ && tar xvzf libfixbuf-2.4.0.tar.gz \
-# && cd /home/work/ot_tools/libfixbuf-2.4.0/ && ./configure && make && make install \
-# && cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz \
-# && cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
-
 # suricataのインストール（eBPFなし）
-RUN add-apt-repository ppa:oisf/suricata-6.0 \
-    &&  apt-get update \
-    && 	apt-get install -y --no-install-recommends suricata \
-    && 	apt-get --purge remove -y software-properties-common \
-    && 	apt-get -y clean \
-    && rm -rf /var/lib/apt/lists/*
+#RUN add-apt-repository ppa:oisf/suricata-6.0 \
+#    &&  apt-get update \
+#    && 	apt-get install -y --no-install-recommends suricata \
+#    && 	apt-get --purge remove -y software-properties-common cargo\
+#    && 	apt-get -y clean \
+#    && rm -rf /var/lib/apt/lists/*
 
 # suricataのインストール（eBPFあり）
 #RUN git clone https://github.com/libbpf/libbpf.git \
@@ -277,16 +257,5 @@ RUN mkdir /opt/ot_tools \
     && cp -pr ot_tools/p0f /opt/
 
 # 環境変数
-RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
+RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/#roxy_env.txt \
     && mv supervisord.conf /etc/supervisor/conf.d/
-
-# zkgパッケージ（必要なものだけ入れる）
-#RUN zkg autoconfig && zkg install --force --skiptest \
-#    zeek-plugin-bacnet \
-#    zeek-plugin-enip \
-#    zeek-plugin-profinet \
-#    zeek-plugin-s7comm \
-#    icsnpp-ethercat \
-#    icsnpp-opcua-binary \
-#    icsnpp-modbus \
-#    zeek/corelight/zeek-long-connections
