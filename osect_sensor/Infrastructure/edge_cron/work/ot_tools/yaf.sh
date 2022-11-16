@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 merge_log () {
     cat $1 > $2
     sed -i '/^#/d' $2
