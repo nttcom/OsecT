@@ -144,7 +144,7 @@ af-packet:
   - interface: enp0s8
 ```
 
-4箇所目：node.cfgを編集し、監視ネットワークを指定します。
+4箇所目：node.cfgを編集し、監視ネットワークを指定します。合わせて、割り当てるCPUコア数も指定します。
 
 ```bash
 $ vi ~/osect_sensor/conf/node.cfg
@@ -156,16 +156,22 @@ $ vi ~/osect_sensor/conf/node.cfg
 [worker-1]
 type=worker
 host=localhost
-interface=eth1
+interface=af_packet::eth1
+lb_method=custom
+lb_procs=6
+pin_cpus=0,1,2,3,4,5
 ```
 
-編集例：監視ネットワークインタフェースがenp0s8の場合
+編集例：監視ネットワークインタフェースがenp0s8, CPUコア数が6の場合
 
 ```bash
 [worker-1]
 type=worker
 host=localhost
-interface=enp0s8
+interface=af_packet::enp0s8
+lb_method=custom
+lb_procs=6
+pin_cpus=0,1,2,3,4,5
 ```
 
 ### 3.2. DjangoのSECRET_KEYの設定
