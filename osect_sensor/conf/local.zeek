@@ -110,8 +110,8 @@ redef digest_salt = "Please change this value.";
 
 @load arp
 @load ns
-@load consts_bacnet
-@load main_bacnet
+#@load consts_bacnet
+#@load main_bacnet
 #@load zeek-plugin-enip
 #@load zeek-plugin-profinet
 #@load zeek-plugin-s7comm
