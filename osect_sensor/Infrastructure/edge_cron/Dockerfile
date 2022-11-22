@@ -183,3 +183,7 @@ RUN mkdir /opt/ot_tools \
 # 環境変数
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
     && mv supervisord.conf /etc/supervisor/conf.d/
+
+# spicyコード配置
+RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /opt/zeek/lib/zeek-spicy/modules/ \
+    && cp -p ot_tools/broscript/CIFS_B/CIFS_B.zeek /opt/zeek/share/zeek/site/

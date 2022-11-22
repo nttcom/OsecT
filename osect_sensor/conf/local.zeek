@@ -119,3 +119,4 @@ redef digest_salt = "Please change this value.";
 #@load icsnpp-modbus
 @load zeek-long-connections
 @load zeek-ap_packet-plugin
+@load CIFS_B
