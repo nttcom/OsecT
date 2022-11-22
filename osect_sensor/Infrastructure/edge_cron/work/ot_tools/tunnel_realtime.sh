@@ -9,4 +9,5 @@ fi
 source /opt/ot_tools/proxy_env.txt
 
 cd /opt/edge_cron/ || exit
+#pypy3 /opt/edge_cron/manage.py tunnel_realtime
 python3.8 /opt/edge_cron/manage.py tunnel_realtime

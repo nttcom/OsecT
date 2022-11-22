@@ -47,7 +47,7 @@ def gtpu_send(pkt, send_iface):
         new_pkt = b / a
 
     try:
-        sendp(new_pkt, iface=send_iface, verbose=0)
+        sendpfast(new_pkt, iface=send_iface)
     except OSError:
         print("MTU Error", len(new_pkt))
     except KeyboardInterrupt:

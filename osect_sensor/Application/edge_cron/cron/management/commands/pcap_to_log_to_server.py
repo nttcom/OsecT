@@ -38,7 +38,7 @@ from common.common_config import (
     YAF_ENABLE,
     YAF_SHELL_COMMAND,
 )
-from common.common_function import pcap2log
+# from common.common_function import pcap2log
 from django.core.management.base import BaseCommand
 from edge_cron.settings import BASE_DIR
 
@@ -180,13 +180,13 @@ def wrapper_log_function(func_type, analyze_full_path, dir_name, pcap_name):
             shell=True,
         )
         proc.wait()
-    elif func_type == 2:
-        # pcap2logのログ作成処理
-        logger.info("pcap to log")
-        pcap2log(
-            PCAP_ANALYZE_FILE_PATH + pcap_name,
-            PCAP_ANALYZE_FILE_PATH + dir_name,
-        )
+#    elif func_type == 2:
+#        # pcap2logのログ作成処理
+#        logger.info("pcap to log")
+#        pcap2log(
+#            PCAP_ANALYZE_FILE_PATH + pcap_name,
+#            PCAP_ANALYZE_FILE_PATH + dir_name,
+#        )
 # tshark -> zeek-plugin-bacnetに移行したため
 #    elif func_type == 3:
 #        if FUNC_RESTRICTION is False:
