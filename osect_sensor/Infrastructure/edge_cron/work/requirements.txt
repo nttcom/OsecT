@@ -3,7 +3,7 @@ cachetools==4.2.2
 certifi==2020.6.20
 charset-normalizer==2.0.9
 Django==3.2.14
-dpkt==1.9.2
+# dpkt==1.9.2
 gitdb2==2.0.3
 gitpython==3.0.7
 google-auth==1.30.0
@@ -23,6 +23,5 @@ tornado==6.1
 typing_extensions==4.0.1
 urllib3==1.26.6
 wheel==0.34.2
-zkg==2.12.0
 zstandard==0.18.0
 scapy==2.4.5

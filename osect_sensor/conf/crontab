@@ -1,6 +1,11 @@
 @reboot /bin/bash -c 'echo export RANDOM_TIME=$(($RANDOM%3600)) >> /root/.profile'
 @reboot /opt/ot_tools/suricata_update.sh > /dev/null 2>&1
 @reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i dummy1 > /dev/null 2>&1
+@reboot /opt/p0f/bin/p0f-k -f /opt/p0f/etc/p0f-k.fp -i dummy1 -O /var/log/p0f-k.log > /dev/null 2>&1
+* * * * * /usr/sbin/logrotate -f /etc/logrotate_p0f.conf > /dev/null 2>&1
+@reboot /usr/local/bin/yaf --mac --live pcap --in dummy1 --rotate 60 --out /var/log/yaf/flow
+@reboot /opt/zeek/bin/zeekctl deploy
+* * * * * /opt/zeek/bin/zeekctl cron
 @reboot /opt/ot_tools/tunnel_realtime.sh > /dev/null 2>&1
 * * * * * /opt/ot_tools/tunnel_batch.sh > /dev/null 2>&1
 * * * * * /opt/ot_tools/ot_cron.sh > /dev/null 2>&1
