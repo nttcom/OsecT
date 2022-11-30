@@ -133,6 +133,7 @@ RUN apt-get update \
     tzdata \
     wget \
     logrotate \
+    tcpreplay \
     iproute2 \
     software-properties-common \
  && apt-get -y clean \

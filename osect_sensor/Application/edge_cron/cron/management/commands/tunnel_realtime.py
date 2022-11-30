@@ -60,12 +60,12 @@ def gtpu_send(pkt, send_iface):
             # logger.info(new_pkt.summary())
         except IndexError as e:
             logger.info(new_pkt.summary())
-    else:
-        logger.info("no GTPU header")
+    # else:
+    #     logger.info("no GTPU header")
 
     try:
-        # sendpfast(new_pkt, iface=send_iface)
-        sendp(new_pkt, iface=send_iface, verbose=0)
+        sendpfast(new_pkt, iface=send_iface)
+        # sendp(new_pkt, iface=send_iface, verbose=0)
     except OSError:
         logger.info("MTU Error")
     except KeyboardInterrupt:
