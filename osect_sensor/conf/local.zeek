@@ -120,3 +120,4 @@ redef digest_salt = "Please change this value.";
 @load zeek-long-connections
 @load zeek-af_packet-plugin
 @load CIFS_B
+@load MYDHCP
