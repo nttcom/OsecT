@@ -1,0 +1,10 @@
+protocol analyzer spicy::MYDHCP over UDP:
+    # parse with MYDHCP::Message,
+    parse originator with MYDHCP::Message,
+    port 67/udp,
+    port 68/udp;
+
+import MYDHCP;
+import Zeek_DHCP;
+
+on MYDHCP::Message -> event MYDHCP::message($conn, $is_orig, Zeek_DHCP::create_msg(self), Zeek_DHCP::create_options(self));

@@ -51,12 +51,6 @@ function log_pending(c: connection)
 	c$cifs$done = T;
 	}
 
-function schedule_tftp_analyzer(id: conn_id) 
-	{
-	Analyzer::schedule_analyzer(0.0.0.0, id$orig_h, id$orig_p, Analyzer::get_tag("spicy_cifs"), 20min);
-	Analyzer::schedule_analyzer(0.0.0.0, id$resp_h, id$orig_p, Analyzer::get_tag("spicy_cifs"), 20min);
-	}
-
 function find_string(s: string): string
 	{
 	local x = "\x00";
@@ -136,7 +130,6 @@ event CIFS::hostAnnouncement(
 							$HostComment = find_string(hostComment)]);
 	c$cifs = info;
 	# print fmt("Zeek saw from %s %s to %s: %s host", c$start_time, c$id$orig_h, c$id$resp_h, c$orig$l2_addr);
-	schedule_tftp_analyzer(c$id);
 	}
 
 event CIFS::localMatserAnnouncement(
@@ -160,5 +153,4 @@ event CIFS::localMatserAnnouncement(
 							$HostComment = find_string(hostComment)]);
 	c$cifs = info;
 	# print fmt("Zeek saw from %s %s to %s: %s %s local", c$start_time, c$id$orig_h, c$id$resp_h, c$orig$l2_addr, network_time());
-	schedule_tftp_analyzer(c$id);
 	}

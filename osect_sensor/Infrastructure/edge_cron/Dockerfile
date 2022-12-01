@@ -106,6 +106,19 @@ RUN zkg install --force --skiptest \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin
 
+# spicyのコンパイル
+WORKDIR /home/work/ot_tools/broscript/CIFS_B/
+RUN spicyz -o CIFS_B.hlto CIFS_B.spicy CIFS_B.evt
+
+WORKDIR /home/work/ot_tools/broscript/MYDHCP/
+RUN spicyz -o MYDHCP.hlto MYDHCP.spicy zeek_MYDHCP.spicy MYDHCP.evt
+
+WORKDIR /home/work
+RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /opt/zeek/lib/zeek-spicy/modules/ \
+    && cp -p ot_tools/broscript/CIFS_B/CIFS_B.zeek /opt/zeek/share/zeek/site/ \
+    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.hlto /opt/zeek/lib/zeek-spicy/modules/ \
+    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.zeek /opt/zeek/share/zeek/site/
+
 # 本番イメージ
 FROM ubuntu:20.04
 ENV LANG C.UTF-8
@@ -166,6 +179,7 @@ RUN add-apt-repository ppa:oisf/suricata-6.0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
+WORKDIR /home/work
 RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/ \
     && cp -p ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/conn/ \
@@ -178,12 +192,9 @@ RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
     && cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/ \
     && cp -p ot_tools/yaf.awk /opt/ot_tools/ \
-    && cp -pr ot_tools/p0f /opt/
+    && cp -pr ot_tools/p0f /opt/ \
 
 # 環境変数
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
     && mv supervisord.conf /etc/supervisor/conf.d/
 
-# spicyコード配置
-RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/CIFS_B/CIFS_B.zeek /opt/zeek/share/zeek/site/
