@@ -59,7 +59,7 @@ P0f-k outputs the MAC address like this:
 
 ### 2. New format log output
 
-P0f-k can output logs in tabbed format. This function logs the OS estimation by TCP SYN and SYN + ACK when the -O option is specified. The log output looks like this:
+P0f-k can output logs in tabbed format. This function logs the OS estimation by TCP SYN and SYN + ACK when the -O option is specified. The log can be rotated in seconds specified by the -R option. The log output looks like this:
 
 ```bash
 1578584182.881877     syn         192.168.1.4     00:11:22:33:44:55     Mac OS X        4:64+0:0:1460:65535,6:mss,nop,ws,nop,nop,ts,sok,eol+1:id-,ecn:0
@@ -76,7 +76,7 @@ P0f-k supports fingerprinting for new operating systems like Windows 10.
 
 The usage of p0f-k is the same as the original p0f.
 
-Here's how to use the added -O option. The -O and -o options cannot be executed at the same time.
+Here's how to use the added -O option.
 
 ```bash
 $ sudo ./p0f -i ens33 -d -O /var/log/p0f-k.log

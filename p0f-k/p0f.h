@@ -18,6 +18,8 @@ extern u8  daemon_mode;
 extern s32 link_type;
 extern u32 max_conn, max_hosts, conn_max_age, host_idle_limit, hash_seed;
 extern u8* read_file;
+extern time_t cur_head_time;
+extern u32 oslog_rotate_period;
 
 void start_observation(char* keyword, u8 field_cnt, u8 to_srv,
                        struct packet_flow* pf, u8 oslog_keyword_type);

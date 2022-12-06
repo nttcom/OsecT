@@ -64,12 +64,17 @@
 #  define O_LARGEFILE 0
 #endif /* !O_LARGEFILE */
 
+#define MAX_LENGTH_OF_OS_LOGFILENAME 96 
+#define MAX_LENGTH_OF_OS_LOGFILENAME_ROTATED 128
+
 static u8 *use_iface,                   /* Interface to listen on             */
           *orig_rule,                   /* Original filter rule               */
           *switch_user,                 /* Target username                    */
           *log_file,                    /* Binary log file name               */
           *api_sock,                    /* API socket file name               */
           *fp_file;                     /* Location of p0f.fp                 */
+
+static char *oslog_file;                /* Log file for OS info               */
 
 u8* read_file;                          /* File to read pcap data from        */
 
@@ -89,6 +94,10 @@ static s32 null_fd = -1,                /* File descriptor of /dev/null       */
 
 static FILE* lf;                        /* Log file stream                    */
 
+static FILE* oslf = NULL;               /* OS information log file stream     */
+
+static u32 writing_oslog = 0;           /* Writing OS information log ?       */
+
 static u8 stop_soon;                    /* Ctrl-C or so pressed?              */
 
 u8 daemon_mode;                         /* Running in daemon mode?            */
@@ -103,7 +112,13 @@ u32 hash_seed;                          /* Hash seed                          */
 
 static u8 obs_fields;                   /* No of pending observation fields   */
 
-u8 oslog_mode;                          /* Running OS Log mode?               */
+u32 oslog_rotate_period = 0;            /* OS info log rotation period [sec]  */
+
+time_t cur_head_time = 0;               /* Head timestamp of curret slot      */
+
+static u64 period_packet_cnt = 0;                  /* Packet counter in the period       */
+
+u8 oslog_write;                         /* Under writing OS information log   */
 
 /* Memory allocator data: */
 
@@ -113,6 +128,8 @@ u32 TRK_cnt[ALLOC_BUCKETS];
 #endif /* DEBUG_BUILD */
 
 #define LOGF(_x...) fprintf(lf, _x)
+
+#define OSLOGF(_x...) fprintf(oslf, _x)
 
 /* Display usage information */
 
@@ -134,6 +151,7 @@ static void usage(void) {
 "  -f file   - read fingerprint database from 'file' (%s)\n"
 "  -o file   - write information to the specified log file\n"
 "  -O file   - write OS information based on TCP/IP header to the specified log file\n"
+"  -R period - rotate OS information log file specified in -O option every [period] second\n"
 #ifndef __CYGWIN__
 "  -s name   - answer to API queries at a named unix socket\n"
 #endif /* !__CYGWIN__ */
@@ -254,6 +272,85 @@ static void open_log(void) {
 }
 
 
+/* Create or open OS information log file */
+
+static void open_oslog(void) {
+
+  oslf = fopen(oslog_file, "w");
+
+  if (!oslf) FATAL("fopen() on '%s' failed.", oslog_file);
+
+  SAYF("[+] OS information Log file '%s' opened for writing.\n", oslog_file);
+
+  period_packet_cnt = 0;
+}
+
+
+
+/* Close OS information log file */
+
+static void close_oslog(void) {
+  fclose(oslf);
+  oslf =NULL;
+
+}
+
+
+/* Rotate OS information log file */
+
+void rotate_oslog(void) {
+  int ret;
+  u8 tmp[32];
+  char oslog_file_rotated[MAX_LENGTH_OF_OS_LOGFILENAME_ROTATED];
+  struct tm* lt = localtime(&cur_head_time);
+
+  strftime((char*)tmp, 32, "%Y-%m-%d_%H-%M-%S", lt);
+
+  close_oslog();
+
+  if (period_packet_cnt > 0) {
+    sprintf(oslog_file_rotated, "%s.%s", oslog_file, tmp);
+    ret = rename(oslog_file, oslog_file_rotated);
+    if (ret != 0) FATAL("rename from '%s' to '%s' failed.", oslog_file, oslog_file_rotated);
+
+  }
+
+  open_oslog();
+  SAYF("[+] OS information Log file rotated\n");
+}
+
+
+/* Check and Do rotating OS information log file */
+
+void check_and_do_rotate_oslog(void) {
+  time_t ct;
+
+  if (oslog_rotate_period == 0) {
+    return;
+  }
+
+  ct = get_unix_time();
+
+  if (cur_head_time == 0) {
+    cur_head_time = get_rotate_base_unix_time(&ct);
+  }
+
+  if (ct > cur_head_time + oslog_rotate_period) {
+    rotate_oslog();
+    do {
+            cur_head_time += oslog_rotate_period;
+    } while (ct - cur_head_time > oslog_rotate_period);
+
+    /*
+    signal(SIGALRM, check_and_do_rotate_oslog);
+    alarm(cur_head_time + oslog_rotate_period - ct + 1);
+    */
+  }
+
+  return;
+}
+
+
 /* Create and start listening on API socket */
 
 static void open_api(void) {
@@ -331,20 +428,32 @@ void start_observation(char* keyword, u8 field_cnt, u8 to_srv,
 
   }
 
+  if (oslog_file) {
+    if (oslog_tcp_type == 1) {
+      time_t ut_sec = get_unix_time();
+      time_t ut_usec = get_unix_time_usec_part();
+
+      writing_oslog = 1;
+
+      OSLOGF("%u.%06u\t%s\t%s\t%s", ut_sec, ut_usec, keyword, addr_to_str(f->client->addr, f->client->ip_ver), mac_addr_to_str(f->cli_mac));
+
+      period_packet_cnt++;
+
+    } else if (oslog_tcp_type == 2) {
+      time_t ut_sec = get_unix_time();
+      time_t ut_usec = get_unix_time_usec_part();
+
+      writing_oslog = 1;
+
+      OSLOGF("%u.%06u\t%s\t%s\t%s", ut_sec, ut_usec, keyword, addr_to_str(f->server->addr, f->server->ip_ver), mac_addr_to_str(f->srv_mac));
+
+      period_packet_cnt++;
+
+    }
+  }
+
   if (log_file) {
-    if (oslog_mode && oslog_tcp_type == 1) {
-      time_t ut_sec = get_unix_time();
-      time_t ut_usec = get_unix_time_usec_part();
 
-      LOGF("%u.%06u\t%s\t%s\t%s", ut_sec, ut_usec, keyword, addr_to_str(f->client->addr, f->client->ip_ver), mac_addr_to_str(f->cli_mac));
-
-    } else if (oslog_mode && oslog_tcp_type == 2) {
-      time_t ut_sec = get_unix_time();
-      time_t ut_usec = get_unix_time_usec_part();
-
-      LOGF("%u.%06u\t%s\t%s\t%s", ut_sec, ut_usec, keyword, addr_to_str(f->server->addr, f->server->ip_ver), mac_addr_to_str(f->srv_mac));
-
-    } else if (!oslog_mode) {
       u8 tmp[64];
 
       time_t ut = get_unix_time();
@@ -357,7 +466,6 @@ void start_observation(char* keyword, u8 field_cnt, u8 to_srv,
 
       LOGF("srv=%s/%s/%u|subj=%s", mac_addr_to_str(f->srv_mac), addr_to_str(f->server->addr, f->server->ip_ver),
          f->srv_port, to_srv ? "cli" : "srv");
-    }
   }
 
   obs_fields = field_cnt;
@@ -374,15 +482,14 @@ void add_observation_field(char* key, u8* value, u8 oslog_key_flg) {
   if (!daemon_mode)
     SAYF("| %-8s = %s\n", key, value ? value : (u8*)"???");
 
-  if (log_file) {
-    if (oslog_mode && oslog_key_flg) {
-      LOGF("\t%s", value ? value : (u8*)"???"); 
-
-    } else if (!oslog_mode) {
-      LOGF("|%s=%s", key, value ? value : (u8*)"???");
+  if (oslog_file) {
+    if (oslog_key_flg) {
+      OSLOGF("\t%s", value ? value : (u8*)"???"); 
 
     }
   }
+
+  if (log_file) LOGF("|%s=%s", key, value ? value : (u8*)"???");
 
   obs_fields--;
 
@@ -390,15 +497,16 @@ void add_observation_field(char* key, u8* value, u8 oslog_key_flg) {
 
     if (!daemon_mode) SAYF("|\n`----\n\n");
 
-    if (log_file) {
-      if (oslog_mode && oslog_key_flg) {
-        LOGF("\n");
+    if (oslog_file) {
+      if (oslog_key_flg) {
+        OSLOGF("\n");
 
-      } else if (!oslog_mode) {
-	LOGF("\n");
-
+	writing_oslog = 0;
       }
-    }
+    } 
+
+    if (log_file) LOGF("\n");
+
   }
 
 }
@@ -515,9 +623,11 @@ static void prepare_pcap(void) {
 
       /* See the earlier note on libpcap SEGV - same problem here.
          Also, this returns something stupid on Windows, but hey... */
-     
+
+      /*
       if (!access("/sys/class/net", R_OK | X_OK) || errno == ENOENT)
         use_iface = (u8*)pcap_lookupdev(pcap_err);
+      */
 
       if (!use_iface)
         FATAL("libpcap is out of ideas; use -i to specify interface.");
@@ -1051,6 +1161,7 @@ static void offline_event_loop(void) {
 int main(int argc, char** argv) {
 
   s32 r;
+  time_t cap_start_time;
 
   setlinebuf(stdout);
 
@@ -1059,7 +1170,7 @@ int main(int argc, char** argv) {
   if (getuid() != geteuid())
     FATAL("Please don't make me setuid. See README for more.\n");
 
-  while ((r = getopt(argc, argv, "+LS:df:i:m:o:O:pr:s:t:u:")) != -1) switch (r) {
+  while ((r = getopt(argc, argv, "+LS:df:i:m:o:O:R:pr:s:t:u:")) != -1) switch (r) {
 
     case 'L':
 
@@ -1127,20 +1238,29 @@ int main(int argc, char** argv) {
     case 'o':
 
       if (log_file)
-        FATAL("Multiple -o and/or -O options not supported.");
+        FATAL("Multiple -o options not supported.");
 
       log_file = (u8*)optarg;
-      oslog_mode = 0;
 
       break;
 
     case 'O':
 
-      if (log_file)
-        FATAL("Multiple -o and/or -O options not supported.");
+      if (oslog_file)
+        FATAL("Multiple -O options not supported.");
 
-      log_file = (u8*)optarg;
-      oslog_mode = 1;
+      oslog_file = (char*)optarg;
+      if (strlen(oslog_file)+1 > MAX_LENGTH_OF_OS_LOGFILENAME) {
+	FATAL("Length of the log file name in -O option must be 95 or less");
+      }
+
+      break;
+
+    case 'R':
+
+      oslog_rotate_period = strtol(optarg, NULL, 10);
+      if (oslog_rotate_period < 60)
+        FATAL("-R option must be integer more than 60");
 
       break;
 
@@ -1158,6 +1278,8 @@ int main(int argc, char** argv) {
         FATAL("Multiple -r options not supported.");
 
       read_file = (u8*)optarg;
+
+      cur_head_time = 0;
 
       break;
 
@@ -1253,6 +1375,7 @@ int main(int argc, char** argv) {
   prepare_bpf();
 
   if (log_file) open_log();
+  if (oslog_file) open_oslog();
   if (api_sock) open_api();
   
   if (daemon_mode) {
@@ -1267,6 +1390,20 @@ int main(int argc, char** argv) {
   signal(SIGHUP, daemon_mode ? SIG_IGN : abort_handler);
   signal(SIGINT, abort_handler);
   signal(SIGTERM, abort_handler);
+
+  if (!read_file && oslog_rotate_period > 0) {
+    cap_start_time = time(NULL);
+    cur_head_time = get_rotate_base_unix_time(&cap_start_time);
+    while (cap_start_time - cur_head_time > oslog_rotate_period) {
+      cur_head_time += oslog_rotate_period;
+
+    }
+
+    /*
+    signal(SIGALRM, check_and_do_rotate_oslog);
+    alarm(cur_head_time + oslog_rotate_period - cap_start_time + 1);
+    */
+  }
 
   if (read_file) offline_event_loop(); else live_event_loop();
 
