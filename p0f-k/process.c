@@ -83,6 +83,26 @@ u32 get_unix_time_usec_part(void) {
   return cur_time->tv_usec;
 }
 
+
+/* get rotation base unix time which is 00:00:00 same as Zeek default config */
+
+time_t get_rotate_base_unix_time(time_t* ut) {
+  struct tm *gt;
+  struct tm gt_base;
+  time_t ut_base;
+
+  gt = gmtime((time_t *)ut);
+
+  memcpy(&gt_base, gt, sizeof(struct tm));
+  gt_base.tm_sec = 0;
+  gt_base.tm_min = 0;
+  gt_base.tm_hour = 0;
+  ut_base = timegm(&gt_base);
+
+  return ut_base;
+}
+
+
 /* Find link-specific offset (pcap knows, but won't tell). */
 
 static void find_offset(const u8* data, s32 total_len) {
@@ -239,6 +259,10 @@ void parse_packet(void* junk, const struct pcap_pkthdr* hdr, const u8* data) {
   packet_cnt++;
   
   cur_time = (struct timeval*)&hdr->ts;
+
+  if (oslog_rotate_period > 0) {
+    check_and_do_rotate_oslog();
+  }
 
   if (!(packet_cnt % EXPIRE_INTERVAL)) expire_cache();
 

@@ -1182,7 +1182,7 @@ struct tcp_sig* fingerprint_tcp(u8 to_srv, struct packet_data* pk,
 
   if ((m = sig->matched)) {
 
-    OBSERVF((m->class_id == -1 || f->sendsyn) ? 0 : 1,
+    OBSERVF(f->sendsyn ? 0 : 1,
             (m->class_id == -1 || f->sendsyn) ? "app" : "os",
             "%s%s%s",
             fp_os_names[m->name_id], m->flavor ? " " : "",
@@ -1190,7 +1190,7 @@ struct tcp_sig* fingerprint_tcp(u8 to_srv, struct packet_data* pk,
 
   } else {
 
-    add_observation_field("os", NULL, 1);
+    add_observation_field("os", NULL, f->sendsyn ? 0 : 1);
 
   }
 
@@ -1209,7 +1209,7 @@ struct tcp_sig* fingerprint_tcp(u8 to_srv, struct packet_data* pk,
 
   add_observation_field("params", dump_flags(pk, sig), 0);
 
-  add_observation_field("raw_sig", dump_sig(pk, sig, f->syn_mss), 1);
+  add_observation_field("raw_sig", dump_sig(pk, sig, f->syn_mss), f->sendsyn ? 0 : 1);
 
   if (pk->tcp_type == TCP_SYN) f->syn_mss = pk->mss;
 

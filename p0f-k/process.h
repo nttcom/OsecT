@@ -212,6 +212,7 @@ u8* addr_to_str(u8* data, u8 ip_ver);
 u64 get_unix_time_ms(void);
 u32 get_unix_time(void);
 u32 get_unix_time_usec_part(void);
+time_t get_rotate_base_unix_time(time_t*);
 
 void add_nat_score(u8 to_srv, struct packet_flow* f, u16 reason, u8 score);
 void verify_tool_class(u8 to_srv, struct packet_flow* f, u32* sys, u32 sys_cnt);
