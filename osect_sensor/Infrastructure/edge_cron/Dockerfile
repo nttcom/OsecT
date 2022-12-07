@@ -57,8 +57,8 @@ RUN apt-get update \
 
 # Zeekのインストール
 RUN git clone --recursive https://github.com/zeek/zeek -b v5.0.0
-RUN cd zeek \
- && ./configure --build-type=Release --prefix=/opt/zeek \
+WORKDIR /home/work/zeek
+RUN ./configure --build-type=Release --prefix=/opt/zeek \
  && make \
  && make install
 ENV PATH $PATH:/opt/zeek/bin
@@ -159,9 +159,9 @@ WORKDIR /
 ENV PATH $PATH:/opt/zeek/bin
 
 # Yafを含むバイナリファイルをコピー
+RUN mkdir /var/log/yaf
 COPY --from=build-env /usr/local/bin /usr/local/bin
 COPY --from=build-env /usr/local/lib /usr/local/lib
-RUN mkdir /var/log/yaf
 
 # Suricataはほぼ無駄がないためそのままインストール
 # Suricata rulesをコピー
