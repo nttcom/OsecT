@@ -80,7 +80,7 @@ $ mv ~/OsecT/osect_sensor ~/
 
 ### 3.1. 監視ネットワークインタフェースの設定
 
-設定箇所は3箇所です。
+設定箇所は4箇所です。
 
 1箇所目：設定ファイルを編集し、監視ネットワークを指定します。
 
@@ -110,12 +110,16 @@ $ vi ~/osect_sensor/conf/crontab
 
 ```bash
 @reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i eth1 > /dev/null 2>&1
+@reboot /opt/p0f/bin/p0f-k -f /opt/p0f/etc/p0f-k.fp -i eth1 -O /var/log/p0f-k.log > /dev/null 2>&1
+@reboot /usr/local/bin/yaf --mac --live pcap --in eth1 --rotate 60 --out /var/log/yaf/flow
 ```
 
 編集例：監視ネットワークインタフェースがenp0s8の場合
 
 ```bash
 @reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i enp0s8 > /dev/null 2>&1
+@reboot /opt/p0f/bin/p0f-k -f /opt/p0f/etc/p0f-k.fp -i enp0s8 -O /var/log/p0f-k.log > /dev/null 2>&1
+@reboot /usr/local/bin/yaf --mac --live pcap --in enp0s8 --rotate 60 --out /var/log/yaf/flow
 ```
 
 3箇所目：suricata.yamlを編集し、監視ネットワークを指定します。
@@ -138,6 +142,36 @@ af-packet:
 # Linux high speed capture support
 af-packet:
   - interface: enp0s8
+```
+
+4箇所目：node.cfgを編集し、監視ネットワークを指定します。合わせて、割り当てるCPUコア数も指定します。
+
+```bash
+$ vi ~/osect_sensor/conf/node.cfg
+```
+
+編集箇所
+
+```bash
+[worker-1]
+type=worker
+host=localhost
+interface=af_packet::eth1
+lb_method=custom
+lb_procs=6
+pin_cpus=0,1,2,3,4,5
+```
+
+編集例：監視ネットワークインタフェースがenp0s8, CPUコア数が6の場合
+
+```bash
+[worker-1]
+type=worker
+host=localhost
+interface=af_packet::enp0s8
+lb_method=custom
+lb_procs=6
+pin_cpus=0,1,2,3,4,5
 ```
 
 ### 3.2. DjangoのSECRET_KEYの設定

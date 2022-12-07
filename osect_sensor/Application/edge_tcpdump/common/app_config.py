@@ -8,7 +8,7 @@ TCPDUMP_SHELL_COMMAND = [
     "-G",
     "60",
     "-ni",
-    "enp0s3",
+    "enp1s0",
     "-s",
     "0",
     "-Z",
