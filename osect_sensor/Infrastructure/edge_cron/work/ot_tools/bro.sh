@@ -16,4 +16,5 @@ merge_log "/opt/zeek/logs/${DATE}/dns.*.log" "dns.log"
 merge_log "/opt/zeek/logs/${DATE}/http.*.log" "http.log"
 merge_log "/opt/zeek/logs/${DATE}/cifs.*.log" "mswin-browser.log"
 merge_log "/opt/zeek/logs/${DATE}/mydhcp.*.log" "dhcp2.log"
+merge_log "/opt/zeek/logs/${DATE}/dhcpv6.*.log" "dhcpv6.log"
 rm /opt/zeek/logs/${DATE}/*.log

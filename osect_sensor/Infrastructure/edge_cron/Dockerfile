@@ -59,7 +59,7 @@ RUN apt-get update \
 RUN git clone --recursive https://github.com/zeek/zeek -b v5.0.0
 WORKDIR /home/work/zeek
 RUN ./configure --build-type=Release --prefix=/opt/zeek \
- && make \
+ && make -j6 \
  && make install
 ENV PATH $PATH:/opt/zeek/bin
 
@@ -113,11 +113,16 @@ RUN spicyz -o CIFS_B.hlto CIFS_B.spicy CIFS_B.evt
 WORKDIR /home/work/ot_tools/broscript/MYDHCP/
 RUN spicyz -o MYDHCP.hlto MYDHCP.spicy zeek_MYDHCP.spicy MYDHCP.evt
 
+WORKDIR /home/work/ot_tools/broscript/DHCPV6/
+RUN spicyz -o dhcpv6.hlto dhcpv6.spicy zeek_dhcpv6.spicy dhcpv6.evt
+
 WORKDIR /home/work
 RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /opt/zeek/lib/zeek-spicy/modules/ \
     && cp -p ot_tools/broscript/CIFS_B/CIFS_B.zeek /opt/zeek/share/zeek/site/ \
     && cp -p ot_tools/broscript/MYDHCP/MYDHCP.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.zeek /opt/zeek/share/zeek/site/
+    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.zeek /opt/zeek/share/zeek/site/ \
+    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.hlto /opt/zeek/lib/zeek-spicy/modules/ \
+    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.zeek /opt/zeek/share/zeek/site/
 
 # 本番イメージ
 FROM ubuntu:20.04
