@@ -121,3 +121,4 @@ redef digest_salt = "Please change this value.";
 @load zeek-af_packet-plugin
 @load CIFS_B
 @load MYDHCP
+@load dhcpv6
