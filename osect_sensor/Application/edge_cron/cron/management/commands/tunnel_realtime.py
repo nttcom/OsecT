@@ -28,15 +28,15 @@ class Command(BaseCommand):
             # dockerfile: apt install -y iproute2
             
             # ダミーインタフェースの作成
-            #logger.info("start to create interface")
-            #output = subprocess.run(["ip", "link", "add", "dummy1", "type", "dummy"])
-            #logger.info("end to create interface")
+            logger.info("start to create interface")
+            output = subprocess.run(["ip", "link", "add", "dummy1", "type", "dummy"])
+            logger.info("end to create interface")
             
-            #if output.returncode == 0:
-            #    # ダミーインタフェースがない場合は設定
-            #    subprocess.run(["ip", "addr", "add", "1.1.1.1/24", "dev", "dummy1"]#)
-            #    subprocess.run(["ip", "link", "set", "dummy1", "up"])
-            #    subprocess.run(["ip", "link", "set", "dummy1", "mtu", "9000"])
+            if output.returncode == 0:
+                # ダミーインタフェースがない場合は設定
+                subprocess.run(["ip", "addr", "add", "1.1.1.1/24", "dev", "dummy1"])
+                subprocess.run(["ip", "link", "set", "dummy1", "up"])
+                subprocess.run(["ip", "link", "set", "dummy1", "mtu", "9000"])
 
             while True:
                 logger.info("realtime suricata start")
