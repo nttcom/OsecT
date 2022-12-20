@@ -149,7 +149,6 @@ RUN apt-get update \
     tzdata \
     wget \
     software-properties-common \
-    logrotate \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
