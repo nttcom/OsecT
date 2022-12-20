@@ -1,6 +1,6 @@
 # asgiref==3.4.1
 # cachetools==4.2.2
-certifi==2020.6.20
+certifi==2022.12.07
 # charset-normalizer==2.0.9
 Django==3.2.16
 # dpkt==1.9.2
