@@ -8,4 +8,4 @@
 * * * * * /opt/ot_tools/ot_cron.sh > /dev/null 2>&1
 0 * * * * /opt/ot_tools/complete_to_archives.sh > /dev/null 2>&1
 0 1 * * * /bin/bash -c 'source /root/.profile; sleep $RANDOM_TIME'; /opt/ot_tools/suricata_update.sh > /dev/null 2>&1
-10 1 * * * kill -USR2 $(pidof suricata) 2>&1
+0 2 * * * kill -USR2 $(pidof suricata) 2>&1
