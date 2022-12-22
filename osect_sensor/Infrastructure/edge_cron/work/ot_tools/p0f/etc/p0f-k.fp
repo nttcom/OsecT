@@ -174,6 +174,7 @@ sig   = *:64:0:*:*,0:mss:df,id+:0
 ; Windows
 ; -------
 
+; Added by Noriki Okamoto
 label = s:win:Windows:10[99,4,0]
 sig   = 4:128:0:*:mss*45,8:mss,nop,ws,sok,ts:df,id+:0
 sig   = 4:128:0:*:mss*44,8:mss,nop,ws,nop,nop,sok:df,id+:0
@@ -182,6 +183,7 @@ sig   = 6:64:0:*:mss*45,8:mss,nop,ws,nop,nop,sok:flow:0
 sig   = 6:128:0:*:64000,0:mss,nop,ws,nop,nop,sok:flow:0
 sig   = 6:64:0:*:65535,8:mss,nop,ws,nop,nop,sok:flow:0
 
+; Added by Noriki Okamoto
 label = s:win:Windows:8/10[100,3,0]
 sig   = 4:128:0:*:65535,8:mss,nop,ws,nop,nop,sok:df,id+:0
 
@@ -402,12 +404,14 @@ sig   = *:64:0:*:mss*4,*:mss,nop,nop,sok,nop,ws:df:0
 ; Windows
 ; -------
 
+; Added by Noriki Okamoto
 label = s:win:Windows:10[1299,4,0]
 sig   = 4:128:0:*:65535,8:mss,nop,ws,nop,nop,sok:df,id+:0
 sig   = 6:128:0:*:65535,8:mss,nop,ws,nop,nop,sok:flow:0
 sig   = 6:128:0:*:64000,0:mss,nop,ws,nop,nop,sok:flow:0
 sig   = 6:128:0:*:64000,0:mss,nop,nop,sok:flow:0
 
+; Added by Noriki Okamoto
 label = s:win:Windows:8/10[1300,3,0]
 sig   = 4:128:0:*:64000,0:mss,nop,ws,nop,nop,sok:df,id+:0
 

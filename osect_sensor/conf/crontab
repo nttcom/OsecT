@@ -1,11 +1,10 @@
 @reboot /bin/bash -c 'echo export RANDOM_TIME=$(($RANDOM%3600)) >> /root/.profile'
 @reboot /opt/ot_tools/suricata_update.sh > /dev/null 2>&1
-@reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i enp1s0 > /dev/null 2>&1
-@reboot /opt/p0f/bin/p0f-k -f /opt/p0f/etc/p0f-k.fp -i enp1s0 -O /var/log/p0f-k.log -R 60 > /dev/null 2>&1
-* * * * * /usr/local/bin/yaf --mac --live pcap --in enp1s0 --rotate 60 --out /var/log/yaf/flow
+* * * * * /opt/ot_tools/suricata_cron.sh enp1s0 > /dev/null 2>&1
+* * * * * /opt/ot_tools/p0f_cron.sh enp1s0 > /dev/null 2>&1
+* * * * * /opt/ot_tools/yaf_cron.sh enp1s0 > /dev/null 2>&1
 @reboot /opt/zeek/bin/zeekctl deploy
 * * * * * /opt/zeek/bin/zeekctl cron
-* * * * * /opt/ot_tools/ot_cron.sh > /dev/null 2>&1
+* * * * * sleep 5; /opt/ot_tools/ot_cron.sh > /dev/null 2>&1
 0 * * * * /opt/ot_tools/complete_to_archives.sh > /dev/null 2>&1
 0 1 * * * /bin/bash -c 'source /root/.profile; sleep $RANDOM_TIME'; /opt/ot_tools/suricata_update.sh > /dev/null 2>&1
-0 2 * * * kill -USR2 $(pidof suricata) 2>&1
