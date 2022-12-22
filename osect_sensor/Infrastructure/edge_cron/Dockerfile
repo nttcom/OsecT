@@ -116,13 +116,18 @@ RUN spicyz -o MYDHCP.hlto MYDHCP.spicy zeek_MYDHCP.spicy MYDHCP.evt
 WORKDIR /home/work/ot_tools/broscript/DHCPV6/
 RUN spicyz -o dhcpv6.hlto dhcpv6.spicy zeek_dhcpv6.spicy dhcpv6.evt
 
+WORKDIR /home/work/ot_tools/broscript/NBNS/
+RUN spicyz -o nbns.hlto nbns.spicy nbns.evt
+
 WORKDIR /home/work
 RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /opt/zeek/lib/zeek-spicy/modules/ \
     && cp -p ot_tools/broscript/CIFS_B/CIFS_B.zeek /opt/zeek/share/zeek/site/ \
     && cp -p ot_tools/broscript/MYDHCP/MYDHCP.hlto /opt/zeek/lib/zeek-spicy/modules/ \
     && cp -p ot_tools/broscript/MYDHCP/MYDHCP.zeek /opt/zeek/share/zeek/site/ \
     && cp -p ot_tools/broscript/DHCPV6/dhcpv6.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.zeek /opt/zeek/share/zeek/site/
+    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.zeek /opt/zeek/share/zeek/site/ \
+    && cp -p ot_tools/broscript/NBNS/nbns.hlto /opt/zeek/lib/zeek-spicy/modules/ \
+    && cp -p ot_tools/broscript/NBNS/nbns.zeek /opt/zeek/share/zeek/site/
 
 # 本番イメージ
 FROM ubuntu:20.04

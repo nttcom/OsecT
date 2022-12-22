@@ -122,3 +122,4 @@ redef digest_salt = "Please change this value.";
 @load CIFS_B
 @load MYDHCP
 @load dhcpv6
+@load nbns
