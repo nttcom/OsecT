@@ -27,4 +27,6 @@ merge_log "/opt/zeek/logs/${DATE}/dhcpv6.*.log" "dhcpv6.log"
 reformat_log "dhcpv6.log"
 merge_log "/opt/zeek/logs/${DATE}/nbns.*.log" "netbios-ns.log"
 reformat_log "netbios-ns.log"
+merge_log "/opt/zeek/logs/${DATE}/ssdp.*.log" "ssdp.log"
+reformat_log "ssdp.log"
 rm /opt/zeek/logs/${DATE}/*.log
