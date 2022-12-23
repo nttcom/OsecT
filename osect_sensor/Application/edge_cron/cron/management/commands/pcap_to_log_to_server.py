@@ -46,7 +46,7 @@ from common.common_config import (
     LABEL_ID,
     CLIENT_CERTIFICATE_PATH,
 )
-from common.common_function import pcap2log
+# from common.common_function import pcap2log
 from django.core.management.base import BaseCommand
 from edge_cron.settings import BASE_DIR
 
