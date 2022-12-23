@@ -32,6 +32,7 @@ from common.common_config import (
     PCAP_SERVER_UPLOADING_FILE_PATH,
     PCAP_TO_DB_CPU,
     PCAP_UPLOADED_FILE_PATH,
+    SEND_REQUST_TIMEOUT,
     SURICATA_ENABLE,
     SURICATA_SHELL_COMMAND,
     SURICATA_YAML,
@@ -388,6 +389,7 @@ def send_server(zip_list):
             cert=CLIENT_CERTIFICATE_PATH,
             files=files,
             data=data,
+            timeout=SEND_REQUST_TIMEOUT,
         )
         if resp.status_code != 200:
             raise Exception(

@@ -83,3 +83,6 @@ CLIENT_CERTIFICATE_PATH = '/etc/ssl/private/client.pem'
 
 SEND_VERSION_API_URL = 'https://your url/paper/api/v1/sensor_status/post'
 """Suricataシグネチャのバージョンを送るURL"""
+
+SEND_REQUST_TIMEOUT = 180
+""" ログ送信時のタイムアウト値 """
