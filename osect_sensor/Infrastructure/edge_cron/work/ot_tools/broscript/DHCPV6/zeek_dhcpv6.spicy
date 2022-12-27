@@ -6,7 +6,7 @@ import DHCPV6;
 import zeek;
 
 on DHCPV6::Message::%done {
-    zeek::confirm_protocol();
+    # zeek::confirm_protocol();
 }
 
 on DHCPV6::Message::%error {

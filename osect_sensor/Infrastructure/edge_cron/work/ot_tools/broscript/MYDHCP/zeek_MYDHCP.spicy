@@ -6,7 +6,7 @@ import MYDHCP;
 import zeek;
 
 on MYDHCP::Message::%done {
-    zeek::confirm_protocol();
+    # zeek::confirm_protocol();
 }
 
 on MYDHCP::Message::%error {

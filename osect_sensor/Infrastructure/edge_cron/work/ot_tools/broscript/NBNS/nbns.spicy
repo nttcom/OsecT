@@ -38,7 +38,7 @@ type Registration = unit {
     };
     additional_records_tail: bytes &eod;
 
-    on %done { print self; zeek::confirm_protocol();}
+    # on %done { print self; zeek::confirm_protocol();}
     # on %done { print self; }
 };
 

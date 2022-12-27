@@ -38,7 +38,7 @@ type HostAnnouncement = unit {
     signature_2         :  bytes &size=1;
     hostComment         :  bytes &eod;
 
-    on %done { print self; zeek::confirm_protocol();}
+    # on %done { print self; zeek::confirm_protocol();}
     # on %done { print self; }
 };
 
@@ -60,7 +60,7 @@ type LocalMatserAnnouncement = unit {
     signature_2         :  bytes &size=1;
     hostComment         :  bytes &eod;
 
-    on %done { print self; zeek::confirm_protocol();}
+    # on %done { print self; zeek::confirm_protocol();}
     # on %done { print self; }
 };
 
