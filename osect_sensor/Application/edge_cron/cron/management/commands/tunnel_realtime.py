@@ -28,20 +28,22 @@ class Command(BaseCommand):
             # dockerfile: apt install -y iproute2
             
             # ダミーインタフェースの作成
-            #logger.info("start to create interface")
-            #output = subprocess.run(["ip", "link", "add", "dummy1", "type", "dummy"])
-            #logger.info("end to create interface")
+            logger.info("start to create interface")
+            output = subprocess.run(["ip", "link", "add", "dummy1", "type", "dummy"])
+            logger.info("end to create interface")
             
-            #if output.returncode == 0:
-            #    # ダミーインタフェースがない場合は設定
-            #    subprocess.run(["ip", "addr", "add", "1.1.1.1/24", "dev", "dummy1"]#)
-            #    subprocess.run(["ip", "link", "set", "dummy1", "up"])
-            #    subprocess.run(["ip", "link", "set", "dummy1", "mtu", "9000"])
-
+            if output.returncode == 0:
+                # ダミーインタフェースがない場合は設定
+                subprocess.run(["ip", "addr", "add", "1.1.1.1/24", "dev", "dummy1"])
+                subprocess.run(["ip", "link", "set", "dummy1", "up"])
+                subprocess.run(["ip", "link", "set", "dummy1", "mtu", "9000"])
+         
             while True:
                 logger.info("realtime suricata start")
-                sniff(iface=SURICATA_CAP_IF, prn=lambda pkt: gtpu_send(pkt, "dummy1"))
-
+                sniff(iface=SURICATA_CAP_IF, store=10000, prn=lambda pkt: gtpu_send(pkt, "dummy1"))
+      
+        #while True:
+        #    sniff(iface=SURICATA_CAP_IF, store=1000000, prn=lambda pkt: sendp(pkt, iface="dummy1", realtime=True, count=3))
 
 def gtpu_send(pkt, send_iface):
     new_pkt = pkt
@@ -64,8 +66,8 @@ def gtpu_send(pkt, send_iface):
     #     logger.info("no GTPU header")
 
     try:
-        sendpfast(new_pkt, iface=send_iface)
-        # sendp(new_pkt, iface=send_iface, verbose=0)
+        # sendpfast(new_pkt, iface=send_iface)
+        sendp(new_pkt, iface=send_iface, verbose=0, realtime=True)
     except OSError:
         logger.info("MTU Error")
     except KeyboardInterrupt:
