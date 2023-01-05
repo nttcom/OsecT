@@ -29,4 +29,8 @@ merge_log "/opt/zeek/logs/${DATE}/nbns.*.log" "netbios-ns.log"
 reformat_log "netbios-ns.log"
 merge_log "/opt/zeek/logs/${DATE}/ssdp.*.log" "ssdp.log"
 reformat_log "ssdp.log"
+merge_log "/opt/zeek/logs/${DATE}/cclink_ie_field_basic.*.log" "cclink_ie_field_basic.log"
+reformat_log "cclink_ie_field_basic.log"
+merge_log "/opt/zeek/logs/${DATE}/field_control.*.log" "cclink-ie.log"
+reformat_log "cclink-ie.log"
 rm /opt/zeek/logs/${DATE}/*.log

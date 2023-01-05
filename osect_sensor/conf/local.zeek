@@ -124,3 +124,5 @@ redef digest_salt = "Please change this value.";
 @load dhcpv6
 @load nbns
 @load ssdp
+@load cc_link_basic
+@load cc_link_noip
