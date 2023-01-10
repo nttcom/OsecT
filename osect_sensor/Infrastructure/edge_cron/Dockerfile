@@ -59,7 +59,7 @@ RUN apt-get update \
 RUN git clone --recursive https://github.com/zeek/zeek -b v5.0.0
 WORKDIR /home/work/zeek
 RUN ./configure --build-type=Release --prefix=/opt/zeek \
- && make -j6 \
+ && make \
  && make install
 ENV PATH $PATH:/opt/zeek/bin
 
