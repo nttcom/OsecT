@@ -1,0 +1,20 @@
+protocol analyzer spicy::cclink_ie_field_basic over UDP:
+    parse originator with cclink_ie_field_basic::Packet,
+    parse responder with cclink_ie_field_basic::Packet,
+    ports { 61450/udp };
+
+import cclink_ie_field_basic;
+
+on cclink_ie_field_basic::CyclicDataReq -> event cclink_ie_field_basic::cyclicDataReq($conn, self.dl, self.command, self.subCommand,
+                                                    self.reqData.protocolVer,
+                                                    self.reqData.offsetAddrInfo.cyclicInfoOffsetAddr,
+                                                    self.reqData.masterNoticeInfo.protocolVer1,
+                                                    self.reqData.cyclicInfo.masterID, self.reqData.cyclicInfo.groupNo, self.reqData.cyclicInfo.parameterNo, self.reqData.cyclicInfo.slaveTotalOccupiedStationCount, self.reqData.cyclicInfo.cyclicTransmissionState, self.reqData.cyclicInfo.slaveNo_slaveID
+                                                    );
+on cclink_ie_field_basic::CyclicDataRes -> event cclink_ie_field_basic::cyclicDataRes($conn, self.dl,
+                                                    self.resData.protocolVer,
+                                                    self.resData.endCode,
+                                                    self.resData.offsetAddrInfo.cyclicInfoOffsetAddr,
+                                                    self.resData.slaveNoticeInfo.protocolVer1,
+                                                    self.resData.cyclicInfo.slaveID, self.resData.cyclicInfo.groupNo
+                                                    );

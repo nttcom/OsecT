@@ -122,6 +122,12 @@ RUN spicyz -o nbns.hlto nbns.spicy nbns.evt
 WORKDIR /home/work/ot_tools/broscript/SSDP/
 RUN spicyz -o ssdp.hlto ssdp.spicy ssdp.evt
 
+WORKDIR /home/work/ot_tools/broscript/CC_LINK_BASIC/
+RUN spicyz -o cc_link_basic.hlto cc_link_basic.spicy cc_link_basic.evt
+
+WORKDIR /home/work/ot_tools/broscript/CC_LINK_NOIP/
+RUN spicyz -o cc_link_noip.hlto cc_link_noip.spicy cc_link_noip.evt
+
 WORKDIR /home/work
 RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /opt/zeek/lib/zeek-spicy/modules/ \
     && cp -p ot_tools/broscript/CIFS_B/CIFS_B.zeek /opt/zeek/share/zeek/site/ \
@@ -132,7 +138,11 @@ RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /opt/zeek/lib/zeek-spicy/modules
     && cp -p ot_tools/broscript/NBNS/nbns.hlto /opt/zeek/lib/zeek-spicy/modules/ \
     && cp -p ot_tools/broscript/NBNS/nbns.zeek /opt/zeek/share/zeek/site/ \
     && cp -p ot_tools/broscript/SSDP/ssdp.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/SSDP/ssdp.zeek /opt/zeek/share/zeek/site/
+    && cp -p ot_tools/broscript/SSDP/ssdp.zeek /opt/zeek/share/zeek/site/ \
+    && cp -p ot_tools/broscript/CC_LINK_BASIC/cc_link_basic.hlto /opt/zeek/lib/zeek-spicy/modules/ \
+    && cp -p ot_tools/broscript/CC_LINK_BASIC/cc_link_basic.zeek /opt/zeek/share/zeek/site/ \
+    && cp -p ot_tools/broscript/CC_LINK_NOIP/cc_link_noip.hlto /opt/zeek/lib/zeek-spicy/modules/ \
+    && cp -p ot_tools/broscript/CC_LINK_NOIP/cc_link_noip.zeek /opt/zeek/share/zeek/site/
 
 # 本番イメージ
 FROM ubuntu:20.04
