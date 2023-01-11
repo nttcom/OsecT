@@ -6,7 +6,7 @@
 @reboot /usr/local/bin/yaf --mac --live pcap --in dummy1 --rotate 60 --out /var/log/yaf/flow
 @reboot /opt/zeek/bin/zeekctl deploy
 * * * * * /opt/zeek/bin/zeekctl cron
-@reboot /opt/ot_tools/tunnel_realtime.sh > /dev/null 2>&1
+* * * * *  /opt/ot_tools/tunnel_realtime.sh > /dev/null 2>&1
 * * * * * /opt/ot_tools/tunnel_batch.sh > /dev/null 2>&1
 * * * * * /opt/ot_tools/ot_cron.sh > /dev/null 2>&1
 0 * * * * /opt/ot_tools/complete_to_archives.sh > /dev/null 2>&1
