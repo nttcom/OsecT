@@ -8,7 +8,7 @@ merge_log () {
 }
 
 cd $1/$2
-DATE=$(date "+%Y-%m-%d")
+DATE=$(date -u "+%Y-%m-%d")
 merge_log "/opt/zeek/logs/${DATE}/conn.*.log" "conn.log"
 merge_log "/opt/zeek/logs/${DATE}/arp.*.log" "arp.log"
 merge_log "/opt/zeek/logs/${DATE}/ns.*.log" "ns.log"
