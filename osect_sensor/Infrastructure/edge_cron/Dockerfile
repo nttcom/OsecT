@@ -255,5 +255,5 @@ RUN zkg autoconfig && zkg install --force --skiptest \
     zeek-plugin-profinet \
     zeek-plugin-s7comm \
     icsnpp-ethercat \
-    icsnpp-opcua-binary \
+    # icsnpp-opcua-binary \
     icsnpp-modbus
