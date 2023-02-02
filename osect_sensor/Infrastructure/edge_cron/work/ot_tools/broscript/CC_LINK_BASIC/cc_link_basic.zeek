@@ -134,7 +134,7 @@ function insert_res_aggregationData(aggregationData: AggregationData, info: Info
 			res_aggregationData[aggregationData]$num = res_aggregationData[aggregationData]$num + 1;
 			res_aggregationData[aggregationData]$ts_e = info$ts;
 		} else {
-			res_aggregationData[aggregationData] = [$ts_s = info$ts, $num = 1];
+			res_aggregationData[aggregationData] = [$ts_s = info$ts, $num = 1, $ts_e = info$ts];
 		}
 
 		return "done";
