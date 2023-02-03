@@ -31,4 +31,16 @@ merge_log "/opt/zeek/logs/${DATE}/ssdp.*.log" "ssdp.log"
 reformat_log "ssdp.log"
 merge_log "/opt/zeek/logs/${DATE}/cclink-ief-basic.*.log" "cclink-ief-basic.log"
 merge_log "/opt/zeek/logs/${DATE}/cclink-ie.*.log" "cclink-ie.log"
+
+if [ $4 = "True" ]; then
+    # tsharkでの出力と同じにするため
+    merge_log "/opt/zeek/logs/${DATE}/bacnet_service.*.log" "bacnet_service.log"
+    sed -i '/^#/d' bacnet_service.log
+    sed -i '1i #' bacnet_service.log
+fi
+
+if [ $5 = "True" ]; then
+    merge_log "/opt/zeek/logs/${DATE}/modbus_detailed.*.log" "modbus_detailed.log"
+fi
+
 rm /opt/zeek/logs/${DATE}/*.log
