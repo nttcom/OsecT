@@ -102,7 +102,7 @@ RUN zkg install --force --skiptest \
 #    zeek-plugin-s7comm \
 #    icsnpp-ethercat \
 #    icsnpp-opcua-binary \
-#    icsnpp-modbus \
+    icsnpp-modbus \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin
 
