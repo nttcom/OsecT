@@ -6,13 +6,13 @@ export {
 	redef enum Log::ID += { LOG };
 
 	type Info: record {
-		ts:		time			&log &optional;
+		ts:		time		&log &optional;
 		orig_mac:	string		&log &optional;
 		resp_mac:	string		&log &optional;
 		orig_ip:	addr		&log &optional;
 		resp_ip:	addr		&log &optional;
 		who_has:	addr		&log &optional;
-		pkts:       int		&log &optional;
+		pkts:       	int		&log &optional;
 	};
 
 	global log_neighbor: event(rec: Info);
@@ -35,28 +35,28 @@ export {
 	{
 	local info_insert: Info = [];
 	info_insert$ts = res_aggregationData[idx]$ts_s;
-    if ( idx?$orig_mac ){
+	if ( idx?$orig_mac ){
 		info_insert$orig_mac = idx$orig_mac;
 	}
-    if ( idx?$resp_mac ){
+	if ( idx?$resp_mac ){
 		info_insert$resp_mac = idx$resp_mac;
 	}
 	if ( idx?$orig_ip ){
 		info_insert$orig_ip = idx$orig_ip;
 	}
-    if ( idx?$resp_ip ){
+	if ( idx?$resp_ip ){
 		info_insert$resp_ip = idx$resp_ip;
 	}
 	# if ( idx?$unsolicited ){
 	# 	info_insert$unsolicited = idx$unsolicited;
 	# }
-    # if ( idx?$no_resp ){
+	# if ( idx?$no_resp ){
 	# 	info_insert$no_resp = idx$no_resp;
 	# }
-    if ( idx?$who_has ){
+	if ( idx?$who_has ){
 		info_insert$who_has = idx$who_has;
 	}
-    # if ( idx?$is_at ){
+	# if ( idx?$is_at ){
 	# 	info_insert$is_at = idx$is_at;
 	# }
 	# if ( res_aggregationData[idx]?$ts_e ){
@@ -78,10 +78,10 @@ export {
 function create_aggregationData(info: Info): AggregationData
 	{
 	local aggregationData: AggregationData;
-    if ( info?$orig_mac ){
+	if ( info?$orig_mac ){
 		aggregationData$orig_mac = info$orig_mac;
 	}
-    if ( info?$resp_mac ){
+	if ( info?$resp_mac ){
 		aggregationData$resp_mac = info$resp_mac;
 	}
 	if ( info?$orig_ip ){
@@ -90,16 +90,16 @@ function create_aggregationData(info: Info): AggregationData
 	if ( info?$resp_ip ){
 		aggregationData$resp_ip = info$resp_ip;
 	}
-    # if ( info?$unsolicited ){
+	# if ( info?$unsolicited ){
 	# 	aggregationData$unsolicited = info$unsolicited;
 	# }
-    # if ( info?$no_resp ){
+	# if ( info?$no_resp ){
 	# 	aggregationData$no_resp = info$no_resp;
 	# }
-    if ( info?$who_has ){
+	if ( info?$who_has ){
 		aggregationData$who_has = info$who_has;
 	}
-    # if ( info?$is_at ){
+	# if ( info?$is_at ){
 	# 	aggregationData$is_at = info$is_at;
 	# }
 
@@ -187,44 +187,3 @@ event icmp_neighbor_advertisement(c: connection, info: icmp_info, router: bool, 
 			# log_request(request);
         	}
 	}
-
-# # 集約 local debug用
-# event zeek_done()
-# 	{
-# 	print "zeek_done()";
-# 	print res_aggregationData;
-# 	for ( i in res_aggregationData ){
-# 		# print i;
-#         # print res_aggregationData[i];
-#         local info: Info = [];
-#         info$ts = res_aggregationData[i]$ts_s;
-#         if ( i?$orig_mac ){
-#             info$orig_mac = i$orig_mac;
-#         }
-#         if ( i?$resp_mac ){
-#             info$resp_mac = i$resp_mac;
-#         }
-#         if ( i?$orig_ip ){
-#             info$orig_ip = i$orig_ip;
-#         }
-#         if ( i?$resp_ip ){
-#             info$resp_ip = i$resp_ip;
-#         }
-#         # if ( i?$unsolicited ){
-#         #     info$unsolicited = i$unsolicited;
-#         # }
-#         # if ( i?$no_resp ){
-#         #     info$no_resp = i$no_resp;
-#         # }
-#         if ( i?$who_has ){
-#             info$who_has = i$who_has;
-#         }
-#         if ( res_aggregationData[i]?$num ){
-# 			info$pkts = res_aggregationData[i]$num;
-# 		}
-#         # if ( i?$is_at ){
-#         #     info$is_at = i$is_at;
-#         # }
-#         Log::write(NS::LOG, info);
-#     }
-# 	}
