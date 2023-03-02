@@ -6,7 +6,7 @@ export {
 	redef enum Log::ID += { LOG };
 
 	type Info: record {
-		ts:		time		&optional &log;
+		ts:		time		&log &optional;
 		orig_mac:	string		&log &optional;
 		orig_ip:	addr		&log &optional;
 		resp_mac:	string		&log &optional;

@@ -213,10 +213,11 @@ RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/site/ \
     && cp -p ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/site/ \
     && cp -p ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/site/ \
+    && cp -p ot_tools/broscript/dns.zeek /opt/zeek/share/zeek/base/protocols/dns/main.zeek \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
     && cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/ \
     && cp -p ot_tools/yaf.awk /opt/ot_tools/ \
-    && cp -pr ot_tools/p0f /opt/
+    && cp -pr ot_tools/p0f /opt/ 
 
 # 環境変数
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
