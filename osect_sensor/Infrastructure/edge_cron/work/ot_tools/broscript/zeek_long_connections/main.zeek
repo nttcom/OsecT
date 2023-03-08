@@ -4,14 +4,6 @@
 # This is probably not so great to reach into the Conn namespace..
 module Conn;
 
-# MACアドレスを出力させるために追記
-redef record Info += {
-      ## Link-layer address of the originator, if available.
-      orig_l2_addr: string    &log &optional;
-      ## Link-layer address of the responder, if available.
-      resp_l2_addr: string    &log &optional;
-};
-
 export {
 function set_conn_log_data_hack(c: connection)
         {
@@ -139,12 +131,12 @@ function long_callback(c: connection, cnt: count): interval
                        # すでに確認済のコネクションの場合は過去のデータを取得
                        if ( data_before$uid[i] == c$conn$uid )
                        {
-                       c$conn$orig_bytes = c$conn$orig_bytes - data_before$orig_bytes_before[i];
-                       c$conn$resp_bytes = c$conn$resp_bytes - data_before$resp_bytes_before[i];
-                       c$conn$orig_pkts = c$conn$orig_pkts - data_before$orig_pkts_before[i];
-                       c$conn$orig_ip_bytes = c$conn$orig_ip_bytes - data_before$orig_ip_bytes_before[i];
-                       c$conn$resp_pkts = c$conn$resp_pkts - data_before$resp_pkts_before[i];
-                       c$conn$resp_ip_bytes = c$conn$resp_ip_bytes - data_before$resp_ip_bytes_before[i];
+                       c$conn$orig_bytes = |c$conn$orig_bytes - data_before$orig_bytes_before[i]|;
+                       c$conn$resp_bytes = |c$conn$resp_bytes - data_before$resp_bytes_before[i]|;
+                       c$conn$orig_pkts = |c$conn$orig_pkts - data_before$orig_pkts_before[i]|;
+                       c$conn$orig_ip_bytes = |c$conn$orig_ip_bytes - data_before$orig_ip_bytes_before[i]|;
+                       c$conn$resp_pkts = |c$conn$resp_pkts - data_before$resp_pkts_before[i]|;
+                       c$conn$resp_ip_bytes = |c$conn$resp_ip_bytes - data_before$resp_ip_bytes_before[i]|;
 
                        data_before$orig_bytes_before[i] += c$conn$orig_bytes;
                        data_before$resp_bytes_before[i] += c$conn$resp_bytes;
@@ -158,13 +150,14 @@ function long_callback(c: connection, cnt: count): interval
                        # 未確認のコネクションの場合はデータを記録
                        if ( (|data_before$uid| - 1) == i )
                        {
-                       data_before$uid[|data_before$uid|] = c$conn$uid;
-                       data_before$orig_bytes_before[|data_before$uid|] = c$conn$orig_bytes;
-                       data_before$resp_bytes_before[|data_before$uid|] = c$conn$resp_bytes;
-                       data_before$orig_pkts_before[|data_before$uid|] = c$conn$orig_pkts;
-                       data_before$orig_ip_bytes_before[|data_before$uid|] = c$conn$orig_ip_bytes;
-                       data_before$resp_pkts_before[|data_before$uid|] = c$conn$resp_pkts;
-                       data_before$resp_ip_bytes_before[|data_before$uid|] = c$conn$resp_ip_bytes;
+		       local c_number = |data_before$uid|;
+                       data_before$uid[c_number] = c$conn$uid;
+                       data_before$orig_bytes_before[c_number] = c$conn$orig_bytes;
+                       data_before$resp_bytes_before[c_number] = c$conn$resp_bytes;
+                       data_before$orig_pkts_before[c_number] = c$conn$orig_pkts;
+                       data_before$orig_ip_bytes_before[c_number] = c$conn$orig_ip_bytes;
+                       data_before$resp_pkts_before[c_number] = c$conn$resp_pkts;
+                       data_before$resp_ip_bytes_before[c_number] = c$conn$resp_ip_bytes;
                        break;
                        }
                 }
