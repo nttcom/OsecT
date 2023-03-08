@@ -1,0 +1,51 @@
+module NBNS;
+
+import zeek;
+import spicy;
+
+public type Message = unit {
+    transaction_id: bytes &size=2;
+    flags: bitfield(16) {
+        tmp1: 0..10;
+        opcode: 11..14;
+        tmp2: 15..15;
+    };
+    questions: bytes &size=2;
+    answer_rrs: bytes &size=2;
+    authority_rrs: bytes &size=2;
+    additional_rrs: bytes &size=2;
+    switch ( self.flags.opcode ) {
+        5         -> registration:   Registration;
+        *             -> unk:   Unknown;
+        }; 
+
+    on %done { print self; }
+};
+
+type Registration = unit {
+    queries_name: bytes &size=34;
+    queries_type: bytes &size=2;
+    queries_class:bytes &size=2;
+    additional_records_head: bytes &size=6;
+    additional_records_ttl: uint32;
+    additional_data_len: uint16;
+    additional_name_flag: bitfield(16) {
+        tmp1: 0..3;
+        tmp2: 4..7;
+        tmp3: 8..11;
+        tmp3: 12..14;
+        name_type: 15..15;
+    };
+    additional_records_tail: bytes &eod;
+
+    # on %done { print self; zeek::confirm_protocol();}
+    # on %done { print self; }
+};
+
+
+type Unknown = unit {
+    data:          bytes &eod;
+
+    # on %done { print self; }
+    # on %done { print self; zeek::confirm_protocol();}
+};

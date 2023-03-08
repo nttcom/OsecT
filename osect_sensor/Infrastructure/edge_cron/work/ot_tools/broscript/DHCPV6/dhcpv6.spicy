@@ -1,0 +1,54 @@
+module DHCPV6;
+
+public type Message = unit {
+    msg_type: uint8;
+    transaction_ID: bytes &size=length_by_msg_type(self.msg_type);
+    options: Option[];
+    # tmp: bytes &eod;
+
+    on %done { print self; }
+};
+
+public function length_by_msg_type(msg_type: uint8): uint8{
+     if (msg_type == 12 || msg_type == 13) {
+        return 33;
+    } else {
+        return 3;
+    }
+}
+
+type Option = unit {
+    code: uint16 &convert=OptionCode($$);
+    switch ( self.code ) {
+        OptionCode::DOMAIN_NAME -> {
+            len: uint16;
+            flags: bytes &size=1;
+            : bytes &size=1;
+            host_name: bytes &size=self.len - 2;
+        }
+        OptionCode::VENDOR_CLASS -> {
+            len: uint16;
+            enterprise: uint32;
+            : bytes &size=2;
+            vendor: bytes &size=self.len - 6;
+        }
+        OptionCode::OP_REQUEST -> {
+            len: uint16;
+            rq_code: uint16[] &size=self.len;
+        }
+        * -> : UnparsedOption(self.code);
+    };
+    # on %done { print self; }
+};
+
+type OptionCode = enum {
+    DOMAIN_NAME = 39,
+    VENDOR_CLASS = 16,
+    OP_REQUEST = 6
+};
+
+type UnparsedOption = unit(code: OptionCode) {
+    len: uint16;
+    data: bytes &size=self.len;
+};
+

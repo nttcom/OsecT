@@ -84,3 +84,5 @@ if [ $? -ne 0 ]; then
   echo "failed to send version"
   exit 1
 fi
+
+kill -USR2 $(pidof suricata) 2>&1
