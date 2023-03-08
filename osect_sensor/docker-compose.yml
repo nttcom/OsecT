@@ -1,7 +1,7 @@
 version: '3'
 services:
   edge_cron:
-    image: cron:zeek_realtime_reduce_basechange
+    image: cron:revxxx
     build: "./Infrastructure/edge_cron/"
     volumes:
       - ./Application/edge_cron:/opt/edge_cron
