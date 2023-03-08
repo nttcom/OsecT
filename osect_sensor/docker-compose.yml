@@ -10,7 +10,6 @@ services:
       - ./keys/client.pem:/etc/ssl/private/client.pem
       - ./conf/suricata_update.conf:/etc/suricata_update.conf
       - ./conf/suricata.yaml:/opt/ot_tools/suricata.yaml       # suricata realtime
-      - ./conf/logrotate_p0f.conf:/etc/logrotate_p0f.conf      # p0f realtime
       - ./conf/crontab:/root/crontab
       - ./conf/zeekctl.cfg:/opt/zeek/etc/zeekctl.cfg           # zeek realtime
       - ./conf/node.cfg:/opt/zeek/etc/node.cfg                 # zeek realtime
