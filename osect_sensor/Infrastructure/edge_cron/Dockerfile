@@ -214,7 +214,6 @@ RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/site/ \
     && cp -p ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/site/ \
     && cp -p ot_tools/broscript/zeek_long_connections/main.zeek /opt/zeek/share/zeek/site/zeek-long-connections/ \
-    && cp -p ot_tools/broscript/dns.zeek /opt/zeek/share/zeek/base/protocols/dns/main.zeek \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
     && cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/ \
     && cp -p ot_tools/yaf.awk /opt/ot_tools/ \
