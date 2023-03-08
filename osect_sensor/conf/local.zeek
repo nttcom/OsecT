@@ -127,3 +127,6 @@ redef ignore_checksums = T;
 @load ssdp
 @load cc_link_basic
 @load cc_link_noip
+
+redef LongConnection::default_durations = LongConnection::Durations(1min);
+redef LongConnection::repeat_last_duration=T;
