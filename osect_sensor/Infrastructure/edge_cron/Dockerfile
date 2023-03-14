@@ -59,7 +59,7 @@ RUN apt-get update \
 RUN git clone --recursive https://github.com/zeek/zeek -b v5.0.0
 WORKDIR /home/work/zeek
 RUN ./configure --build-type=Release --prefix=/opt/zeek \
- && make \
+ && make -j6\
  && make install
 ENV PATH $PATH:/opt/zeek/bin
 
@@ -216,7 +216,6 @@ RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/broscript/zeek_long_connections/main.zeek /opt/zeek/share/zeek/site/zeek-long-connections/ \
     && cp -p ot_tools/broscript/dns.zeek /opt/zeek/share/zeek/base/protocols/dns/main.zeek \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
-    && cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/ \
     && cp -p ot_tools/yaf.awk /opt/ot_tools/ \
     && cp -pr ot_tools/p0f /opt/ 
 

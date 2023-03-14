@@ -4,9 +4,9 @@ export {
 	redef enum Log::ID += { LOG };
 
 	type Info: record {
-		ts:		time &log;
-		SrcIP:	addr &log;
-		SrcMAC: string &log;
+		ts:		time &log &optional;
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
 		Name: string &log &optional;
 		TTL: count &log &optional;
 		ServiceType: string &log &optional;
@@ -35,7 +35,90 @@ export {
 										["1e"] = "Browser Service Elections", 
 										["01"] = "Master Browser", 
 										};
+	
+	type AggregationData: record {
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
+		Name: string &log &optional;
+		TTL: count &log &optional;
+		ServiceType: string &log &optional;
+	};
+
+	type Ts_num: record {
+		ts_s:			time &log;
+		num: 			int &log;
+		ts_e: 			time &log &optional;
+	};
+
+	function insert_log(res_aggregationData: table[AggregationData] of Ts_num, idx: AggregationData): interval
+	{
+	local info_insert: Info = [];
+	info_insert$ts = res_aggregationData[idx]$ts_s;
+	if ( idx?$SrcIP ){
+		info_insert$SrcIP = idx$SrcIP;
+	}
+	if ( idx?$SrcMAC ){
+		info_insert$SrcMAC = idx$SrcMAC;
+	}
+	if ( idx?$Name ){
+		info_insert$Name = idx$Name;
+	}
+	if ( idx?$TTL ){
+		info_insert$TTL = idx$TTL;
+	}
+	if ( idx?$ServiceType ){
+		info_insert$ServiceType = idx$ServiceType;
+	}
+	# if ( res_aggregationData[idx]?$ts_e ){
+	# 	info_insert$ts_end = res_aggregationData[idx]$ts_e;
+	# }
+	# if ( res_aggregationData[idx]?$num ){
+	# 	info_insert$pkts = res_aggregationData[idx]$num;
+	# }
+	# print res_aggregationData;
+	# print info;
+	Log::write(NBNS::LOG, info_insert);
+	# res_aggregationData = {};
+	return 0secs;
+	}
+
+	global res_aggregationData: table[AggregationData] of Ts_num &create_expire=60sec &expire_func=insert_log;
 }
+
+function create_aggregationData(info: Info): AggregationData
+	{
+	local aggregationData: AggregationData;
+	
+	if ( info?$SrcIP ){
+		aggregationData$SrcIP = info$SrcIP;
+	}
+	if ( info?$SrcMAC ){
+		aggregationData$SrcMAC = info$SrcMAC;
+	}
+	if ( info?$Name ){
+		aggregationData$Name = info$Name;
+	}
+	if ( info?$TTL ){
+		aggregationData$TTL = info$TTL;
+	}
+	if ( info?$ServiceType ){
+		aggregationData$ServiceType = info$ServiceType;
+	}
+
+	return aggregationData;
+	}
+
+function insert_res_aggregationData(aggregationData: AggregationData, info: Info): string
+	{
+		if (aggregationData in res_aggregationData){
+			res_aggregationData[aggregationData]$num = res_aggregationData[aggregationData]$num + 1;
+			res_aggregationData[aggregationData]$ts_e = info$ts;
+		} else {
+			res_aggregationData[aggregationData] = [$ts_s = info$ts, $num = 1, $ts_e = info$ts];
+		}
+
+		return "done";
+	}
 
 # Maps a partial data connection ID to the request's Info record.
 global expected_data_conns: table[addr, port, addr] of Info;
@@ -93,7 +176,9 @@ event NBNS::message(c: connection, name_type: int, additional_records_ttl: count
 	# print fmt("%s %s %s %s %s %s %s", network_time(), c$id$orig_h, c$id$resp_h, c$orig$l2_addr, name_type, additional_records_ttl, queries_name);
 	if (name_type == 0){
 		local info: Info;
+		local aggregationData: AggregationData;
 		local tmp: string;
+
 		info$ts = network_time();
 		info$SrcIP = c$id$orig_h;
 		info$SrcMAC = c$orig$l2_addr;
@@ -105,8 +190,48 @@ event NBNS::message(c: connection, name_type: int, additional_records_ttl: count
 		} else {
 			info$ServiceType = "Unknown";
 		}
-		Log::write(NBNS::LOG, info);
+
+		# Log::write(NBNS::LOG, info);
+		aggregationData = create_aggregationData(info);
+		insert_res_aggregationData(aggregationData, info);
 		c$nbns = info;
 		# print fmt("%s %s %s %s %s %s %s", network_time(), c$id$orig_h, c$id$resp_h, c$orig$l2_addr, name_type, half_to_full(queries_name[1:-1]), additional_records_ttl);
 	}
 	}
+
+# # 集約 local debug用
+# event zeek_done()
+# 	{
+# 	print "zeek_done()";
+# 	print res_aggregationData;
+# 	for ( i in res_aggregationData ){
+# 		# print i;
+#         # print res_aggregationData[i];
+# 		local info: Info = [];
+# 		info$ts = res_aggregationData[i]$ts_s;
+# 		if ( i?$SrcIP ){
+# 			info$SrcIP = i$SrcIP;
+# 		}
+# 		if ( i?$SrcMAC ){
+# 			info$SrcMAC = i$SrcMAC;
+# 		}
+# 		if ( i?$Name ){
+# 			info$Name = i$Name;
+# 		}
+# 		if ( i?$TTL ){
+# 			info$TTL = i$TTL;
+# 		}
+# 		if ( i?$ServiceType ){
+# 			info$ServiceType = i$ServiceType;
+# 		}
+# 		# if ( res_aggregationData[i]?$ts_e ){
+# 		# 	info$ts_end = res_aggregationData[i]$ts_e;
+# 		# }
+# 		if ( res_aggregationData[i]?$num ){
+# 			info$pkts = res_aggregationData[i]$num;
+# 		}
+# 		# print res_aggregationData;
+# 		# print info;
+# 		Log::write(NBNS::LOG, info);
+#     }
+# 	}
