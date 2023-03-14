@@ -823,9 +823,11 @@ hook finalize_dns(c: connection)
 	# If Zeek is expiring state, we should go ahead and log all unmatched
 	# queries and replies now.
 	if( c$dns_state?$pending_query )
+		{
 		# Log::write(DNS::LOG, c$dns_state$pending_query);
 		aggregationData = create_aggregationData(c$dns_state$pending_query);
 		insert_res_aggregationData(aggregationData, c$dns_state$pending_query);
+		}
 
 	if( c$dns_state?$pending_queries )
 		log_unmatched_msgs(c$dns_state$pending_queries);
