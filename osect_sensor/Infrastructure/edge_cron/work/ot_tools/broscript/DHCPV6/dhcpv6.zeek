@@ -194,42 +194,42 @@ event DHCPV6::message(c: connection, is_orig: bool, options: Options)
 	# print fmt("Zeek saw from %s %s to %s: %s options: %s", c$start_time, c$id$orig_h, c$id$resp_h, c$orig$l2_addr, options$host_name);
 	}
 
-# # 集約 local debug用
-# event zeek_done()
-# 	{
-# 	print "zeek_done()";
-# 	print res_aggregationData;
-# 	for ( i in res_aggregationData ){
-# 		# print i;
-#         # print res_aggregationData[i];
-# 		local info: Info = [];
-# 		info$ts = res_aggregationData[i]$ts_s;
-#         if ( i?$SrcIP ){
-# 			info$SrcIP = i$SrcIP;
-# 		}
-# 		if ( i?$SrcMAC ){
-# 			info$SrcMAC = i$SrcMAC;
-# 		}
-# 		if ( i?$Hostname ){
-# 			info$Hostname = i$Hostname;
-# 		}
-# 		if ( i?$FingerPrint ){
-# 			info$FingerPrint = i$FingerPrint;
-# 		}
-# 		if ( i?$EnterpriseNumber ){
-# 			info$EnterpriseNumber = i$EnterpriseNumber;
-# 		}
-# 		if ( i?$VendorClass ){
-# 			info$VendorClass = i$VendorClass;
-# 		}
-# 		# if ( res_aggregationData[i]?$ts_e ){
-# 		# 	info$ts_end = res_aggregationData[i]$ts_e;
-# 		# }
-# 		# if ( res_aggregationData[i]?$num ){
-# 		# 	info$pkts = res_aggregationData[i]$num;
-# 		# }
-# 		# print res_aggregationData;
-# 		# print info;
-# 		Log::write(DHCPV6::LOG, info);
-#     }
-# 	}
+# 集約 local debug用
+event zeek_done()
+	{
+	print "zeek_done()";
+	print res_aggregationData;
+	for ( i in res_aggregationData ){
+		# print i;
+        # print res_aggregationData[i];
+		local info: Info = [];
+		info$ts = res_aggregationData[i]$ts_s;
+        if ( i?$SrcIP ){
+			info$SrcIP = i$SrcIP;
+		}
+		if ( i?$SrcMAC ){
+			info$SrcMAC = i$SrcMAC;
+		}
+		if ( i?$Hostname ){
+			info$Hostname = i$Hostname;
+		}
+		if ( i?$FingerPrint ){
+			info$FingerPrint = i$FingerPrint;
+		}
+		if ( i?$EnterpriseNumber ){
+			info$EnterpriseNumber = i$EnterpriseNumber;
+		}
+		if ( i?$VendorClass ){
+			info$VendorClass = i$VendorClass;
+		}
+		# if ( res_aggregationData[i]?$ts_e ){
+		# 	info$ts_end = res_aggregationData[i]$ts_e;
+		# }
+		# if ( res_aggregationData[i]?$num ){
+		# 	info$pkts = res_aggregationData[i]$num;
+		# }
+		# print res_aggregationData;
+		# print info;
+		Log::write(DHCPV6::LOG, info);
+    }
+	}

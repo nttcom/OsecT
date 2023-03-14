@@ -199,39 +199,39 @@ event NBNS::message(c: connection, name_type: int, additional_records_ttl: count
 	}
 	}
 
-# # 集約 local debug用
-# event zeek_done()
-# 	{
-# 	print "zeek_done()";
-# 	print res_aggregationData;
-# 	for ( i in res_aggregationData ){
-# 		# print i;
-#         # print res_aggregationData[i];
-# 		local info: Info = [];
-# 		info$ts = res_aggregationData[i]$ts_s;
-# 		if ( i?$SrcIP ){
-# 			info$SrcIP = i$SrcIP;
-# 		}
-# 		if ( i?$SrcMAC ){
-# 			info$SrcMAC = i$SrcMAC;
-# 		}
-# 		if ( i?$Name ){
-# 			info$Name = i$Name;
-# 		}
-# 		if ( i?$TTL ){
-# 			info$TTL = i$TTL;
-# 		}
-# 		if ( i?$ServiceType ){
-# 			info$ServiceType = i$ServiceType;
-# 		}
-# 		# if ( res_aggregationData[i]?$ts_e ){
-# 		# 	info$ts_end = res_aggregationData[i]$ts_e;
-# 		# }
-# 		if ( res_aggregationData[i]?$num ){
-# 			info$pkts = res_aggregationData[i]$num;
-# 		}
-# 		# print res_aggregationData;
-# 		# print info;
-# 		Log::write(NBNS::LOG, info);
-#     }
-# 	}
+# 集約 local debug用
+event zeek_done()
+	{
+	print "zeek_done()";
+	print res_aggregationData;
+	for ( i in res_aggregationData ){
+		# print i;
+        # print res_aggregationData[i];
+		local info: Info = [];
+		info$ts = res_aggregationData[i]$ts_s;
+		if ( i?$SrcIP ){
+			info$SrcIP = i$SrcIP;
+		}
+		if ( i?$SrcMAC ){
+			info$SrcMAC = i$SrcMAC;
+		}
+		if ( i?$Name ){
+			info$Name = i$Name;
+		}
+		if ( i?$TTL ){
+			info$TTL = i$TTL;
+		}
+		if ( i?$ServiceType ){
+			info$ServiceType = i$ServiceType;
+		}
+		# if ( res_aggregationData[i]?$ts_e ){
+		# 	info$ts_end = res_aggregationData[i]$ts_e;
+		# }
+		# if ( res_aggregationData[i]?$num ){
+		# 	info$pkts = res_aggregationData[i]$num;
+		# }
+		# print res_aggregationData;
+		# print info;
+		Log::write(NBNS::LOG, info);
+    }
+	}

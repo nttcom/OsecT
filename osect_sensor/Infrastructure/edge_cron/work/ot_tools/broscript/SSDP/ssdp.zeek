@@ -178,36 +178,36 @@ event SSDP::message(c: connection, method: string, line: Line)
 	# print fmt("%s %s %s %s %s %s %s", network_time(), c$id$orig_h, c$id$resp_h, c$orig$l2_addr, name_type, half_to_full(queries_name[1:-1]), additional_records_ttl);
 	}
 
-# # 集約 local debug用
-# event zeek_done()
-# 	{
-# 	print "zeek_done()";
-# 	print res_aggregationData;
-# 	for ( i in res_aggregationData ){
-# 		# print i;
-#         # print res_aggregationData[i];
-# 		local info: Info = [];
-# 		info$ts = res_aggregationData[i]$ts_s;
-# 		if ( i?$SrcIP ){
-# 			info$SrcIP = i$SrcIP;
-# 		}
-# 		if ( i?$SrcMAC ){
-# 			info$SrcMAC = i$SrcMAC;
-# 		}
-# 		if ( i?$Method ){
-# 			info$Method = i$Method;
-# 		}
-# 		if ( i?$SERVER_or_USER_AGENT ){
-# 			info$SERVER_or_USER_AGENT = i$SERVER_or_USER_AGENT;
-# 		}
-# 		# if ( res_aggregationData[i]?$ts_e ){
-# 		# 	info$ts_end = res_aggregationData[i]$ts_e;
-# 		# }
-# 		if ( res_aggregationData[i]?$num ){
-# 			info$pkts = res_aggregationData[i]$num;
-# 		}
-# 		# print res_aggregationData;
-# 		# print info;
-# 		Log::write(SSDP::LOG, info);
-#     }
-# 	}
+# 集約 local debug用
+event zeek_done()
+	{
+	print "zeek_done()";
+	print res_aggregationData;
+	for ( i in res_aggregationData ){
+		# print i;
+        # print res_aggregationData[i];
+		local info: Info = [];
+		info$ts = res_aggregationData[i]$ts_s;
+		if ( i?$SrcIP ){
+			info$SrcIP = i$SrcIP;
+		}
+		if ( i?$SrcMAC ){
+			info$SrcMAC = i$SrcMAC;
+		}
+		if ( i?$Method ){
+			info$Method = i$Method;
+		}
+		if ( i?$SERVER_or_USER_AGENT ){
+			info$SERVER_or_USER_AGENT = i$SERVER_or_USER_AGENT;
+		}
+		# if ( res_aggregationData[i]?$ts_e ){
+		# 	info$ts_end = res_aggregationData[i]$ts_e;
+		# }
+		# if ( res_aggregationData[i]?$num ){
+		# 	info$pkts = res_aggregationData[i]$num;
+		# }
+		# print res_aggregationData;
+		# print info;
+		Log::write(SSDP::LOG, info);
+    }
+	}
