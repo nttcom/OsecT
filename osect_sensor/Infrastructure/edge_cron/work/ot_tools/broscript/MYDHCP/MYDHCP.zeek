@@ -4,12 +4,12 @@ export {
 	redef enum Log::ID += { LOG };
 
 	type Info: record {
-		ts:		time 　　　　　　　　　　　　　　　　　　　　　　&log &optional;
-		SrcIP:	　　　　　　　　　　　　　　　　addr 　　　　　　　　　　　　　　　　　　　　　　&log &optional;
-		SrcMAC: 　　　　　　　　　　　　　　　　string 　　　　　　　　　　　　　　　　　　&log &optional;
-		Hostname: 　　　　　　　　　　　　string 　　　　　　　　　　　　　　　　　　&log &optional;
-		ParameterList: 　　vector of count　　&log &optional;
-		ClassId: 　　　　　　　　　　　　　　string 　　　　　　　　　　　　　　　　　　&log &optional;
+		ts:		time &log &optional;
+		SrcIP:		addr &log &optional;
+		SrcMAC: 	string &log &optional;
+		Hostname: 	string &log &optional;
+		ParameterList: 	vector of count &log &optional;
+		ClassId: 	string &log &optional;
 
 		# Set to block number of final piece of data once received.
 		final_block: count &optional;
@@ -26,16 +26,16 @@ export {
 										};
 
 	type AggregationData: record {
-		SrcIP:	　　　　　　　　　　　　　　addr 　　　　　　　　　　　　　　　　　　　　　　&log &optional;
-		SrcMAC: 　　　　　　　　　　　　　　string 　　　　　　　　　　　　　　　　　　&log &optional;
-		Hostname: 　　　　　　　　　　string 　　　　　　　　　　　　　　　　　　&log &optional;
-		ParameterList: vector of count &log &optional;
-		ClassId: 　　　　　　　　　　　　string 　　　　　　　　　　　　　　　　　　&log &optional;
+		SrcIP:		addr &log &optional;
+		SrcMAC: 	string &log &optional;
+		Hostname: 	string &log &optional;
+		ParameterList: 	vector of count &log &optional;
+		ClassId: 	string &log &optional;
 	};
 
 	type Ts_num: record {
 		ts_s:			time &log;
-		num: 			int 　　&log;
+		num: 			int &log;
 		ts_e: 			time &log &optional;
 	};
 
