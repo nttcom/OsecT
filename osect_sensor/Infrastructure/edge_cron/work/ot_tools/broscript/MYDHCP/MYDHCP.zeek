@@ -5,11 +5,11 @@ export {
 
 	type Info: record {
 		ts:		time &log &optional;
-		SrcIP:		addr &log &optional;
-		SrcMAC: 	string &log &optional;
-		Hostname: 	string &log &optional;
-		ParameterList: 	vector of count &log &optional;
-		ClassId: 	string &log &optional;
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
+		Hostname: string &log &optional;
+		ParameterList: vector of count &log &optional;
+		ClassId: string &log &optional;
 
 		# Set to block number of final piece of data once received.
 		final_block: count &optional;
@@ -25,12 +25,16 @@ export {
 	                                    ["\xCF\x80"] = "stop",
 										};
 
+	global Cc: set[string] = { "\x00", "\x01", "\x02", "\x03", "\x04", "\x05", "\x06", "\x07", "\x08", "\x09", "\x0a", "\x0b"
+								, "\x0c", "\x0d", "\x0e", "\x0f", "\x10", "\x11", "\x12", "\x13", "\x14", "\x15", "\x16", "\x17"
+								, "\x18", "\x19", "\x1a", "\x1b", "\x1c", "\x1d", "\x1e", "\x1f", "\x7f"};
+
 	type AggregationData: record {
-		SrcIP:		addr &log &optional;
-		SrcMAC: 	string &log &optional;
-		Hostname: 	string &log &optional;
-		ParameterList: 	vector of count &log &optional;
-		ClassId: 	string &log &optional;
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
+		Hostname: string &log &optional;
+		ParameterList: vector of count &log &optional;
+		ClassId: string &log &optional;
 	};
 
 	type Ts_num: record {
@@ -62,7 +66,7 @@ export {
 	# 	info_insert$ts_end = res_aggregationData[idx]$ts_e;
 	# }
 	# if ( res_aggregationData[idx]?$num ){
-	# 	info_insert$number = res_aggregationData[idx]$num;
+	# 	info_insert$pkts = res_aggregationData[idx]$num;
 	# }
 	# print res_aggregationData;
 	# print info;
@@ -108,6 +112,23 @@ function insert_res_aggregationData(aggregationData: AggregationData, info: Info
 		return "done";
 	}
 
+function del_hex(s: string): string
+{
+	local res = "";
+	for ( c in s )
+		{
+		if ( c in Cc )
+			{
+			next;
+			}
+		else
+			{
+			res = res + c;
+			}
+		}
+	return res;
+}
+
 # Maps a partial data connection ID to the request's Info record.
 global expected_data_conns: table[addr, port, addr] of Info;
 
@@ -130,9 +151,9 @@ event MYDHCP::message(
 
 	info$ts = network_time();
 	info$SrcIP = c$id$orig_h;
-	info$SrcMAC = c$orig$l2_addr;
+	info$SrcMAC = msg$chaddr;
 	if ( options?$host_name ){
-		info$Hostname = options$host_name;
+		info$Hostname = del_hex(options$host_name);
 	}
 	if ( options?$param_list ){
 		info$ParameterList = options$param_list;
@@ -155,8 +176,8 @@ event MYDHCP::message(
 # 集約 local debug用
 event zeek_done()
 	{
-	print "zeek_done()";
-	print res_aggregationData;
+	# print "zeek_done()";
+	# print res_aggregationData;
 	for ( i in res_aggregationData ){
 		# print i;
         # print res_aggregationData[i];

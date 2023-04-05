@@ -4,13 +4,13 @@ export {
 	redef enum Log::ID += { LOG };
 
 	type Info: record {
-		ts:		  time            &log &optional;
-		SrcIP:	          addr            &log &optional;
-		SrcMAC:           string          &log &optional;
-		Hostname:         string          &log &optional;
-		FingerPrint:      vector of count &log &optional;
-		EnterpriseNumber: count           &log &optional;
-		VendorClass:      string          &log &optional;
+		ts:		time &log &optional;
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
+		Hostname: string &log &optional;
+		FingerPrint: vector of count &log &optional;
+		EnterpriseNumber: count &log &optional;
+		VendorClass: string &log &optional;
 
 		# Set to block number of final piece of data once received.
 		final_block: count &optional;
@@ -26,18 +26,22 @@ export {
 	                                    ["\xCF\x80"] = "stop",
 										};
 	
+	global Cc: set[string] = { "\x00", "\x01", "\x02", "\x03", "\x04", "\x05", "\x06", "\x07", "\x08", "\x09", "\x0a", "\x0b"
+								, "\x0c", "\x0d", "\x0e", "\x0f", "\x10", "\x11", "\x12", "\x13", "\x14", "\x15", "\x16", "\x17"
+								, "\x18", "\x19", "\x1a", "\x1b", "\x1c", "\x1d", "\x1e", "\x1f", "\x7f"};
+
 	type AggregationData: record {
-		SrcIP:	          addr            &log &optional;
-		SrcMAC:           string          &log &optional;
-		Hostname:         string          &log &optional;
-		FingerPrint:      vector of count &log &optional;
-		EnterpriseNumber: count           &log &optional;
-		VendorClass:      string          &log &optional;
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
+		Hostname: string &log &optional;
+		FingerPrint: vector of count &log &optional;
+		EnterpriseNumber: count &log &optional;
+		VendorClass: string &log &optional;
 	};
 
 	type Ts_num: record {
 		ts_s:			time &log;
-		num: 			int  &log;
+		num: 			int &log;
 		ts_e: 			time &log &optional;
 	};
 
@@ -138,7 +142,7 @@ function del_hex(s: string): string
 	local res = "";
 	for ( c in s )
 		{
-		if ( c == "\x05" || c == "\x00" )
+		if ( c in Cc )
 			{
 			next;
 			}
@@ -156,10 +160,10 @@ event zeek_init() &priority=5
 	}
 
 type Options: record {
-	host_name:  string;
-	vendor:     string;
+	host_name: string;
+	vendor: string;
 	enterprise: count;
-	rq_code:    vector of count;
+	rq_code: vector of count;
 };
 
 event DHCPV6::message(c: connection, is_orig: bool, options: Options)
@@ -197,8 +201,8 @@ event DHCPV6::message(c: connection, is_orig: bool, options: Options)
 # 集約 local debug用
 event zeek_done()
 	{
-	print "zeek_done()";
-	print res_aggregationData;
+	# print "zeek_done()";
+	# print res_aggregationData;
 	for ( i in res_aggregationData ){
 		# print i;
         # print res_aggregationData[i];
