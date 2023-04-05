@@ -4,12 +4,12 @@ export {
 	redef enum Log::ID += { LOG };
 
 	type Info: record {
-		ts:		time 	&log &optional;
-		SrcIP:		addr 	&log &optional;
-		SrcMAC: 	string 	&log &optional;
-		Name: 		string 	&log &optional;
-		TTL: 		count 	&log &optional;
-		ServiceType: 	string 	&log &optional;
+		ts:		time &log &optional;
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
+		Name: string &log &optional;
+		TTL: count &log &optional;
+		ServiceType: string &log &optional;
 
 		# Set to block number of final piece of data once received.
 		final_block: count &optional;
@@ -37,16 +37,16 @@ export {
 										};
 	
 	type AggregationData: record {
-		SrcIP:		addr 	&log &optional;
-		SrcMAC: 	string 	&log &optional;
-		Name: 		string 	&log &optional;
-		TTL: 		count 	&log &optional;
-		ServiceType: 	string 	&log &optional;
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
+		Name: string &log &optional;
+		TTL: count &log &optional;
+		ServiceType: string &log &optional;
 	};
 
 	type Ts_num: record {
 		ts_s:			time &log;
-		num: 			int  &log;
+		num: 			int &log;
 		ts_e: 			time &log &optional;
 	};
 
@@ -152,8 +152,8 @@ function half_to_full(queries_name: string): string
 		tmp1 = (bytestring_to_count(queries_name[i]) - 0x41) * 16;
 		tmp2 = (bytestring_to_count(queries_name[i + 1]) - 0x41) & 0xf;
 		tmp3 = fmt("%x", tmp1 | tmp2);
-		if (tmp3 == "0"){
-			res[|res|] = hexstr_to_bytestring("00");
+		if (|tmp3| == 1){
+			res[|res|] = hexstr_to_bytestring("0" + tmp3);
 		} else {
 			res[|res|] = hexstr_to_bytestring(tmp3);
 		}
@@ -202,8 +202,8 @@ event NBNS::message(c: connection, name_type: int, additional_records_ttl: count
 # 集約 local debug用
 event zeek_done()
 	{
-	print "zeek_done()";
-	print res_aggregationData;
+	# print "zeek_done()";
+	# print res_aggregationData;
 	for ( i in res_aggregationData ){
 		# print i;
         # print res_aggregationData[i];

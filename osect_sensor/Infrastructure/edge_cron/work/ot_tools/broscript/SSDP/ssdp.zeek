@@ -5,11 +5,11 @@ export {
 	redef ignore_checksums = T;
 
 	type Info: record {
-		ts:			time &log &optional;
-		SrcIP:			addr &log &optional;
-		SrcMAC: 		string &log &optional;
-		Method: 		string &log &optional;
-		SERVER_or_USER_AGENT: 	string &log &optional;
+		ts:		time &log &optional;
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
+		Method: string &log &optional;
+		SERVER_or_USER_AGENT: string &log &optional;
 
 		# Set to block number of final piece of data once received.
 		final_block: count &optional;
@@ -22,15 +22,15 @@ export {
 	global log_ssdp: event(rec: Info);
 
 	type AggregationData: record {
-		SrcIP:			addr &log &optional;
-		SrcMAC: 		string &log &optional;
-		Method: 		string &log &optional;
-		SERVER_or_USER_AGENT: 	string &log &optional;
+		SrcIP:	addr &log &optional;
+		SrcMAC: string &log &optional;
+		Method: string &log &optional;
+		SERVER_or_USER_AGENT: string &log &optional;
 	};
 
 	type Ts_num: record {
 		ts_s:			time &log;
-		num: 			int  &log;
+		num: 			int &log;
 		ts_e: 			time &log &optional;
 	};
 
@@ -181,8 +181,8 @@ event SSDP::message(c: connection, method: string, line: Line)
 # 集約 local debug用
 event zeek_done()
 	{
-	print "zeek_done()";
-	print res_aggregationData;
+	# print "zeek_done()";
+	# print res_aggregationData;
 	for ( i in res_aggregationData ){
 		# print i;
         # print res_aggregationData[i];
