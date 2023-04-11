@@ -142,7 +142,7 @@ event arp_request(mac_src: string, mac_dst: string, SPA: addr, SHA: string, TPA:
 	local request: Info;
 	local aggregationData: AggregationData;
 	request$ts = network_time();
-	request$orig_mac = mac_src;
+	request$orig_mac = SHA;
 	request$orig_ip = SPA;
 	request$resp_ip = TPA;
 	request$who_has = TPA;
@@ -156,8 +156,8 @@ event arp_reply(mac_src: string, mac_dst: string, SPA: addr, SHA: string, TPA: a
 	local request: Info;
 	local aggregationData: AggregationData;
 	request$ts = network_time();
-	request$orig_mac = mac_dst;
-	request$resp_mac = mac_src;
+	request$orig_mac = THA;
+	request$resp_mac = SHA;
 	request$orig_ip = TPA;
 	request$resp_ip = SPA;
 	# log_request(request);
