@@ -80,6 +80,11 @@ $ mv ~/OsecT/osect_sensor ~/
 
 ### 3.1. 監視ネットワークインタフェースの設定
 
+まず、インタフェースを確認します。
+```bash
+ip a
+```
+
 設定箇所は3箇所です。
 
 1箇所目：crontabを編集し、監視ネットワークを指定します。
@@ -104,7 +109,7 @@ $ vi ~/osect_sensor/conf/crontab
 * * * * * /opt/ot_tools/yaf_cron.sh enp0s8 > /dev/null 2>&1
 ```
 
-3箇所目：suricata.yamlを編集し、監視ネットワークを指定します。
+2箇所目：suricata.yamlを編集し、監視ネットワークを指定します。
 
 ```bash
 $ vi ~/osect_sensor/conf/suricata.yaml
@@ -126,7 +131,7 @@ af-packet:
   - interface: enp0s8
 ```
 
-4箇所目：node.cfgを編集し、監視ネットワークを指定します。合わせて、割り当てるCPUコア数も指定します。
+3箇所目：node.cfgを編集し、監視ネットワークを指定します。
 
 ```bash
 $ vi ~/osect_sensor/conf/node.cfg
@@ -144,7 +149,7 @@ lb_procs=6
 pin_cpus=0,1,2,3,4,5
 ```
 
-編集例：監視ネットワークインタフェースがenp0s8, CPUコア数が6の場合
+編集例：監視ネットワークインタフェースがenp0s8の場合
 
 ```bash
 [worker-1]
