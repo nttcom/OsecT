@@ -13,6 +13,8 @@ reformat_log () {
 }
 
 cd $1/$2
+# conn_long.logと重複するためconn.logに出力されるduration>60を除外
+awk -i inplace '$9<60{print}' "conn.log"
 # conn.logとconn_long.logの両方を回収
 merge_log "conn*.log" "conn.log"
 merge_log "arp.*.log" "arp.log"
