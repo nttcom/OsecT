@@ -1,0 +1,49 @@
+# Copyright (c) 2021 by the Zeek Project. See LICENSE for details.
+
+module Zeek_DHCPV6;
+
+import DHCPV6;
+import zeek;
+
+on DHCPV6::Message::%done {
+    # zeek::confirm_protocol();
+}
+
+on DHCPV6::Message::%error {
+    zeek::reject_protocol("error while parsing DHCP request");
+}
+
+public function create_options(msg: DHCPV6::Message):
+    tuple<
+        host_name: bytes,
+        vendor: bytes,
+        enterprise: uint32,
+        rq_code: vector<uint16>
+        >{
+
+    local host_name: bytes;
+    local vendor: bytes;
+    local enterprise: uint32;
+    local rq_code: vector<uint16>;
+
+    for (option in msg.options) {
+        if (option?.host_name)
+            host_name = option.host_name;
+
+        if (option?.vendor)
+            vendor = option.vendor;
+
+        if (option?.enterprise)
+            enterprise = option.enterprise;
+
+        if (option?.rq_code)
+            rq_code = option.rq_code;
+    }
+
+    return (
+        host_name,
+        vendor,
+        enterprise,
+        rq_code,
+    );
+}

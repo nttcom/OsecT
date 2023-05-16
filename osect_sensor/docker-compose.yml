@@ -1,26 +1,19 @@
 version: '3'
 services:
-  edge_tcpdump:
-    build: "./Infrastructure/edge_tcpdump/"
-    volumes:
-      - ./Application/edge_tcpdump:/opt/edge_tcpdump
-      - pcap-volume:/opt/edge_cron/paper/sc_src/input/pcap/uploaded/
-    network_mode: host
-    command: ["/opt/ot_tools/doc_run_realtime.sh"]
-    restart: always
-    mem_limit: 128g
-    oom_kill_disable: true
   edge_cron:
+    image: cron:revxxx
     build: "./Infrastructure/edge_cron/"
     volumes:
       - ./Application/edge_cron:/opt/edge_cron
-      - pcap-volume:/opt/edge_cron/paper/sc_src/input/pcap/uploaded/
       - pcap-logs-volume:/opt/edge_cron/paper/sc_src/input/pcap/complete/
       - logs-volume:/var/log/ot_tools/
       - ./keys/client.pem:/etc/ssl/private/client.pem
       - ./conf/suricata_update.conf:/etc/suricata_update.conf
-      - ./conf/suricata.yaml:/opt/ot_tools/suricata.yaml
+      - ./conf/suricata.yaml:/opt/ot_tools/suricata.yaml       # suricata realtime
       - ./conf/crontab:/root/crontab
+      - ./conf/zeekctl.cfg:/opt/zeek/etc/zeekctl.cfg           # zeek realtime
+      - ./conf/node.cfg:/opt/zeek/etc/node.cfg                 # zeek realtime
+      - ./conf/local.zeek:/opt/zeek/share/zeek/site/local.zeek # zeek realtime
     network_mode: host
     ulimits:
       memlock: -1
@@ -34,11 +27,6 @@ services:
       '
     restart: always
 volumes:
-  pcap-volume:
-      driver_opts:
-        type: local
-        device: ./logs/pcap
-        o: bind
   pcap-logs-volume:
       driver_opts:
         type: local
@@ -49,5 +37,3 @@ volumes:
         type: local
         device: ./logs/ottools
         o: bind
-
-

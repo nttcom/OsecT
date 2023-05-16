@@ -1,27 +1,47 @@
 #!/bin/bash
 
-cd $1/$2 || exit
-mkdir tmp
-cd tmp || exit
+merge_log () {
+    cat $(find /opt/zeek/logs -name ${1}) > $2
+    sed -i '/^#/d' $2
+    sed -i '1i #\n#\n#\n#\n#\n#\n#\n#' $2
+    sed -i '$a #close' $2
+}
 
-/opt/zeek/bin/zeek -r $1/$3 \
-		   /opt/zeek/share/zeek/base/protocols/arp.zeek \
-		   /opt/zeek/share/zeek/base/protocols/ns.zeek \
-		   /opt/zeek/share/zeek/base/protocols/consts_bacnet.zeek \
-		   /opt/zeek/share/zeek/base/protocols/main_bacnet.zeek \
-           /opt/zeek/share/zeek/site/icsnpp-modbus/main.zeek
-mv {conn,arp,ns,dns,http}.log ../
+reformat_log () {
+    sed -i '/^#/d' $1
+    sed -i '1i #' $1
+}
+
+cd $1/$2
+# conn.logとconn_long.logの両方を回収
+merge_log "conn*.log" "conn.log"
+merge_log "arp.*.log" "arp.log"
+merge_log "ns.*.log" "ns.log"
+merge_log "dns.*.log" "dns.log"
+merge_log "http.*.log" "http.log"
+merge_log "cifs.*.log" "mswin-browser.log"
+reformat_log "mswin-browser.log"
+merge_log "mydhcp.*.log" "dhcp2.log"
+reformat_log "dhcp2.log"
+merge_log "dhcpv6.*.log" "dhcpv6.log"
+reformat_log "dhcpv6.log"
+merge_log "nbns.*.log" "netbios-ns.log"
+reformat_log "netbios-ns.log"
+merge_log "ssdp.*.log" "ssdp.log"
+reformat_log "ssdp.log"
+# OTプロトコル: CC-Link
+merge_log "cclink-ief-basic.*.log" "cclink-ief-basic.log"
+merge_log "cclink-ie.*.log" "cclink-ie.log"
 
 if [ $4 = "True" ]; then
     # tsharkでの出力と同じにするため
+    merge_log "bacnet_service.*.log" "bacnet_service.log"
     sed -i '/^#/d' bacnet_service.log
     sed -i '1i #' bacnet_service.log
-    mv bacnet_service.log ../
 fi
 
 if [ $5 = "True" ]; then
-    mv modbus_detailed.log ../
+    merge_log "modbus_detailed.*.log" "modbus_detailed.log"
 fi
 
-cd $1/$2 || exit
-rm -rf tmp
+rm $(find /opt/zeek/logs -name "*.log")
