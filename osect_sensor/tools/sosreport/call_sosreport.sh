@@ -26,4 +26,4 @@ fi
 
 cp -p ${PLUGINS_IN_PATH}/${PLUGINS_FILE_NAME} ${PLUGINS_OUT_PATH}/${PLUGINS_FILE_NAME}
 
-sos report --plugin-timeout 0 --batch --all-logs -z ${COMPRESSION_TYPE} -o ${EXEC_PLUGIN_NAME}
+sos report --batch --all-logs -z ${COMPRESSION_TYPE} -o ${EXEC_PLUGIN_NAME}

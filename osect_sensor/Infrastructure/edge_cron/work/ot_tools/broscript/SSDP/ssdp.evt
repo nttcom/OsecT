@@ -1,0 +1,8 @@
+protocol analyzer spicy::SSDP over UDP:
+    # parse with SSDP::Message,
+    parse originator with SSDP::Message,
+    port 1900/udp;
+
+import SSDP;
+
+on SSDP::Message -> event SSDP::message($conn, self.method, SSDP::create_line(self));

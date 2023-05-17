@@ -1,0 +1,72 @@
+module CIFS;
+
+import zeek;
+import spicy;
+
+public type Packet = unit {
+            :  bytes &size=168;
+    opcode  :  uint8 &convert=Opcode($$);
+    switch ( self.opcode ) {
+        Opcode::HostAnnouncement          -> hostAnnouncement:   HostAnnouncement;
+        Opcode::LocalMatserAnnouncement   -> localMatserAnnouncement:   LocalMatserAnnouncement;
+        *                                 -> unk:   Unknown;
+        };        
+
+    on %done { print self; }
+};
+
+type Opcode = enum {
+    HostAnnouncement = 0x01,
+    LocalMatserAnnouncement = 0x0f,
+};
+
+type HostAnnouncement = unit {
+    update_count        :  bytes &size=1;
+    update_periodicity  :  bytes &size=4;
+    serverName          :  bytes &size=16;
+    osVersion_1         :  uint8;
+    osVersion_2         :  uint8;
+    serverType          :  bitfield(32) {
+        x1: 0..7;
+        x2: 8..15;
+        x3: 16..23;
+        x4: 24..31;
+    } &byte-order=spicy::ByteOrder::Little;
+    browserVersion_1    :  uint8;
+    browserVersion_2    :  uint8;
+    signature_1         :  bytes &size=1;
+    signature_2         :  bytes &size=1;
+    hostComment         :  bytes &eod;
+
+    # on %done { print self; zeek::confirm_protocol();}
+    # on %done { print self; }
+};
+
+type LocalMatserAnnouncement = unit {
+    update_count        :  bytes &size=1;
+    update_periodicity  :  bytes &size=4;
+    serverName          :  bytes &size=16;
+    osVersion_1         :  uint8;
+    osVersion_2         :  uint8;
+    serverType          :  bitfield(32) {
+        x1: 0..7;
+        x2: 8..15;
+        x3: 16..23;
+        x4: 24..31;
+    } &byte-order=spicy::ByteOrder::Little;
+    browserVersion_1    :  uint8;
+    browserVersion_2    :  uint8;
+    signature_1         :  bytes &size=1;
+    signature_2         :  bytes &size=1;
+    hostComment         :  bytes &eod;
+
+    # on %done { print self; zeek::confirm_protocol();}
+    # on %done { print self; }
+};
+
+type Unknown = unit {
+    data:          bytes &eod;
+
+    # on %done { print self; }
+    # on %done { print self; zeek::confirm_protocol();}
+};

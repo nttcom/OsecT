@@ -1,0 +1,9 @@
+protocol analyzer spicy::DHCPV6 over UDP:
+    # parse with DHCPV6::Message,
+    parse originator with DHCPV6::Message,
+    port 547/udp;
+
+import DHCPV6;
+import Zeek_DHCPV6;
+
+on DHCPV6::Message -> event DHCPV6::message($conn, $is_orig, Zeek_DHCPV6::create_options(self));

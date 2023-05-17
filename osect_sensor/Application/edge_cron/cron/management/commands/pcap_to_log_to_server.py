@@ -10,6 +10,7 @@ import random
 import shutil
 import tarfile
 import time
+import datetime
 from multiprocessing import Pool
 from subprocess import Popen
 
@@ -38,8 +39,15 @@ from common.common_config import (
     SURICATA_YAML,
     YAF_ENABLE,
     YAF_SHELL_COMMAND,
+    BACNET_ENABLE,
+    MODBUS_ENABLE,
+    PCAP_TO_DB_CPU,
+    PCAP_SERVER_UPLOADING_FILE_PATH,
+    API_URL,
+    LABEL_ID,
+    CLIENT_CERTIFICATE_PATH,
 )
-from common.common_function import pcap2log
+# from common.common_function import pcap2log
 from django.core.management.base import BaseCommand
 from edge_cron.settings import BASE_DIR
 
@@ -72,11 +80,11 @@ class Command(BaseCommand):
         logger.debug("DEBUG pcap_num=" + str(pcap_num))
         logger.debug(str(pcap_list))
 
-        if pcap_num == 0:
-            logger.info(
-                "There is no target file [" + ", ".join(allowed_ext_list) + "]"
-            )
-            return
+        #if pcap_num == 0:
+        #    logger.info(
+        #        "There is no target file [" + ", ".join(allowed_ext_list) + "]"
+        #    )
+        #    return
 
         start = time.time()
         logger.info("{} ".format("start pcap_to_log"))
@@ -85,8 +93,8 @@ class Command(BaseCommand):
         log_info(start, "end pcap_to_log")
 
         # 処理済みのPCAPファイルを移動
-        move_pcap_file(analyze_pcap_list)
-        log_info(start, "end move_pcap_file")
+        #move_pcap_file(analyze_pcap_list)
+        #log_info(start, "end move_pcap_file")
 
         # 処理済みのログが含まれるディレクトリを完了ディレクトリに移動
         move_pcap_dir(analyze_pcap_dir_list, PCAP_COMPLETE_FILE_PATH)
@@ -133,10 +141,10 @@ class Command(BaseCommand):
         end_time = time.perf_counter()
 
         # 乱数 < 処理時間の場合はsleepしない
-        processing_time = math.ceil(end_time - start_time)
-        sleep_time = max(0, (random.randrange(1, 60, 1) - processing_time))
-        time.sleep(sleep_time)
-        logger.info("sleep " + str(sleep_time) + "s")
+        #processing_time = math.ceil(end_time - start_time)
+        #sleep_time = max(0, (random.randrange(1, 60, 1) - processing_time))
+        #time.sleep(sleep_time)
+        #logger.info("sleep " + str(sleep_time) + "s")
 
         try:
             send_server(tar_list)
@@ -184,26 +192,11 @@ def wrapper_log_function(func_type, analyze_full_path, dir_name, pcap_name):
     elif func_type == 2:
         # pcap2logのログ作成処理
         logger.info("pcap to log")
-        pcap2log(
-            PCAP_ANALYZE_FILE_PATH + pcap_name,
-            PCAP_ANALYZE_FILE_PATH + dir_name,
-        )
-# tshark -> zeek-plugin-bacnetに移行したため
-#    elif func_type == 3:
-#        if FUNC_RESTRICTION is False:
-#            # bacnet用ログの作成処理
-#            logger.info("execute: " + BACNET_SHELL_COMMAND)
-#            proc = Popen(
-#                BACNET_SHELL_COMMAND
-#                + " "
-#                + analyze_full_path
-#                + " "
-#                + dir_name
-#                + " "
-#                + pcap_name,
-#                shell=True,
-#            )
-#            proc.wait()
+        #pcap2log(
+        #    PCAP_ANALYZE_FILE_PATH + pcap_name,
+        #    PCAP_ANALYZE_FILE_PATH + dir_name,
+        #)
+        #proc.wait()
     elif func_type == 4:
         if SURICATA_ENABLE:
             # suricataログの処理
@@ -280,56 +273,60 @@ def pcap_to_log(pcap_list):
     analyze_full_path = os.path.join(BASE_DIR, PCAP_ANALYZE_FILE_PATH)
     analyze_pcap_dir_list = []
     analyze_pcap_list = []
-    for index, pcap in enumerate(pcap_list, 1):
-        pcap_name = os.path.basename(pcap)
-        dir_name = os.path.splitext(os.path.basename(pcap))[0]
-        analyze_pcap_dir = analyze_full_path + dir_name
-        analyze_pcap_dir_list.append(analyze_pcap_dir)
+    # for index, pcap in enumerate(pcap_list, 1):
+    # pcap_name = os.path.basename(pcap)
+    # dir_name = os.path.splitext(os.path.basename(pcap))[0]
+    dir_name = "realtime-" + datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+    pcap_name = "paper" # ダミー
+    analyze_pcap_dir = analyze_full_path + dir_name
+    analyze_pcap_dir_list.append(analyze_pcap_dir)
 
-        try:
-            # pcap移動処理
-            logger.info("move pcap file")
-            analyze_pcap = shutil.move(pcap, PCAP_ANALYZE_FILE_PATH)
-            analyze_pcap_list.append(analyze_pcap)
-        except Exception as e:
-            logger.error("pcap move error (to analyze directory): " + str(e))
-            continue
+        #try:
+        #    # pcap移動処理
+        #    logger.info("move pcap file")
+        #    analyze_pcap = shutil.move(pcap, PCAP_ANALYZE_FILE_PATH)
+        #    logger.info("end move pcap file")
+        #    analyze_pcap_list.append(analyze_pcap)
+        #    logger.info("end append pcap list")
+        #except Exception as e:
+        #    logger.error("pcap move error (to analyze directory): " + str(e))
+        #    continue
 
-        try:
-            # broログ格納用ディレクトリ作成処理
-            logger.info("make analyze directory [" + analyze_pcap_dir + "]")
-            os.mkdir(analyze_pcap_dir)
-        except Exception as e:
-            logger.error(err_msg + "make directory error: " + str(e))
-            continue
+    try:
+        # broログ格納用ディレクトリ作成処理
+        logger.info("make analyze directory [" + analyze_pcap_dir + "]")
+        os.mkdir(analyze_pcap_dir)
+    except Exception as e:
+        logger.error(err_msg + "make directory error: " + str(e))
+        # continue
 
-        try:
-            if YAF_ENABLE:
-                func_type_list = (
-                    [0, 1, 2, 4, 5]
+    try:
+        if YAF_ENABLE:
+            func_type_list = (
+                [0, 1, 2, 4, 5]
+            )
+        else:
+            func_type_list = (
+                [0, 1, 2, 4]
+            )
+        analyze_full_path_list = [analyze_full_path] * len(func_type_list)
+        dir_name_list = [dir_name] * len(func_type_list)
+        pcap_name_list = [pcap_name] * len(func_type_list)
+        
+        with Pool(PCAP_TO_DB_CPU) as pool:
+            args = list(
+                zip(
+                    func_type_list,
+                    analyze_full_path_list,
+                    dir_name_list,
+                    pcap_name_list,
                 )
-            else:
-                func_type_list = (
-                    [0, 1, 2, 4]
-                )
-            analyze_full_path_list = [analyze_full_path] * len(func_type_list)
-            dir_name_list = [dir_name] * len(func_type_list)
-            pcap_name_list = [pcap_name] * len(func_type_list)
+            )
+            pool.starmap(wrapper_log_function, args)
 
-            with Pool(PCAP_TO_DB_CPU) as pool:
-                args = list(
-                    zip(
-                        func_type_list,
-                        analyze_full_path_list,
-                        dir_name_list,
-                        pcap_name_list,
-                    )
-                )
-                pool.starmap(wrapper_log_function, args)
-
-        except Exception as e:
-            logger.error("analyze error: " + str(e))
-            continue
+    except Exception as e:
+        logger.error("analyze error: " + str(e))
+        # continue
 
     logger.info(str(analyze_pcap_dir_list))
     logger.info(str(analyze_pcap_list))

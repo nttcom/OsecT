@@ -1,0 +1,9 @@
+protocol analyzer spicy::NBNS over UDP:
+    parse with NBNS::Message,
+    # parse originator with NBNS::Message,
+    port 137/udp;
+
+import NBNS;
+
+# on NBNS::Message -> event NBNS::message($conn, self.flags, self.registration.additional_name_flag_addr, self.registration.additional_records_ttl, self.registration.queries_name);
+on NBNS::Registration -> event NBNS::message($conn, self.additional_name_flag.name_type, self.additional_records_ttl, self.queries_name);
