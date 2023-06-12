@@ -129,5 +129,59 @@ redef LogAscii::enable_utf_8 = F;
 @load cc_link_basic
 @load cc_link_noip
 
+# セッション接続されたままパケットが1分以上流れない場合はセッションを閉じる
+redef Conn::analyzer_inactivity_timeouts += {
+        # For interactive services, allow longer periods of inactivity.
+        [[Analyzer::ANALYZER_SSH, Analyzer::ANALYZER_FTP]] = 1min,
+};
+
+# セッション接続されたままパケットが1分以上流れない場合はセッションを閉じる
+redef Conn::port_inactivity_timeouts += {
+                [[21/tcp, 22/tcp, 23/tcp, 513/tcp, 61450/udp]] = 1min,
+};
+
+# 1分おきにconn_long.logを出力
 redef LongConnection::default_durations = LongConnection::Durations(1min);
 redef LongConnection::repeat_last_duration=T;
+
+# conn.logのtsをログ出力時間に変更
+hook Conn::log_policy(rec: Conn::Info, id: Log::ID, filter: Log::Filter) {
+        rec$ts = network_time();
+}
+
+redef record Conn::Info += {
+        prev_orig_bytes: count &default=0;
+        prev_resp_bytes: count &default=0;
+        prev_orig_pkts: count &default=0;
+        prev_orig_ip_bytes: count &default=0;
+        prev_resp_pkts: count &default=0;
+        prev_resp_ip_bytes: count &default=0;
+};
+
+hook LongConnection::log_policy(rec: Conn::Info, id: Log::ID, filter: Log::Filter) {
+        rec$ts = network_time();
+
+        local tmp_orig_bytes = rec$orig_bytes;
+        rec$orig_bytes = rec$orig_bytes - rec$prev_orig_bytes;
+        rec$prev_orig_bytes = tmp_orig_bytes;
+
+        local tmp_resp_bytes = rec$resp_bytes;
+        rec$resp_bytes = rec$resp_bytes - rec$prev_resp_bytes;
+        rec$prev_resp_bytes = tmp_resp_bytes;
+
+        local tmp_orig_pkts = rec$orig_pkts;
+        rec$orig_pkts = rec$orig_pkts - rec$prev_orig_pkts;
+        rec$prev_orig_pkts = tmp_orig_pkts;
+
+        local tmp_orig_ip_bytes = rec$orig_ip_bytes;
+        rec$orig_ip_bytes = rec$orig_ip_bytes - rec$prev_orig_ip_bytes;
+        rec$prev_orig_ip_bytes = tmp_orig_ip_bytes;
+
+        local tmp_resp_pkts = rec$resp_pkts;
+        rec$resp_pkts = rec$resp_pkts - rec$prev_resp_pkts;
+        rec$prev_resp_pkts = tmp_resp_pkts;
+
+        local tmp_resp_ip_bytes = rec$resp_ip_bytes;
+        rec$resp_ip_bytes = rec$resp_ip_bytes - rec$prev_resp_ip_bytes;
+        rec$prev_resp_ip_bytes = tmp_resp_ip_bytes;
+}
