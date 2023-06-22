@@ -6,6 +6,8 @@ English is [here](README_en.md)
 
 OsecT（オーセクト）は、多様なプロトコルが存在する制御システムのネットワークからデータを収集・蓄積・分析することで、制御システムを構成する機器や通信状況および、セキュリティ上の脆弱性や脅威など安全上のリスクを可視化する技術です。
 
+[WideAngle プロフェッショナルサービス OsecT](https://www.ntt.com/business/services/security/security-management/wideangle/osect.html)として商用サービス提供中です。
+
 ## 特長
 
 主な特長は以下の通りです。
@@ -26,13 +28,8 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 - 定常時とは異なる振る舞いを検知することで、インシデントにつながる事象を把握可能
 - 大規模ネットワークの通信解析で培ったNTTの技術を応用
 
-## 紹介記事
+## 紹介記事・関連記事
 
-- [制御システムのセキュリティと対策技術OsecTのご紹介（前編）](https://engineers.ntt.com/entry/2021/07/27/112539)
+- [OsecT、サービスリリースしました](https://engineers.ntt.com/entry/2022/05/10/110748)
 - [制御システムのセキュリティと対策技術OsecTのご紹介（後編）](https://engineers.ntt.com/entry/2021/08/02/113151)
-
-## 実証実験
-
-OsecTの機能をSaaSとして提供する実証実験を実施中です。詳細は[ニュースリリース](https://www.ntt.com/about-us/press-releases/news/article/2021/0524.html)をご覧ください。
-
-実証実験で使用するOsecTセンサーの[仕様](osect_sensor/SPECIFICATION.md)と[ソースコード](osect_sensor/)を公開しています。
+- [制御システムのセキュリティと対策技術OsecTのご紹介（前編）](https://engineers.ntt.com/entry/2021/07/27/112539)
