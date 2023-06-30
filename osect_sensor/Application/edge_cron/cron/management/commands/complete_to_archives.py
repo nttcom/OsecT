@@ -48,9 +48,7 @@ def exec_complete_to_archives(logger):
         logger.info("There is no compression file or directory")
 
     # complete_archives配下の保持期限切れファイルの削除
-    file_date_archives_infos = _get_file_date_info(
-        PCAP_COMPLETE_ARCHIVES_FILE_PATH
-    )
+    file_date_archives_infos = _get_file_date_info(PCAP_COMPLETE_ARCHIVES_FILE_PATH)
     target_archives_list = _get_target_list(
         file_date_archives_infos, PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_DATE
     )
@@ -94,9 +92,9 @@ def _get_file_date_info(target_path):
     file_date_infos = [
         {
             "file_name": file_name,
-            "file_date": datetime.fromtimestamp(
-                os.path.getmtime(file_name)
-            ).strftime("%Y%m%d"),
+            "file_date": datetime.fromtimestamp(os.path.getmtime(file_name)).strftime(
+                "%Y%m%d"
+            ),
         }
         for file_name in file_names
     ]
@@ -113,9 +111,7 @@ def _get_target_list(file_date_infos, limit_date):
     :param limit_date: 保有日付
     :return: target_file_list
     """
-    limit_date = (datetime.now() + timedelta(days=-limit_date)).strftime(
-        "%Y%m%d"
-    )
+    limit_date = (datetime.now() + timedelta(days=-limit_date)).strftime("%Y%m%d")
 
     target_file_list = []
     for file_date_info in file_date_infos:
@@ -140,9 +136,7 @@ def _compress_file(target_compression_list):
         compression_file = os.path.join(
             PCAP_COMPLETE_ARCHIVES_FILE_PATH, "%s.zip" % (file_name)
         )
-        compression_path = os.path.join(
-            PCAP_COMPLETE_ARCHIVES_FILE_PATH, file_name
-        )
+        compression_path = os.path.join(PCAP_COMPLETE_ARCHIVES_FILE_PATH, file_name)
 
         if os.path.isfile(target_compression):
             # ファイル
@@ -154,9 +148,7 @@ def _compress_file(target_compression_list):
             os.remove(target_compression)
         else:
             # ディレクトリ
-            shutil.make_archive(
-                compression_path, "zip", root_dir=target_compression
-            )
+            shutil.make_archive(compression_path, "zip", root_dir=target_compression)
             # 圧縮後ディレクトリ削除
             shutil.rmtree(target_compression)
 
@@ -204,9 +196,7 @@ def _get_file_size_info():
                 file_info_list.append(file_info)
             else:
                 # ディレクトリ
-                file_names = glob.glob(
-                    os.path.join(file_path, "**"), recursive=True
-                )
+                file_names = glob.glob(os.path.join(file_path, "**"), recursive=True)
                 total_path_size = sum(
                     (
                         os.path.getsize(file_name)
