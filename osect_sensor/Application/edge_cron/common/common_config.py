@@ -1,22 +1,22 @@
-LABEL_ID = ''
+LABEL_ID = ""
 """ 複数スイッチ対応用のラベルID """
 
-PCAP_UPLOADING_FILE_PATH = 'paper/sc_src/input/pcap/uploading/'
+PCAP_UPLOADING_FILE_PATH = "paper/sc_src/input/pcap/uploading/"
 """pcapのアップロード先の配置パス"""
 
-PCAP_UPLOADED_FILE_PATH = 'paper/sc_src/input/pcap/uploaded/'
+PCAP_UPLOADED_FILE_PATH = "paper/sc_src/input/pcap/uploaded/"
 """pcapのアップロードが終わったファイルを配置するパス"""
 
-PCAP_ANALYZE_FILE_PATH = 'paper/sc_src/input/pcap/analyze/'
+PCAP_ANALYZE_FILE_PATH = "paper/sc_src/input/pcap/analyze/"
 """解析中のpcap及び中間ファイルの配置パス"""
 
-PCAP_COMPLETE_FILE_PATH = 'paper/sc_src/input/pcap/complete/'
+PCAP_COMPLETE_FILE_PATH = "paper/sc_src/input/pcap/complete/"
 """全ての処理が終わったpcap及び中間ファイルの配置パス"""
 
-PCAP_COMPLETE_ARCHIVES_FILE_PATH = 'paper/sc_src/input/pcap/complete_archives/'
+PCAP_COMPLETE_ARCHIVES_FILE_PATH = "paper/sc_src/input/pcap/complete_archives/"
 """全ての処理が終わったpcap及び中間ファイルのアーカイブパス"""
 
-PCAP_SERVER_UPLOADING_FILE_PATH = 'paper/sc_src/input/pcap/server_uploading/'
+PCAP_SERVER_UPLOADING_FILE_PATH = "paper/sc_src/input/pcap/server_uploading/"
 """ ログ解析が終わったディレクトリをuploadするための一時領域 """
 
 SURICATA_ENABLE = True
@@ -34,24 +34,24 @@ BACNET_ENABLE = True
 MODBUS_ENABLE = False
 """ Modbusトラフィックを取り込むか否か """
 
-BRO_SHELL_COMMAND = '/opt/ot_tools/bro.sh'
+BRO_SHELL_COMMAND = "/opt/ot_tools/bro.sh"
 """broのログ取得コマンド"""
 
-P0F_SHELL_COMMAND = '/opt/ot_tools/p0f.sh'
+P0F_SHELL_COMMAND = "/opt/ot_tools/p0f.sh"
 
-P0F_AWK_COMMAND = '/opt/ot_tools/p0f-dic/p0f-dic-awk.sh'
+P0F_AWK_COMMAND = "/opt/ot_tools/p0f-dic/p0f-dic-awk.sh"
 
-BACNET_SHELL_COMMAND = '/opt/ot_tools/bacnet.sh'
+BACNET_SHELL_COMMAND = "/opt/ot_tools/bacnet.sh"
 
-SURICATA_SHELL_COMMAND = '/opt/ot_tools/suricata.sh'
+SURICATA_SHELL_COMMAND = "/opt/ot_tools/suricata.sh"
 """ SURICATAのログ取得コマンド """
 
-YAF_SHELL_COMMAND = '/opt/ot_tools/yaf.sh'
+YAF_SHELL_COMMAND = "/opt/ot_tools/yaf.sh"
 
-SURICATA_YAML = '/opt/ot_tools/suricata.yaml'
+SURICATA_YAML = "/opt/ot_tools/suricata.yaml"
 """ SURICATAの設定ファイル保存場所 """
 
-ALLOWED_PCAP_EXT = '.pcap,.cap,.pkt'
+ALLOWED_PCAP_EXT = ".pcap,.cap,.pkt"
 """ アップロード出来るPCAPファイルの拡張子 """
 
 ALLOWED_LOG_EXT = ".tar.zst"
@@ -63,7 +63,7 @@ COMPRESS_LEVEL = 10
 PCAP_TO_DB_CPU = 5
 """ PCAPをログ化する際に使用するCPU数 """
 
-API_URL = 'https://your url/paper/api/v1/createlogdata/post'
+API_URL = "https://your url/paper/api/v1/createlogdata/post"
 """ SaaS連携用APIのURL """
 
 TIME_OUT_VAL = 120
@@ -78,10 +78,10 @@ PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_DATE = 365
 PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 150
 """completeとcomplete_archivesの保持容量上限値（GB）"""
 
-CLIENT_CERTIFICATE_PATH = '/etc/ssl/private/client.pem'
+CLIENT_CERTIFICATE_PATH = "/etc/ssl/private/client.pem"
 """クライアント認証のための証明書・秘密鍵"""
 
-SEND_VERSION_API_URL = 'https://your url/paper/api/v1/sensor_status/post'
+SEND_VERSION_API_URL = "https://your url/paper/api/v1/sensor_status/post"
 """Suricataシグネチャのバージョンを送るURL"""
 
 SEND_REQUST_TIMEOUT = 180

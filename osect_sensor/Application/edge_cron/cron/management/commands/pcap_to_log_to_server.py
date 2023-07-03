@@ -47,6 +47,7 @@ from common.common_config import (
     LABEL_ID,
     CLIENT_CERTIFICATE_PATH,
 )
+
 # from common.common_function import pcap2log
 from django.core.management.base import BaseCommand
 from edge_cron.settings import BASE_DIR
@@ -80,7 +81,7 @@ class Command(BaseCommand):
         logger.debug("DEBUG pcap_num=" + str(pcap_num))
         logger.debug(str(pcap_list))
 
-        #if pcap_num == 0:
+        # if pcap_num == 0:
         #    logger.info(
         #        "There is no target file [" + ", ".join(allowed_ext_list) + "]"
         #    )
@@ -93,8 +94,8 @@ class Command(BaseCommand):
         log_info(start, "end pcap_to_log")
 
         # 処理済みのPCAPファイルを移動
-        #move_pcap_file(analyze_pcap_list)
-        #log_info(start, "end move_pcap_file")
+        # move_pcap_file(analyze_pcap_list)
+        # log_info(start, "end move_pcap_file")
 
         # 処理済みのログが含まれるディレクトリを完了ディレクトリに移動
         move_pcap_dir(analyze_pcap_dir_list, PCAP_COMPLETE_FILE_PATH)
@@ -117,9 +118,7 @@ class Command(BaseCommand):
                 mode="w",
             ) as tar:
                 for file_name in os.listdir(log_dir):
-                    tar.add(
-                        os.path.join(log_dir, file_name), arcname=file_name
-                    )
+                    tar.add(os.path.join(log_dir, file_name), arcname=file_name)
 
             # 圧縮 (zstandard)
             compress_name = dir_name + ALLOWED_LOG_EXT
@@ -141,10 +140,10 @@ class Command(BaseCommand):
         end_time = time.perf_counter()
 
         # 乱数 < 処理時間の場合はsleepしない
-        #processing_time = math.ceil(end_time - start_time)
-        #sleep_time = max(0, (random.randrange(1, 60, 1) - processing_time))
-        #time.sleep(sleep_time)
-        #logger.info("sleep " + str(sleep_time) + "s")
+        # processing_time = math.ceil(end_time - start_time)
+        # sleep_time = max(0, (random.randrange(1, 60, 1) - processing_time))
+        # time.sleep(sleep_time)
+        # logger.info("sleep " + str(sleep_time) + "s")
 
         try:
             send_server(tar_list)
@@ -192,11 +191,11 @@ def wrapper_log_function(func_type, analyze_full_path, dir_name, pcap_name):
     elif func_type == 2:
         # pcap2logのログ作成処理
         logger.info("pcap to log")
-        #pcap2log(
+        # pcap2log(
         #    PCAP_ANALYZE_FILE_PATH + pcap_name,
         #    PCAP_ANALYZE_FILE_PATH + dir_name,
-        #)
-        #proc.wait()
+        # )
+        # proc.wait()
     elif func_type == 4:
         if SURICATA_ENABLE:
             # suricataログの処理
@@ -252,11 +251,7 @@ def get_pcap_list():
     extend_pcap_list = pcap_list.extend
     for ext in allowed_ext_list:
         extend_pcap_list(
-            sorted(
-                glob.glob(
-                    PCAP_UPLOADED_FILE_PATH + "**/*" + ext, recursive=True
-                )
-            )
+            sorted(glob.glob(PCAP_UPLOADED_FILE_PATH + "**/*" + ext, recursive=True))
         )
 
     return pcap_list, allowed_ext_list
@@ -277,20 +272,20 @@ def pcap_to_log(pcap_list):
     # pcap_name = os.path.basename(pcap)
     # dir_name = os.path.splitext(os.path.basename(pcap))[0]
     dir_name = "realtime-" + datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
-    pcap_name = "paper" # ダミー
+    pcap_name = "paper"  # ダミー
     analyze_pcap_dir = analyze_full_path + dir_name
     analyze_pcap_dir_list.append(analyze_pcap_dir)
 
-        #try:
-        #    # pcap移動処理
-        #    logger.info("move pcap file")
-        #    analyze_pcap = shutil.move(pcap, PCAP_ANALYZE_FILE_PATH)
-        #    logger.info("end move pcap file")
-        #    analyze_pcap_list.append(analyze_pcap)
-        #    logger.info("end append pcap list")
-        #except Exception as e:
-        #    logger.error("pcap move error (to analyze directory): " + str(e))
-        #    continue
+    # try:
+    #    # pcap移動処理
+    #    logger.info("move pcap file")
+    #    analyze_pcap = shutil.move(pcap, PCAP_ANALYZE_FILE_PATH)
+    #    logger.info("end move pcap file")
+    #    analyze_pcap_list.append(analyze_pcap)
+    #    logger.info("end append pcap list")
+    # except Exception as e:
+    #    logger.error("pcap move error (to analyze directory): " + str(e))
+    #    continue
 
     try:
         # broログ格納用ディレクトリ作成処理
@@ -302,17 +297,13 @@ def pcap_to_log(pcap_list):
 
     try:
         if YAF_ENABLE:
-            func_type_list = (
-                [0, 1, 2, 4, 5]
-            )
+            func_type_list = [0, 1, 2, 4, 5]
         else:
-            func_type_list = (
-                [0, 1, 2, 4]
-            )
+            func_type_list = [0, 1, 2, 4]
         analyze_full_path_list = [analyze_full_path] * len(func_type_list)
         dir_name_list = [dir_name] * len(func_type_list)
         pcap_name_list = [pcap_name] * len(func_type_list)
-        
+
         with Pool(PCAP_TO_DB_CPU) as pool:
             args = list(
                 zip(
@@ -362,9 +353,7 @@ def move_pcap_dir(log_dir_list, dst_dir):
             logger.info("move analyzed log directory [" + pcap_dir + "]")
             shutil.move(pcap_dir, dst_dir)
         except Exception as e:
-            logger.error(
-                "log directory move error (to " + dst_dir + "): " + str(e)
-            )
+            logger.error("log directory move error (to " + dst_dir + "): " + str(e))
             continue
 
 
