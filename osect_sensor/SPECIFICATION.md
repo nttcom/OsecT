@@ -459,4 +459,4 @@ OsecTセンサーではsosreport標準の情報に加えて、以下の情報を
 
 - TLSによる暗号化
 - 公開鍵証明書によるサーバ/クライアント認証
-- NTT Comの[ICMS(IoT Connect Mobile Type S)](https://sdpf.ntt.com/services/icms/)および[FIC(Flexible InterConnect)](https://sdpf.ntt.com/services/fic/)を用いた閉域ネットワーク経由でのデータアップロード
+- NTT ComのICMS(IoT Connect Mobile Type S)およびFIC(Flexible InterConnect)を用いた閉域ネットワーク経由でのデータアップロード
