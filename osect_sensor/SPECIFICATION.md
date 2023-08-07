@@ -130,10 +130,8 @@ OsecTセンサーはSaaS型OsecTにおいて、以下の機能を提供します
 | orig_ip | オリジネーターのIPアドレス |
 | resp_mac | レスポンダーのMACアドレス（ARP応答の場合のみ記録） |
 | resp_ip | レスポンダーのIPアドレス |
-| unsolicited | （記録しない） |
-| no_resp | （記録しない） |
 | who_has | レスポンダーのIPアドレス（ARP要求の場合のみ記録） |
-| is_at | （記録しない） |
+| pkts | パケット出現回数 |
 
 ### 2.4. NSログ
 
@@ -157,6 +155,7 @@ OsecTセンサーはSaaS型OsecTにおいて、以下の機能を提供します
 | resp_mac | レスポンダーのMACアドレス（NAの場合のみ記録） |
 | resp_ip | レスポンダーのIPアドレス |
 | who_has | レスポンダーのIPアドレス（NSの場合のみ記録） |
+| pkts | パケット出現回数 |
 
 ### 2.5. DNSログ
 
@@ -199,6 +198,7 @@ OsecTセンサーはSaaS型OsecTにおいて、以下の機能を提供します
 | answers | クエリ回答のリソースディスクリプション |
 | TTL | answersフィールドに対応するRRのキャシュ間隔 |
 | rejected | サーバによってクエリが拒否されたか否か |
+| pkts | パケット出現回数 |
 
 ### 2.6. p0fログ
 
@@ -459,4 +459,4 @@ OsecTセンサーではsosreport標準の情報に加えて、以下の情報を
 
 - TLSによる暗号化
 - 公開鍵証明書によるサーバ/クライアント認証
-- NTT ComのUNO(Arcstar Universal One)およびFIC(Flexible InterConnect)を用いた閉域ネットワーク経由でのデータアップロード
+- NTT Comの[ICMS(IoT Connect Mobile Type S)](https://sdpf.ntt.com/services/icms/)および[FIC(Flexible InterConnect)](https://sdpf.ntt.com/services/fic/)を用いた閉域ネットワーク経由でのデータアップロード
