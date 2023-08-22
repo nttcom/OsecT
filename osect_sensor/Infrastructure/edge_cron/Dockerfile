@@ -18,6 +18,7 @@ RUN apt-get update \
     kmod \
     gawk \
     gcc \
+    git \
     g++ \
     libmount-dev \
     libpcre3-dev \
@@ -103,6 +104,7 @@ RUN zkg install --force --skiptest \
 #    icsnpp-ethercat \
 #    icsnpp-opcua-binary \
     icsnpp-modbus \
+    icsnpp-bacnet \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin
 
@@ -158,6 +160,7 @@ RUN apt-get update \
 && apt-get install -y --no-install-recommends \
     cron \
     cargo \
+    git \
     libpcap0.8-dev \
     libssl-dev \
     libmaxminddb-dev \
@@ -218,8 +221,10 @@ RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
     && cp -p ot_tools/yaf.awk /opt/ot_tools/ \
     && cp -pr ot_tools/p0f /opt/ 
+    && git clone https://github.com/nttcom/zeek-parser-Bacnet.git \
+    && cp -p zeek-parser-Bacnet/scripts/bacnet_ip.zeek /usr/local/zeek/share/zeek/site/icsnpp-bacnet/main.zeek \
+    && cp -p zeek-parser-Bacnet/scripts/consts_bacnet_ip.zeek /usr/local/zeek/lib/zeek/plugins/packages/icsnpp-bacnet/scripts/consts.zeek
 
 # 環境変数
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
     && mv supervisord.conf /etc/supervisor/conf.d/
-
