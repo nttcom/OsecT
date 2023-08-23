@@ -17,7 +17,10 @@ RUN apt-get update \
     flex \
     kmod \
     gawk \
+<<<<<<< HEAD
     git \
+=======
+>>>>>>> main
     libmount-dev \
     libpcre3-dev \
     libyaml-dev \
@@ -77,10 +80,13 @@ RUN wget -q http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.ta
     && rm rules/*ja3.rules \
     && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
+<<<<<<< HEAD
 # zeek-parser-Bacnetのclone
 WORKDIR /home/work
 RUN git clone https://github.com/nttcom/zeek-parser-Bacnet.git
 
+=======
+>>>>>>> main
 # 本番イメージ
 FROM zeek/zeek:5.0.0
 ENV LANG C.UTF-8
