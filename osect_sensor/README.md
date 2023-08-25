@@ -206,6 +206,6 @@ $ ~/osect_sensor/keys/client.pem
 
 ```bash
 $ cd ~/osect_sensor/
-$ sudo /usr/local/bin/docker-compose build
-$ sudo /usr/local/bin/docker-compose up -d
+$ /usr/local/bin/docker-compose build
+$ /usr/local/bin/docker-compose up -d
 ```
