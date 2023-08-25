@@ -43,7 +43,8 @@ Docker CEをインストールします。
 
 ```bash
 $ sudo apt install -y docker-ce
-$ sudo docker container run --rm hello-world
+$ sudo usermod -aG docker <username>
+$ docker container run --rm hello-world
 ```
 
 docker-compose 1.27.4をインストールします。
@@ -168,8 +169,6 @@ DjangoのSECRET_KEYの設定を設定します。
 ```bash
 $ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's@SECRET_KEY = ""@SECRET_KEY = "'$SK'"@g' ~/osect_sensor/Application/edge_cron/edge_cron/settings.py
 （何も表示されません。）
-$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's@SECRET_KEY = ""@SECRET_KEY = "'$SK'"@g' ~/osect_sensor/Application/edge_tcpdump/sc_tcpdump/settings.py
-（何も表示されません。）
 ```
 
 ### 3.3. データ送信用URLの設定
@@ -206,6 +205,6 @@ $ ~/osect_sensor/keys/client.pem
 
 ```bash
 $ cd ~/osect_sensor/
-$ sudo /usr/local/bin/docker-compose build
-$ sudo /usr/local/bin/docker-compose up -d
+$ /usr/local/bin/docker-compose build
+$ /usr/local/bin/docker-compose up -d
 ```
