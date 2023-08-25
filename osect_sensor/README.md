@@ -43,7 +43,7 @@ Docker CEをインストールします。
 
 ```bash
 $ sudo apt install -y docker-ce
-# sudo usermod -aG docker <username>
+$ sudo usermod -aG docker <username>
 $ docker container run --rm hello-world
 ```
 
