@@ -17,7 +17,7 @@ RUN apt-get update \
     flex \
     kmod \
     gawk \
-    git \
+    # git \
     libmount-dev \
     libpcre3-dev \
     libyaml-dev \
@@ -78,8 +78,8 @@ RUN wget -q http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.ta
     && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
 # zeek-parser-Bacnetのclone
-WORKDIR /home/work
-RUN git clone https://github.com/nttcom/zeek-parser-Bacnet.git
+# WORKDIR /home/work
+# RUN git clone https://github.com/nttcom/zeek-parser-Bacnet.git
 
 # 本番イメージ
 FROM zeek/zeek:5.0.0
@@ -162,7 +162,7 @@ RUN zkg install --force --skiptest \
 #    icsnpp-ethercat \
 #    icsnpp-opcua-binary \
     icsnpp-modbus \
-    icsnpp-bacnet \
+    # icsnpp-bacnet \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin
 
@@ -209,7 +209,7 @@ RUN mkdir /var/log/yaf
 COPY --from=build-env /usr/local/bin /usr/local/bin
 COPY --from=build-env /usr/local/lib /usr/local/lib
 # zeek-parser-Bacnetのコピー
-COPY --from=build-env /home/work/zeek-parser-Bacnet /home/work/zeek-parser-Bacnet
+# COPY --from=build-env /home/work/zeek-parser-Bacnet /home/work/zeek-parser-Bacnet
 
 # Suricataはほぼ無駄がないためそのままインストール
 # Suricata rulesをコピー
@@ -238,11 +238,11 @@ RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/broscript/consts_bacnet.zeek /usr/local/zeek/share/zeek/site \
     && cp -p ot_tools/broscript/zeek_long_connections/main.zeek /usr/local/zeek/share/zeek/site/zeek-long-connections/ \
     && cp -p ot_tools/broscript/dns.zeek /usr/local/zeek/share/zeek/base/protocols/dns/main.zeek \
+    # && cp -p zeek-parser-Bacnet/scripts/bacnet_ip.zeek /usr/local/zeek/share/zeek/site/icsnpp-bacnet/main.zeek \
+    # && cp -p zeek-parser-Bacnet/scripts/consts_bacnet_ip.zeek /usr/local/zeek/lib/zeek/plugins/packages/icsnpp-bacnet/scripts/consts.zeek \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
     && cp -p ot_tools/yaf.awk /opt/ot_tools/ \
-    && cp -pr ot_tools/p0f /opt/ \
-    && cp -p zeek-parser-Bacnet/scripts/bacnet_ip.zeek /usr/local/zeek/share/zeek/site/icsnpp-bacnet/main.zeek \
-    && cp -p zeek-parser-Bacnet/scripts/consts_bacnet_ip.zeek /usr/local/zeek/lib/zeek/plugins/packages/icsnpp-bacnet/scripts/consts.zeek
+    && cp -pr ot_tools/p0f /opt/
 
 # 環境変数
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
