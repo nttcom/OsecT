@@ -30,6 +30,7 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 
 ## 紹介記事・関連記事
 
+- [誰もがOT機器/危機を管理できる世界へ](https://speakerdeck.com/nttcom/empowering-ot-security-enabling-universal-control-device-management-and-countering-cyber-attacks)
 - [OTセキュリティリスク可視化サービス OsecT、リニューアルしました](https://engineers.ntt.com/entry/2023/08/31/100633)
 - [【日本初紹介】Zeek・Spicyの使い方まとめ](https://engineers.ntt.com/entry/2023/06/23/095042)
 - [OsecT、サービスリリースしました](https://engineers.ntt.com/entry/2022/05/10/110748)
