@@ -119,6 +119,7 @@ redef LogAscii::enable_utf_8 = F;
 #@load zeek-plugin-s7comm
 #@load icsnpp-ethercat
 #@load icsnpp-modbus
+@load icsnpp-bacnet
 @load zeek-long-connections
 @load zeek-af_packet-plugin
 @load CIFS_B
