@@ -133,7 +133,6 @@ RUN apt-get update \
     liblua5.1-dev \
     libhiredis-dev \
     libevent-dev \
-    vim \
     # python-yaml \
     rustc \
  && apt-get -y clean \
