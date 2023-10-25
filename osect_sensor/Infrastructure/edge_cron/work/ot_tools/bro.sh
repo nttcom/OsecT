@@ -48,4 +48,4 @@ if [ $5 = "True" ]; then
     merge_log "modbus_detailed.*.log" "modbus_detailed.log"
 fi
 
-rm $(find /usr/local/zeek/logs -name "*.log")
+find /usr/local/zeek/logs -name "*.log" -print0 | xargs -0 rm
