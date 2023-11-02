@@ -167,35 +167,12 @@ RUN zkg refresh && \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin \
     zeek-parser-CCLinkFieldBasic \
-    zeek-parser-CCLinkField-CCLinkControl
-
-# spicyのコンパイル
-WORKDIR /home/work/ot_tools/broscript/CIFS_B/
-RUN spicyz -o CIFS_B.hlto CIFS_B.spicy CIFS_B.evt
-
-WORKDIR /home/work/ot_tools/broscript/MYDHCP/
-RUN spicyz -o MYDHCP.hlto MYDHCP.spicy zeek_MYDHCP.spicy MYDHCP.evt
-
-WORKDIR /home/work/ot_tools/broscript/DHCPV6/
-RUN spicyz -o dhcpv6.hlto dhcpv6.spicy zeek_dhcpv6.spicy dhcpv6.evt
-
-WORKDIR /home/work/ot_tools/broscript/NBNS/
-RUN spicyz -o nbns.hlto nbns.spicy nbns.evt
-
-WORKDIR /home/work/ot_tools/broscript/SSDP/
-RUN spicyz -o ssdp.hlto ssdp.spicy ssdp.evt
-
-WORKDIR /home/work
-RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /usr/local/zeek/lib/zeek-spicy/modules \
-    && cp -p ot_tools/broscript/CIFS_B/CIFS_B.zeek /usr/local/zeek/share/zeek/site \
-    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.hlto /usr/local/zeek/lib/zeek-spicy/modules \
-    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.zeek /usr/local/zeek/share/zeek/site \
-    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.hlto /usr/local/zeek/lib/zeek-spicy/modules \
-    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.zeek /usr/local/zeek/share/zeek/site \
-    && cp -p ot_tools/broscript/NBNS/nbns.hlto /usr/local/zeek/lib/zeek-spicy/modules \
-    && cp -p ot_tools/broscript/NBNS/nbns.zeek /usr/local/zeek/share/zeek/site \
-    && cp -p ot_tools/broscript/SSDP/ssdp.hlto /usr/local/zeek/lib/zeek-spicy/modules \
-    && cp -p ot_tools/broscript/SSDP/ssdp.zeek /usr/local/zeek/share/zeek/site
+    zeek-parser-CCLinkField-CCLinkControl \
+    zeek-parser-CIFS-COM \
+    zeek-parser-CIFS-NBNS-COM \
+    zeek-parser-DHCPv4-COM \
+    zeek-parser-DHCPv6-COM \
+    zeek-parser-SSDP-COM
 
 # Yafを含むバイナリファイルをコピー
 RUN mkdir /var/log/yaf
@@ -227,8 +204,6 @@ RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/broscript/http/mac-logging.zeek /usr/local/zeek/share/zeek/base/protocols/http/ \
     && cp -p ot_tools/broscript/arp.zeek /usr/local/zeek/share/zeek/site \
     && cp -p ot_tools/broscript/ns.zeek /usr/local/zeek/share/zeek/site \
-    && cp -p ot_tools/broscript/main_bacnet.zeek /usr/local/zeek/share/zeek/site \
-    && cp -p ot_tools/broscript/consts_bacnet.zeek /usr/local/zeek/share/zeek/site \
     && cp -p ot_tools/broscript/zeek_long_connections/main.zeek /usr/local/zeek/share/zeek/site/zeek-long-connections/ \
     && cp -p ot_tools/broscript/dns.zeek /usr/local/zeek/share/zeek/base/protocols/dns/main.zeek \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
