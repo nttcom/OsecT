@@ -31,7 +31,7 @@ YAF_ENABLE = True
 BACNET_ENABLE = True
 """ Bacnetトラフィックを取り込むか否か """
 
-MODBUS_ENABLE = False
+MODBUS_ENABLE = True
 """ Modbusトラフィックを取り込むか否か """
 
 BRO_SHELL_COMMAND = "/opt/ot_tools/bro.sh"
