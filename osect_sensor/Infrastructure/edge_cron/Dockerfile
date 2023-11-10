@@ -17,7 +17,7 @@ RUN apt-get update \
     flex \
     kmod \
     gawk \
-    git \
+    # git \
     libmount-dev \
     libpcre3-dev \
     libyaml-dev \
@@ -132,6 +132,7 @@ RUN apt-get update \
     libgeoip-dev \
     liblua5.1-dev \
     libhiredis-dev \
+    libevent-dev \
     # python-yaml \
     rustc \
  && apt-get -y clean \
