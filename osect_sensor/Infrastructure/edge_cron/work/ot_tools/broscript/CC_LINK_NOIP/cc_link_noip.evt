@@ -1,5 +1,5 @@
 packet analyzer spicy::NO_IP:
-    parse with NO_IP::Packet;
+parse with NO_IP::Packet;
 
 # field 伝送制御フレーム
 # -----------------------------------
@@ -60,4 +60,33 @@ on NO_IP::Packet::cyclicDataOut1 -> event raw::cyclicDataOut1($packet, self.cycl
 on NO_IP::Packet::cyclicDataOut2 -> event raw::cyclicDataOut2($packet, self.cyclicDataOut2.c_priority, self.cyclicDataOut2.srcNodeNumber);
 on NO_IP::Packet::cyclicDataIn1 -> event raw::cyclicDataIn1($packet, self.cyclicDataIn1.c_priority, self.cyclicDataIn1.srcNodeNumber);
 on NO_IP::Packet::cyclicDataIn2 -> event raw::cyclicDataIn2($packet, self.cyclicDataIn2.c_priority, self.cyclicDataIn2.srcNodeNumber);
+# -----------------------------------
+
+# tsnフレーム
+# -----------------------------------
+on NO_IP::Packet::cyclicM -> event raw::cyclicM($packet);
+on NO_IP::Packet::cyclicS -> event raw::cyclicS($packet);
+on NO_IP::Packet::acyclicPriority -> event raw::acyclicPriority($packet);
+on NO_IP::Packet::acyclicDetection -> event raw::acyclicDetection($packet, self.acyclicDetection.detectionVer);
+on NO_IP::Packet::acyclicDetectionAck -> event raw::acyclicDetectionAck($packet, 
+                                                                        self.acyclicDetectionAck.nodeType, 
+                                                                        self.acyclicDetectionAck.detectionAckVer, 
+                                                                        self.acyclicDetectionAck.deviceType, 
+                                                                        self.acyclicDetectionAck.functionName.x1, 
+                                                                        self.acyclicDetectionAck.functionName.x2,
+                                                                        self.acyclicDetectionAck.functionName.x3,
+                                                                        self.acyclicDetectionAck.functionName.x4,
+                                                                        self.acyclicDetectionAck.functionName.x5,
+                                                                        self.acyclicDetectionAck.functionName.x6,
+                                                                        self.acyclicDetectionAck.functionName.x7,
+                                                                        self.acyclicDetectionAck.functionName.x8,
+                                                                        self.acyclicDetectionAck.functionName2.x1,
+                                                                        self.acyclicDetectionAck.functionName2.x2,
+                                                                        self.acyclicDetectionAck.functionName2.x3,
+                                                                        self.acyclicDetectionAck.functionName2.x4,
+                                                                        self.acyclicDetectionAck.functionName2.x5,
+                                                                        self.acyclicDetectionAck.functionName2.x6,
+                                                                        self.acyclicDetectionAck.functionName2.x7,
+                                                                        self.acyclicDetectionAck.functionName2.x8);
+on NO_IP::Packet::acyclicData -> event raw::acyclicData($packet);
 # -----------------------------------

@@ -1,0 +1,67 @@
+module TSN_PTP;
+
+import spicy;
+
+public type Packet = unit {
+    mType: bitfield(8) {
+        x: 4..7 &convert=MType($$);
+    } &bit-order = spicy::BitOrder::MSB0;
+    switch ( self.mType.x ) {
+        MType::PtpSync                ->  ptpSync:  PtpSync;
+        MType::PtpPdelayReq           ->  ptpPdelayReq:  PtpPdelayReq;
+        MType::PtpPdelayResp          ->  ptpPdelayResp:  PtpPdelayResp;
+        MType::PtpFollowUp            ->  ptpFollowUp:  PtpFollowUp;
+        MType::PtpPdelayRespFollowUp  ->  ptpPdelayRespFollowUp:  PtpPdelayRespFollowUp;
+        MType::PtpAnnounce            ->  ptpAnnounce:  PtpAnnounce;
+        MType::PtpdelayReq            ->  ptpdelayReq:  PtpdelayReq;
+        MType::PtpdelayResp           ->  ptpdelayResp:  PtpdelayResp;
+        *                             ->  unk:  Unknown;
+        };     
+};
+
+type MType = enum {
+    PtpSync = 0,
+    PtpPdelayReq = 2,
+    PtpPdelayResp = 3,
+    PtpFollowUp = 8,
+    PtpPdelayRespFollowUp = 10,
+    PtpAnnounce = 11,
+    PtpdelayReq = 1,
+    PtpdelayResp = 9,
+};
+
+type PtpSync = unit {
+    data: bytes &eod;
+};
+
+type PtpPdelayReq = unit {
+    data: bytes &eod;
+};
+
+type PtpPdelayResp = unit {
+    data: bytes &eod;
+};
+
+type PtpFollowUp = unit {
+    data: bytes &eod;
+};
+
+type PtpPdelayRespFollowUp = unit {
+    data: bytes &eod;
+};
+
+type PtpAnnounce = unit {
+    data: bytes &eod;
+};
+
+type PtpdelayReq = unit {
+    data: bytes &eod;
+};
+
+type PtpdelayResp = unit {
+    data: bytes &eod;
+};
+
+type Unknown = unit {
+    data: bytes &eod;
+};

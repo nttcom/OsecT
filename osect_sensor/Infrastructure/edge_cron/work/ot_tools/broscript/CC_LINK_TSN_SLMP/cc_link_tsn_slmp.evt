@@ -1,0 +1,11 @@
+protocol analyzer spicy::CCLINK_IE_TSN_SLMP over UDP:
+parse originator with CCLINK_IE_TSN_SLMP::Packet,
+parse responder with CCLINK_IE_TSN_SLMP::Packet,
+ports { 45238/udp, 45239/udp };       #port number of the protocol, please change it if necessary
+
+import CCLINK_IE_TSN_SLMP;
+
+# -----------------------------------
+on CCLINK_IE_TSN_SLMP::Packet::reqLMT -> event tsn_slmp::reqLMT($conn, self.reqLMT.command, self.reqLMT.subcommand);
+on CCLINK_IE_TSN_SLMP::Packet::resLMT -> event tsn_slmp::resLMT($conn, self.resLMT.command, self.resLMT.subcommand);
+# -----------------------------------

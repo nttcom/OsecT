@@ -1,0 +1,13 @@
+packet analyzer spicy::TSN_PTP:
+parse with TSN_PTP::Packet;
+
+# -----------------------------------
+on TSN_PTP::Packet::ptpSync -> event raw::ptpSync($packet);
+on TSN_PTP::Packet::ptpPdelayReq -> event raw::ptpPdelayReq($packet);
+on TSN_PTP::Packet::ptpPdelayResp -> event raw::ptpPdelayResp($packet);
+on TSN_PTP::Packet::ptpFollowUp -> event raw::ptpFollowUp($packet);
+on TSN_PTP::Packet::ptpPdelayRespFollowUp -> event raw::ptpPdelayRespFollowUp($packet);
+on TSN_PTP::Packet::ptpAnnounce -> event raw::ptpAnnounce($packet);
+on TSN_PTP::Packet::ptpdelayReq -> event raw::ptpdelayReq($packet);
+on TSN_PTP::Packet::ptpdelayResp -> event raw::ptpdelayResp($packet);
+# -----------------------------------
