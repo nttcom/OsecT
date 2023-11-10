@@ -1,7 +1,7 @@
 #!/bin/bash
 
 merge_log () {
-    cat $(find /opt/zeek/logs -name ${1}) > $2
+    cat $(find /usr/local/zeek/logs -name ${1}) > $2
     sed -i '/^#/d' $2
     sed -i '1i #\n#\n#\n#\n#\n#\n#\n#' $2
     sed -i '$a #close' $2
@@ -13,6 +13,9 @@ reformat_log () {
 }
 
 cd $1/$2
+# conn_long.logと重複するためconn.logに出力されるduration>60を除外
+awk '$9<60{print}' $(find /usr/local/zeek/logs -name "conn.*.log") > "/usr/local/zeek/logs/conn_replace.log"
+rm $(find /usr/local/zeek/logs -name "conn.*.log")
 # conn.logとconn_long.logの両方を回収
 merge_log "conn*.log" "conn.log"
 merge_log "arp.*.log" "arp.log"
@@ -44,4 +47,4 @@ if [ $5 = "True" ]; then
     merge_log "modbus_detailed.*.log" "modbus_detailed.log"
 fi
 
-rm $(find /opt/zeek/logs -name "*.log")
+find /usr/local/zeek/logs -name "*.log" -print0 | xargs -0 rm

@@ -17,8 +17,7 @@ RUN apt-get update \
     flex \
     kmod \
     gawk \
-    gcc \
-    g++ \
+    # git \
     libmount-dev \
     libpcre3-dev \
     libyaml-dev \
@@ -28,7 +27,6 @@ RUN apt-get update \
     libssl-dev \
     libmaxminddb-dev \
     ninja-build \
-    make \
     pkg-config \
     python3-dev \
     python3-pip \
@@ -55,19 +53,6 @@ RUN apt-get update \
  && echo "${TZ}" > /etc/timezone \
  && dpkg-reconfigure -f noninteractive tzdata
 
-# Zeekのインストール
-RUN git clone --recursive https://github.com/zeek/zeek -b v5.0.0
-WORKDIR /home/work/zeek
-RUN ./configure --build-type=Release --prefix=/opt/zeek \
- && make \
- && make install
-ENV PATH $PATH:/opt/zeek/bin
-
-# Spicyのインストール
-RUN wget -q https://github.com/zeek/spicy/releases/download/v1.5.1/spicy_linux_ubuntu20.deb \
-  && dpkg --install spicy_linux_ubuntu20.deb
-ENV PATH $PATH:/opt/spicy/bin
-
 # pip関係のインストール
 WORKDIR /home/work
 RUN apt-get purge -y python3-yaml \
@@ -92,8 +77,82 @@ RUN wget -q http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.ta
     && rm rules/*ja3.rules \
     && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
 
+# zeek-parser-Bacnetのclone
+# WORKDIR /home/work
+# RUN git clone https://github.com/nttcom/zeek-parser-Bacnet.git
+
+# 本番イメージ
+FROM zeek/zeek:5.0.0
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+ENV DEBIAN_FRONTEND noninteractive
+
+WORKDIR /home/work
+COPY work/ /home/work
+RUN mkdir /home/work/django && mkdir /home/work/uwsgi
+
+RUN apt-get update \
+&& apt-get install -y --no-install-recommends \
+    cron \
+    cargo \
+    libpcap0.8-dev \
+    libssl-dev \
+    libmaxminddb-dev \
+    python3-dev \
+    python3-pip \
+    python3-semantic-version \
+    python3-git \
+    supervisor \
+    tzdata \
+    wget \
+    cmake \
+    make \
+    gcc \
+    g++ \
+    flex \
+    libfl-dev \
+    bison \
+    libpcap-dev \
+    build-essential \
+    libpcap0.8-dev \
+    software-properties-common \
+    libpcre3 \
+    libpcre3-dbg \
+    libpcre3-dev \
+    libnet1-dev \
+    libyaml-0-2 \
+    libyaml-dev \
+    pkg-config \
+    zlib1g \
+    zlib1g-dev \
+    libcap-ng-dev \
+    libcap-ng0 \
+    libmagic-dev \
+    libnss3-dev \
+    libgeoip-dev \
+    liblua5.1-dev \
+    libhiredis-dev \
+    libevent-dev \
+    # python-yaml \
+    rustc \
+ && apt-get -y clean \
+ && rm -rf /var/lib/apt/lists/* \
+ && echo "${TZ}" > /etc/timezone \
+ && dpkg-reconfigure -f noninteractive tzdata
+#  && cargo install --force cbindgen
+
+# pip関係のインストール
+WORKDIR /home/work
+RUN apt-get update \
+    && apt-get purge -y python3-yaml \
+    && python3.9 -m pip install --upgrade pip --no-cache-dir \
+    && python3.9 -m pip install setuptools==59.8.0 --no-cache-dir \
+    && python3.9 -m pip install -r requirements.txt --no-cache-dir
+
+ENV PATH $PATH:/root/.cargo/bin
+
 # zkgパッケージ（必要なものだけ入れる）
-ENV PATH $PATH:/opt/zeek/bin
+ENV PATH $PATH:/usr/local/zeek/bin
 # RUN zkg autoconfig
 RUN zkg install --force --skiptest \
 #    zeek-plugin-bacnet \
@@ -103,6 +162,7 @@ RUN zkg install --force --skiptest \
 #    icsnpp-ethercat \
 #    icsnpp-opcua-binary \
     icsnpp-modbus \
+    # icsnpp-bacnet \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin
 
@@ -129,63 +189,27 @@ WORKDIR /home/work/ot_tools/broscript/CC_LINK_NOIP/
 RUN spicyz -o cc_link_noip.hlto cc_link_noip.spicy cc_link_noip.evt
 
 WORKDIR /home/work
-RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/CIFS_B/CIFS_B.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/NBNS/nbns.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/NBNS/nbns.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/SSDP/ssdp.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/SSDP/ssdp.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/CC_LINK_BASIC/cc_link_basic.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/CC_LINK_BASIC/cc_link_basic.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/CC_LINK_NOIP/cc_link_noip.hlto /opt/zeek/lib/zeek-spicy/modules/ \
-    && cp -p ot_tools/broscript/CC_LINK_NOIP/cc_link_noip.zeek /opt/zeek/share/zeek/site/
-
-# 本番イメージ
-FROM ubuntu:20.04
-ENV LANG C.UTF-8
-ENV TZ Asia/Tokyo
-ENV DEBIAN_FRONTEND noninteractive
-
-WORKDIR /home/work
-COPY work/ /home/work
-RUN mkdir /home/work/django && mkdir /home/work/uwsgi
-
-RUN apt-get update \
-&& apt-get install -y --no-install-recommends \
-    cron \
-    cargo \
-    libpcap0.8-dev \
-    libssl-dev \
-    libmaxminddb-dev \
-    python3-dev \
-    python3-pip \
-    python3-semantic-version \
-    python3-git \
-    supervisor \
-    tzdata \
-    wget \
-    software-properties-common \
- && apt-get -y clean \
- && rm -rf /var/lib/apt/lists/* \
- && echo "${TZ}" > /etc/timezone \
- && dpkg-reconfigure -f noninteractive tzdata \
- && cargo install --force cbindgen
-
-ENV PATH $PATH:/root/.cargo/bin
-
-# Zeekのバイナリファイルをコピー
-COPY --from=build-env /opt/zeek /opt/zeek
-WORKDIR /
-ENV PATH $PATH:/opt/zeek/bin
+RUN cp -p ot_tools/broscript/CIFS_B/CIFS_B.hlto /usr/local/zeek/lib/zeek-spicy/modules \
+    && cp -p ot_tools/broscript/CIFS_B/CIFS_B.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.hlto /usr/local/zeek/lib/zeek-spicy/modules \
+    && cp -p ot_tools/broscript/MYDHCP/MYDHCP.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.hlto /usr/local/zeek/lib/zeek-spicy/modules \
+    && cp -p ot_tools/broscript/DHCPV6/dhcpv6.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/NBNS/nbns.hlto /usr/local/zeek/lib/zeek-spicy/modules \
+    && cp -p ot_tools/broscript/NBNS/nbns.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/SSDP/ssdp.hlto /usr/local/zeek/lib/zeek-spicy/modules \
+    && cp -p ot_tools/broscript/SSDP/ssdp.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/CC_LINK_BASIC/cc_link_basic.hlto /usr/local/zeek/lib/zeek-spicy/modules \
+    && cp -p ot_tools/broscript/CC_LINK_BASIC/cc_link_basic.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/CC_LINK_NOIP/cc_link_noip.hlto /usr/local/zeek/lib/zeek-spicy/modules \
+    && cp -p ot_tools/broscript/CC_LINK_NOIP/cc_link_noip.zeek /usr/local/zeek/share/zeek/site
 
 # Yafを含むバイナリファイルをコピー
 RUN mkdir /var/log/yaf
 COPY --from=build-env /usr/local/bin /usr/local/bin
 COPY --from=build-env /usr/local/lib /usr/local/lib
+# zeek-parser-Bacnetのコピー
+# COPY --from=build-env /home/work/zeek-parser-Bacnet /home/work/zeek-parser-Bacnet
 
 # Suricataはほぼ無駄がないためそのままインストール
 # Suricata rulesをコピー
@@ -195,8 +219,7 @@ COPY --from=build-env /var/lib/suricata/rules/suricata.rules /var/lib/suricata/r
 WORKDIR /home/work
 
 # suricataのインストール（eBPFなし）
-RUN add-apt-repository ppa:oisf/suricata-6.0 \
-    &&  apt-get update \
+RUN apt-get update \
     && 	apt-get install -y --no-install-recommends suricata \
     && 	apt-get --purge remove -y software-properties-common \
     && 	apt-get -y clean \
@@ -205,21 +228,22 @@ RUN add-apt-repository ppa:oisf/suricata-6.0 \
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
 WORKDIR /home/work
 RUN mkdir /opt/ot_tools \
-    && cp -p ot_tools/broscript/conn/__load__.zeek /opt/zeek/share/zeek/base/protocols/conn/ \
-    && cp -p ot_tools/broscript/conn/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/conn/ \
-    && cp -p ot_tools/broscript/http/__load__.zeek /opt/zeek/share/zeek/base/protocols/http/ \
-    && cp -p ot_tools/broscript/http/mac-logging.zeek /opt/zeek/share/zeek/base/protocols/http/ \
-    && cp -p ot_tools/broscript/arp.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/ns.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/main_bacnet.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/consts_bacnet.zeek /opt/zeek/share/zeek/site/ \
-    && cp -p ot_tools/broscript/zeek_long_connections/main.zeek /opt/zeek/share/zeek/site/zeek-long-connections/ \
+    && cp -p ot_tools/broscript/conn/__load__.zeek /usr/local/zeek/share/zeek/base/protocols/conn/ \
+    && cp -p ot_tools/broscript/conn/mac-logging.zeek /usr/local/zeek/share/zeek/base/protocols/conn/ \
+    && cp -p ot_tools/broscript/http/__load__.zeek /usr/local/zeek/share/zeek/base/protocols/http/ \
+    && cp -p ot_tools/broscript/http/mac-logging.zeek /usr/local/zeek/share/zeek/base/protocols/http/ \
+    && cp -p ot_tools/broscript/arp.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/ns.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/main_bacnet.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/consts_bacnet.zeek /usr/local/zeek/share/zeek/site \
+    && cp -p ot_tools/broscript/zeek_long_connections/main.zeek /usr/local/zeek/share/zeek/site/zeek-long-connections/ \
+    && cp -p ot_tools/broscript/dns.zeek /usr/local/zeek/share/zeek/base/protocols/dns/main.zeek \
+    # && cp -p zeek-parser-Bacnet/scripts/bacnet_ip.zeek /usr/local/zeek/share/zeek/site/icsnpp-bacnet/main.zeek \
+    # && cp -p zeek-parser-Bacnet/scripts/consts_bacnet_ip.zeek /usr/local/zeek/lib/zeek/plugins/packages/icsnpp-bacnet/scripts/consts.zeek \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
-    && cp -p ot_tools/tsharkfields2bacnetservicelog_dict.awk /opt/ot_tools/ \
     && cp -p ot_tools/yaf.awk /opt/ot_tools/ \
     && cp -pr ot_tools/p0f /opt/
 
 # 環境変数
 RUN printenv | grep -e https_proxy -e HTTPS_PROXY -e http_proxy -e HTTP_PROXY -e no_proxy -e NO_PROXY| awk '{print "export " $1}' > /opt/ot_tools/proxy_env.txt \
     && mv supervisord.conf /etc/supervisor/conf.d/
-

@@ -4,6 +4,8 @@
 
 OsecT is a visualization technology that shows the elements that make up a security risk, such as equipment, communication status, vulnerabilities, and threats in the control system by collecting, accumulating, and analyzing data from control system networks with various protocols.
 
+[WideAngle Professional Service OsecT](https://www.ntt.com/business/services/security/security-management/wideangle/osect.html) is now available as a commercial service (in Japanese).
+
 ## Features
 
 The main features are as follows.

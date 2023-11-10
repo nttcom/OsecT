@@ -6,7 +6,7 @@
 
 - [OKI AIエッジコンピューター「AE2100」](https://www.oki.com/jp/AIedge/)
 
-また、Ubuntu 18.04.5 LTSおよびUbuntu 20.04.3 LTSで動作確認済みです。
+また、Ubuntu 18.04.5 LTSおよびUbuntu 20.04.5 LTSで動作確認済みです。
 
 本手順書では、ホームディレクトリ直下（`~/osect_sensor`）にインストールすることとしています。別のディレクトリにインストールする場合、パスを読み替えてください。
 
@@ -43,7 +43,8 @@ Docker CEをインストールします。
 
 ```bash
 $ sudo apt install -y docker-ce
-$ sudo docker container run --rm hello-world
+$ sudo usermod -aG docker <username>
+$ docker container run --rm hello-world
 ```
 
 docker-compose 1.27.4をインストールします。
@@ -80,27 +81,14 @@ $ mv ~/OsecT/osect_sensor ~/
 
 ### 3.1. 監視ネットワークインタフェースの設定
 
-設定箇所は4箇所です。
-
-1箇所目：設定ファイルを編集し、監視ネットワークを指定します。
-
+まず、インタフェースを確認します。
 ```bash
-$ vi ~/osect_sensor/Application/edge_tcpdump/common/app_config.py
+ip a
 ```
 
-編集箇所
+設定箇所は3箇所です。
 
-```python
-TCPDUMP_SHELL_COMMAND = ['/usr/sbin/tcpdump', '-w', 'realtime-%F-%T.pcap', '-G', '60', '-ni', 'enp0s3', '-s', '0', '-z', '/opt/ot_tools/capture.sh']
-````
-
-編集例：監視ネットワークインタフェースがenp0s8の場合
-
-```python
-TCPDUMP_SHELL_COMMAND = ['/usr/sbin/tcpdump', '-w', 'realtime-%F-%T.pcap', '-G', '60', '-ni', 'enp0s8', '-s', '0', '-z', '/opt/ot_tools/capture.sh']
-```
-
-2箇所目：crontabを編集し、監視ネットワークを指定します。
+1箇所目：crontabを編集し、監視ネットワークを指定します。
 
 ```bash
 $ vi ~/osect_sensor/conf/crontab
@@ -109,20 +97,20 @@ $ vi ~/osect_sensor/conf/crontab
 編集箇所
 
 ```bash
-@reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i eth1 > /dev/null 2>&1
-@reboot /opt/p0f/bin/p0f-k -f /opt/p0f/etc/p0f-k.fp -i eth1 -O /var/log/p0f-k.log > /dev/null 2>&1
-@reboot /usr/local/bin/yaf --mac --live pcap --in eth1 --rotate 60 --out /var/log/yaf/flow
+* * * * * /opt/ot_tools/suricata_cron.sh enp1s0 > /dev/null 2>&1
+* * * * * /opt/ot_tools/p0f_cron.sh enp1s0 > /dev/null 2>&1
+* * * * * /opt/ot_tools/yaf_cron.sh enp1s0 > /dev/null 2>&1
 ```
 
 編集例：監視ネットワークインタフェースがenp0s8の場合
 
 ```bash
-@reboot /usr/bin/suricata -c /opt/ot_tools/suricata.yaml -i enp0s8 > /dev/null 2>&1
-@reboot /opt/p0f/bin/p0f-k -f /opt/p0f/etc/p0f-k.fp -i enp0s8 -O /var/log/p0f-k.log > /dev/null 2>&1
-@reboot /usr/local/bin/yaf --mac --live pcap --in enp0s8 --rotate 60 --out /var/log/yaf/flow
+* * * * * /opt/ot_tools/suricata_cron.sh enp0s8 > /dev/null 2>&1
+* * * * * /opt/ot_tools/p0f_cron.sh enp0s8 > /dev/null 2>&1
+* * * * * /opt/ot_tools/yaf_cron.sh enp0s8 > /dev/null 2>&1
 ```
 
-3箇所目：suricata.yamlを編集し、監視ネットワークを指定します。
+2箇所目：suricata.yamlを編集し、監視ネットワークを指定します。
 
 ```bash
 $ vi ~/osect_sensor/conf/suricata.yaml
@@ -144,7 +132,7 @@ af-packet:
   - interface: enp0s8
 ```
 
-4箇所目：node.cfgを編集し、監視ネットワークを指定します。合わせて、割り当てるCPUコア数も指定します。
+3箇所目：node.cfgを編集し、監視ネットワークを指定します。
 
 ```bash
 $ vi ~/osect_sensor/conf/node.cfg
@@ -162,7 +150,7 @@ lb_procs=6
 pin_cpus=0,1,2,3,4,5
 ```
 
-編集例：監視ネットワークインタフェースがenp0s8, CPUコア数が6の場合
+編集例：監視ネットワークインタフェースがenp0s8の場合
 
 ```bash
 [worker-1]
@@ -180,8 +168,6 @@ DjangoのSECRET_KEYの設定を設定します。
 
 ```bash
 $ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's@SECRET_KEY = ""@SECRET_KEY = "'$SK'"@g' ~/osect_sensor/Application/edge_cron/edge_cron/settings.py
-（何も表示されません。）
-$ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's@SECRET_KEY = ""@SECRET_KEY = "'$SK'"@g' ~/osect_sensor/Application/edge_tcpdump/sc_tcpdump/settings.py
 （何も表示されません。）
 ```
 
@@ -219,6 +205,6 @@ $ ~/osect_sensor/keys/client.pem
 
 ```bash
 $ cd ~/osect_sensor/
-$ sudo /usr/local/bin/docker-compose build
-$ sudo /usr/local/bin/docker-compose up -d
+$ /usr/local/bin/docker-compose build
+$ /usr/local/bin/docker-compose up -d
 ```
