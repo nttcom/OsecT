@@ -30,6 +30,7 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 
 ## 紹介記事・関連記事
 
+- [OT環境向けセキュリティ対策「OsecT」](https://www.newww-media.co.jp/backnumber/202401/202401p26.pdf)
 - [中堅・中小企業におけるOT可視化・常時監視の課題とソリューション](https://speakerdeck.com/nttcom/challenges-and-solutions-for-ot-visualization-and-constant-monitoring-in-small-and-medium-sized-enterprises)
 - [誰もがOT機器/危機を管理できる世界へ](https://speakerdeck.com/nttcom/empowering-ot-security-enabling-universal-control-device-management-and-countering-cyber-attacks)
 - [OTセキュリティリスク可視化サービス OsecT、リニューアルしました](https://engineers.ntt.com/entry/2023/08/31/100633)
