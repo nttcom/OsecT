@@ -8,6 +8,7 @@ from common.common_config import (
     CLIENT_CERTIFICATE_PATH,
     SEND_VERSION_API_URL,
     LABEL_ID,
+    SSL_VERIFY,
 )
 
 logger = logging.getLogger("edge_send_version")
@@ -38,6 +39,7 @@ class Command(BaseCommand):
             SEND_VERSION_API_URL,
             cert=CLIENT_CERTIFICATE_PATH,
             data=data,
+            verify=SSL_VERIFY,
         )
         if resp.status_code != 200:
             raise Exception(

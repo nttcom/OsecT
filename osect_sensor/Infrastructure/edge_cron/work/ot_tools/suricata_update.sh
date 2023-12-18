@@ -30,7 +30,7 @@ fi
 
 # Download signature version number
 rm -f $DOWNLOAD_VER_FILE
-wget ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_VER_FILE}
+wget --ca-certificate=/etc/ssl/certs/osect_core.crt ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_VER_FILE}
 if [ $? -ne 0 ]; then
     export SURICATA_UPDATE_STATUS="failed to download ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_VER_FILE}"
     echo $SURICATA_UPDATE_STATUS
@@ -49,7 +49,7 @@ fi
 
 # Download signature rules
 rm -f $DOWNLOAD_SIG_FILE
-wget ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_SIG_FILE}
+wget --ca-certificate=/etc/ssl/certs/osect_core.crt ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_SIG_FILE}
 if [ $? -ne 0 ]; then
     export SURICATA_UPDATE_STATUS="failed to download ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_SIG_FILE}"
     echo $SURICATA_UPDATE_STATUS
@@ -59,7 +59,7 @@ fi
 
 # Compare MD5 checksum values
 rm -f ${DOWNLOAD_SIG_FILE}.md5
-REMOTE_MD5=`wget -O - ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_SIG_FILE}.md5`
+REMOTE_MD5=`wget --ca-certificate=/etc/ssl/certs/osect_core.crt -O - ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_SIG_FILE}.md5`
 LOCAL_MD5=`md5sum ${DOWNLOAD_SIG_FILE} | grep -o '^\S*'`
 if [ $REMOTE_MD5 != $LOCAL_MD5 ]; then
     export SURICATA_UPDATE_STATUS="incorrect md5 value"

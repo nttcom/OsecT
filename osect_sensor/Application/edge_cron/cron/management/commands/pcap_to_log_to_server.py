@@ -46,6 +46,7 @@ from common.common_config import (
     API_URL,
     LABEL_ID,
     CLIENT_CERTIFICATE_PATH,
+    SSL_VERIFY,
 )
 
 # from common.common_function import pcap2log
@@ -376,6 +377,7 @@ def send_server(zip_list):
             files=files,
             data=data,
             timeout=SEND_REQUST_TIMEOUT,
+            verify=SSL_VERIFY,
         )
         if resp.status_code != 200:
             raise Exception(

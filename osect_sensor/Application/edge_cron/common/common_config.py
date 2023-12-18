@@ -1,4 +1,4 @@
-LABEL_ID = ""
+LABEL_ID = "default"
 """ 複数スイッチ対応用のラベルID """
 
 PCAP_UPLOADING_FILE_PATH = "paper/sc_src/input/pcap/uploading/"
@@ -63,7 +63,7 @@ COMPRESS_LEVEL = 10
 PCAP_TO_DB_CPU = 5
 """ PCAPをログ化する際に使用するCPU数 """
 
-API_URL = "https://your url/paper/api/v1/createlogdata/post"
+API_URL = "https://core.osect-edge.ntt.com:10443/paper/api/v1/createlogdata/post"
 """ SaaS連携用APIのURL """
 
 TIME_OUT_VAL = 120
@@ -81,8 +81,11 @@ PCAP_COMPLETE_ARCHIVES_DELETE_LIMIT_CAPACITY = 150
 CLIENT_CERTIFICATE_PATH = "/etc/ssl/private/client.pem"
 """クライアント認証のための証明書・秘密鍵"""
 
-SEND_VERSION_API_URL = "https://your url/paper/api/v1/sensor_status/post"
+SEND_VERSION_API_URL = "https://core.osect-edge.ntt.com:10443/paper/api/v1/sensor_status/post"
 """Suricataシグネチャのバージョンを送るURL"""
 
 SEND_REQUST_TIMEOUT = 180
 """ ログ送信時のタイムアウト値 """
+
+SSL_VERIFY = "/etc/ssl/certs/osect_core.crt"
+""" コアへのHTTPリクエスト時の検証の要否またはコアの証明書のパス """

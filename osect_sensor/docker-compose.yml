@@ -8,6 +8,7 @@ services:
       - pcap-logs-volume:/opt/edge_cron/paper/sc_src/input/pcap/complete/
       - logs-volume:/var/log/ot_tools/
       - ./keys/client.pem:/etc/ssl/private/client.pem
+      - ./keys/server.crt:/etc/ssl/certs/osect_core.crt
       - ./conf/suricata_update.conf:/etc/suricata_update.conf
       - ./conf/suricata.yaml:/opt/ot_tools/suricata.yaml       # suricata realtime
       - ./conf/crontab:/root/crontab
@@ -26,13 +27,17 @@ services:
         /usr/bin/supervisord --configuration=/etc/supervisor/conf.d/supervisord.conf
       '
     restart: always
+    environment:
+     - CURL_CA_BUNDLE=/etc/ssl/certs/osect_core.crt
 volumes:
   pcap-logs-volume:
+      driver: local
       driver_opts:
         type: local
         device: ./logs/pcap-logs
         o: bind
   logs-volume:
+      driver: local
       driver_opts:
         type: local
         device: ./logs/ottools
