@@ -1,5 +1,5 @@
 certifi==2023.07.22
-Django==3.2.20
+Django==4.2.7
 meson==0.56.0
 requests==2.31.0
 urllib3==1.26.6
