@@ -154,16 +154,16 @@ ENV PATH $PATH:/root/.cargo/bin
 # zkgパッケージ（必要なものだけ入れる）
 ENV PATH $PATH:/usr/local/zeek/bin
 # RUN zkg autoconfig
-RUN zkg refresh && \
-    zkg install --force --skiptest \
+RUN zkg install icsnpp-modbus --version 03de54df8b0a8c1e6264876167f80dccae74902a --force --skiptest \
+    && zkg refresh \
+    && zkg install --force --skiptest \
 #    zeek-plugin-bacnet \
 #    zeek-plugin-enip \
 #    zeek-plugin-profinet \
 #    zeek-plugin-s7comm \
 #    icsnpp-ethercat \
 #    icsnpp-opcua-binary \
-    icsnpp-modbus \
-    # icsnpp-bacnet \
+#    icsnpp-bacnet \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin \
     zeek-parser-CCLinkFieldBasic \

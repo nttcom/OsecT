@@ -116,7 +116,7 @@ redef LogAscii::enable_utf_8 = F;
 #@load zeek-plugin-profinet
 #@load zeek-plugin-s7comm
 #@load icsnpp-ethercat
-#@load icsnpp-modbus
+@load icsnpp-modbus
 @load zeek-long-connections
 @load zeek-af_packet-plugin
 @load zeek-parser-CCLinkFieldBasic
