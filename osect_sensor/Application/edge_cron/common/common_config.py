@@ -28,10 +28,10 @@ FUNC_RESTRICTION = False
 YAF_ENABLE = True
 """ yaf use flag """
 
-BACNET_ENABLE = True
+BACNET_ENABLE = False
 """ Bacnetトラフィックを取り込むか否か """
 
-MODBUS_ENABLE = True
+MODBUS_ENABLE = False
 """ Modbusトラフィックを取り込むか否か """
 
 BRO_SHELL_COMMAND = "/opt/ot_tools/bro.sh"
