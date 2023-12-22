@@ -155,6 +155,7 @@ ENV PATH $PATH:/root/.cargo/bin
 ENV PATH $PATH:/usr/local/zeek/bin
 # RUN zkg autoconfig
 RUN zkg install icsnpp-modbus --version 03de54df8b0a8c1e6264876167f80dccae74902a --force --skiptest \
+    && zkg refresh \
     && zkg install --force --skiptest \
 #    zeek-plugin-bacnet \
 #    zeek-plugin-enip \
