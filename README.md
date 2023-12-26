@@ -30,11 +30,18 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 
 ## 紹介記事・関連記事
 
-- [OT環境向けセキュリティ対策「OsecT」 既存システムに影響を与えずネットワーク可視化・セキュリティリスク検知](https://www.newww-media.co.jp/backnumber/202401/202401p26.pdf)
-- [中堅・中小企業におけるOT可視化・常時監視の課題とソリューション](https://speakerdeck.com/nttcom/challenges-and-solutions-for-ot-visualization-and-constant-monitoring-in-small-and-medium-sized-enterprises)
-- [誰もがOT機器/危機を管理できる世界へ](https://speakerdeck.com/nttcom/empowering-ot-security-enabling-universal-control-device-management-and-countering-cyber-attacks)
+### 社内技術ブログ
+- [OsecTにおける運用の自動化](https://engineers.ntt.com/entry/2023/12/23/090934)
 - [OTセキュリティリスク可視化サービス OsecT、リニューアルしました](https://engineers.ntt.com/entry/2023/08/31/100633)
 - [【日本初紹介】Zeek・Spicyの使い方まとめ](https://engineers.ntt.com/entry/2023/06/23/095042)
 - [OsecT、サービスリリースしました](https://engineers.ntt.com/entry/2022/05/10/110748)
 - [制御システムのセキュリティと対策技術OsecTのご紹介（後編）](https://engineers.ntt.com/entry/2021/08/02/113151)
 - [制御システムのセキュリティと対策技術OsecTのご紹介（前編）](https://engineers.ntt.com/entry/2021/07/27/112539)
+
+### 社外発表
+- [制御システムネットワークの実態とセキュリティ課題](https://speakerdeck.com/nttcom/revelation-and-security-issues-of-control-system-networks)
+- [中堅・中小企業におけるOT可視化・常時監視の課題とソリューション](https://speakerdeck.com/nttcom/challenges-and-solutions-for-ot-visualization-and-constant-monitoring-in-small-and-medium-sized-enterprises)
+- [誰もがOT機器/危機を管理できる世界へ](https://speakerdeck.com/nttcom/empowering-ot-security-enabling-universal-control-device-management-and-countering-cyber-attacks)
+
+### メディア掲載
+- [OT環境向けセキュリティ対策「OsecT」 既存システムに影響を与えずネットワーク可視化・セキュリティリスク検知](https://www.newww-media.co.jp/backnumber/202401/202401p26.pdf)
