@@ -1,39 +1,38 @@
-# OsecTセンサーのインストール手順
+# OsecT Sensor Installation Manual
 
-English is [here](README_en.md)
+## 0. Premise
 
-## 0. 前提
-
-動作確認済の機種は以下の通りです。
+Operations have been confirmed for the model and OS below:
 
 - [OKI AIエッジコンピューター「AE2100」](https://www.oki.com/jp/AIedge/)
 
-また、Ubuntu 18.04.5 LTSおよびUbuntu 20.04.5 LTSで動作確認済みです。
+Ubuntu 18.04.5 LTS
+Ubuntu 20.04.5 LTS
 
-本手順書では、ホームディレクトリ直下（`~/osect_sensor`）にインストールすることとしています。別のディレクトリにインストールする場合、パスを読み替えてください。
+In this manual, it is assumed to be installed directly under the directory (`~/osect_sensor`). If you want to install in a different directory, please change the path.
 
-## 1. OSの更新及びツールのインストール
+## 1. OS Update & Tool Installation
 
-### 1.1 OSの更新
+### 1.1 OS Update
 
-OSを最新の状態に更新します。
+Update the OS to the latest.
 
 ```bash
 $ sudo apt update
 $ sudo apt upgrade -y
 ```
 
-### 1.2 Gitのインストール
+### 1.2 Git Installation
 
-インストール資材のダウンロードに必要なGitをインストールします。
+Git is required to be downloaded.
 
 ```bash
 $ sudo apt install -y git
 ```
 
-### 1.3. Dockerのインストール
+### 1.3. Docker Installation
 
-Dockerリポジトリを設定します。
+Set up a Docker repository.
 
 ```bash
 $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -41,7 +40,7 @@ $ sudo apt-key fingerprint 0EBFCD88
 $ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 ```
 
-Docker CEをインストールします。
+Docker CE Installation
 
 ```bash
 $ sudo apt install -y docker-ce
@@ -49,24 +48,24 @@ $ sudo usermod -aG docker <username>
 $ docker container run --rm hello-world
 ```
 
-docker-compose 1.27.4をインストールします。
+Docker Compose 1.27.4 Installation
 
 ```bash
 $ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 $ sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-### 1.4. sosreportのインストール
+### 1.4. Sosreport Installation
 
-OsecTセンサーのサポートログの収集に必要なsosreportをインストールします。
+Sosreport is required to collect support logs for OsecT sensors.
 
 ```bash
 $ sudo apt install -y sosreport
 ```
 
-## 2. インストール資材のダウンロード
+## 2. Installation Materials Download
 
-インストール資材をGitHubからダウンロードし、ホームディレクトリ直下(~/)に配置します。
+Please download the installation materials from GitHub and place them directly under your home directory (~/).
 
 ```bash
 $ cd ~
@@ -74,29 +73,29 @@ $ git clone https://github.com/nttcom/OsecT/
 
 $ ls ~/OsecT/osect_sensor
 Application  docker-compose.yml  Infrastructure  logs  tools
-#これらのファイルが表示されることをご確認ください。
+#Please make sure these files are shown.
 
 $ mv ~/OsecT/osect_sensor ~/
 ```
 
-## 3. OsecTセンサーの設定
+## 3. OsecT Sensor Settings
 
-### 3.1. 監視ネットワークインタフェースの設定
+### 3.1. Configuration of Monitoring Network Interface
 
-まず、インタフェースを確認します。
+Firstly, Please check the interface.
 ```bash
 ip a
 ```
 
-設定箇所は3箇所です。
+3 settings need to be configured.
 
-1箇所目：crontabを編集し、監視ネットワークを指定します。
+①: Edit the crontab and specify the monitoring network.
 
 ```bash
 $ vi ~/osect_sensor/conf/crontab
 ```
 
-編集箇所
+Part to edit:
 
 ```bash
 * * * * * /opt/ot_tools/suricata_cron.sh enp1s0 > /dev/null 2>&1
@@ -104,7 +103,7 @@ $ vi ~/osect_sensor/conf/crontab
 * * * * * /opt/ot_tools/yaf_cron.sh enp1s0 > /dev/null 2>&1
 ```
 
-編集例：監視ネットワークインタフェースがenp0s8の場合
+Edited Example (when the monitoring network interface is enp0s8)
 
 ```bash
 * * * * * /opt/ot_tools/suricata_cron.sh enp0s8 > /dev/null 2>&1
@@ -112,13 +111,13 @@ $ vi ~/osect_sensor/conf/crontab
 * * * * * /opt/ot_tools/yaf_cron.sh enp0s8 > /dev/null 2>&1
 ```
 
-2箇所目：suricata.yamlを編集し、監視ネットワークを指定します。
+②: Edit suricata.yaml and specify the monitoring network.
 
 ```bash
 $ vi ~/osect_sensor/conf/suricata.yaml
 ```
 
-編集箇所
+Part to edit:
 
 ```bash
 # Linux high speed capture support
@@ -126,7 +125,7 @@ af-packet:
   - interface: eth1
 ```
 
-編集例：監視ネットワークインタフェースがenp0s8の場合
+Edited Example (when the monitoring network interface is enp0s8)
 
 ```bash
 # Linux high speed capture support
@@ -134,13 +133,13 @@ af-packet:
   - interface: enp0s8
 ```
 
-3箇所目：node.cfgを編集し、監視ネットワークを指定します。
+③: Edit node.cfg and specify the monitoring network.
 
 ```bash
 $ vi ~/osect_sensor/conf/node.cfg
 ```
 
-編集箇所
+Part to edit:
 
 ```bash
 [worker-1]
@@ -152,7 +151,7 @@ lb_procs=6
 pin_cpus=0,1,2,3,4,5
 ```
 
-編集例：監視ネットワークインタフェースがenp0s8の場合
+Edited Example (when the monitoring network interface is enp0s8)
 
 ```bash
 [worker-1]
@@ -164,46 +163,44 @@ lb_procs=6
 pin_cpus=0,1,2,3,4,5
 ```
 
-### 3.2. DjangoのSECRET_KEYの設定
+### 3.2. SECRET_KEY Configuration in Django
 
-DjangoのSECRET_KEYの設定を設定します。
+Set Django's SECRET_KEY.
 
 ```bash
 $ SK=`cat /dev/urandom | base64 | fold -w 64 | head -n 1`; sed -i -e 's@SECRET_KEY = ""@SECRET_KEY = "'$SK'"@g' ~/osect_sensor/Application/edge_cron/edge_cron/settings.py
-（何も表示されません。）
+(Nothing is displayed.)
 ```
 
-### 3.3. データ送信用URLの設定
+### 3.3. URL Configuration for Data Transmission
 
-NTT Comから提供されたデータ送信用URLを設定ファイルに記載します。
+Please edit the data transmission URL provided by NTT Com in the configuration file.
 
 ```bash
 $ vi Application/edge_cron/common/common_config.py
 ```
 
-記載箇所:
+Part to edit:
 
 ```python
 API_URL = 'https://your url/paper/api/v1/createlogdata/post'
 ```
 
-記載例:
+Edited Example
 
 ```python
 API_URL = 'https://xxxxx.osect.ntt.com/paper/api/v1/createlogdata/post'
 ```
 
-### 3.4. クライアント証明書の設定
+### 3.4. Client Certificate Configuration
 
-NTT Comから提供されたクライアント証明書を以下に格納します（ファイル名は変更しません）。
+Store the client certificate provided by NTT Com to the path below (ne need to change the file name).
 
 ```bash
 $ ~/osect_sensor/keys/client.pem
 ```
 
-## 4. コンテナの構築・起動
-
-コンテナを構築、起動します。
+## 4. Building and starting the container
 
 ```bash
 $ cd ~/osect_sensor/
