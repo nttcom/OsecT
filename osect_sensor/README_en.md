@@ -2,12 +2,10 @@
 
 ## 0. Premise
 
-Operations have been confirmed for the model and OS below:
+Operations have been confirmed for the OS below:
 
-- [OKI AIエッジコンピューター「AE2100」](https://www.oki.com/jp/AIedge/)
-
-Ubuntu 18.04.5 LTS
-Ubuntu 20.04.5 LTS
+- Ubuntu 18.04.5 LTS
+- Ubuntu 20.04.5 LTS
 
 In this manual, it is assumed to be installed directly under the directory (`~/osect_sensor`). If you want to install in a different directory, please change the path.
 
@@ -89,7 +87,7 @@ ip a
 
 3 settings need to be configured.
 
-①: Edit the crontab and specify the monitoring network.
+1: Edit the crontab and specify the monitoring network.
 
 ```bash
 $ vi ~/osect_sensor/conf/crontab
@@ -111,7 +109,7 @@ Edited Example (when the monitoring network interface is enp0s8)
 * * * * * /opt/ot_tools/yaf_cron.sh enp0s8 > /dev/null 2>&1
 ```
 
-②: Edit suricata.yaml and specify the monitoring network.
+2: Edit suricata.yaml and specify the monitoring network.
 
 ```bash
 $ vi ~/osect_sensor/conf/suricata.yaml
@@ -133,7 +131,7 @@ af-packet:
   - interface: enp0s8
 ```
 
-③: Edit node.cfg and specify the monitoring network.
+3: Edit node.cfg and specify the monitoring network.
 
 ```bash
 $ vi ~/osect_sensor/conf/node.cfg
@@ -194,7 +192,7 @@ API_URL = 'https://xxxxx.osect.ntt.com/paper/api/v1/createlogdata/post'
 
 ### 3.4. Client Certificate Configuration
 
-Store the client certificate provided by NTT Com to the path below (ne need to change the file name).
+Store the client certificate provided by NTT Com to the path below (not need to change the file name).
 
 ```bash
 $ ~/osect_sensor/keys/client.pem
