@@ -30,7 +30,7 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 
 ## 紹介記事・関連記事
 
-### 社内技術ブログ
+### 開発者ブログ
 - [OsecTにおける運用の自動化](https://engineers.ntt.com/entry/2023/12/23/090934)
 - [OTセキュリティリスク可視化サービス OsecT、リニューアルしました](https://engineers.ntt.com/entry/2023/08/31/100633)
 - [【日本初紹介】Zeek・Spicyの使い方まとめ](https://engineers.ntt.com/entry/2023/06/23/095042)
