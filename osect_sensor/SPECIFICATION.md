@@ -1,5 +1,7 @@
 # OsecTセンサーの仕様
 
+English is [here](SPECIFICATION_en.md)
+
 ## 1. 概要
 
 OsecTセンサーはSaaS型OsecTにおいて、以下の機能を提供します。

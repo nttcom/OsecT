@@ -1,5 +1,7 @@
 # OsecTセンサーのインストール手順
 
+English is [here](README_en.md)
+
 ## 0. 前提
 
 動作確認済の機種は以下の通りです。
