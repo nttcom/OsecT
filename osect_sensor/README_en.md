@@ -192,7 +192,7 @@ API_URL = 'https://xxxxx.osect.ntt.com/paper/api/v1/createlogdata/post'
 
 ### 3.4. Client Certificate Configuration
 
-Store the client certificate provided by NTT Com to the path below (not need to change the file name).
+Store the client certificate provided by NTT Com to the path below (no need to change the file name).
 
 ```bash
 $ ~/osect_sensor/keys/client.pem
