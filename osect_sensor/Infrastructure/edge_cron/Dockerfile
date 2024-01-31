@@ -135,6 +135,10 @@ RUN apt-get update \
     libevent-dev \
     # python-yaml \
     rustc \
+    autoconf \
+    automake \
+    libtool \
+    libjansson-dev \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
@@ -154,15 +158,15 @@ ENV PATH $PATH:/root/.cargo/bin
 # zkgパッケージ（必要なものだけ入れる）
 ENV PATH $PATH:/usr/local/zeek/bin
 # RUN zkg autoconfig
-RUN zkg refresh && \
-    zkg install --force --skiptest \
+RUN zkg install icsnpp-modbus --version 03de54df8b0a8c1e6264876167f80dccae74902a --force --skiptest \
+    && zkg refresh \
+    && zkg install --force --skiptest \
 #    zeek-plugin-bacnet \
 #    zeek-plugin-enip \
 #    zeek-plugin-profinet \
 #    zeek-plugin-s7comm \
 #    icsnpp-ethercat \
 #    icsnpp-opcua-binary \
-#    icsnpp-modbus \
 #    icsnpp-bacnet \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin \
@@ -205,12 +209,17 @@ COPY --from=build-env /var/lib/suricata/rules/suricata.rules /var/lib/suricata/r
 
 WORKDIR /home/work
 
-# suricataのインストール（eBPFなし）
-RUN apt-get update \
-    && 	apt-get install -y --no-install-recommends suricata \
-    && 	apt-get --purge remove -y software-properties-common \
-    && 	apt-get -y clean \
-    && rm -rf /var/lib/apt/lists/*
+# suricataのインストール
+# suricata のバージョンアップに追随するためにリリース前には最新のバージョンであることを確認すること
+# https://redmine.openinfosecfoundation.org/projects/suricata/wiki/Debian_Installation
+RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.15.tar.gz \
+    && tar -xvzf suricata-6.0.15.tar.gz \
+    && cd suricata-6.0.15 \
+    && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-gccmarch-native \
+    && make \
+    && make install \
+    && make install-conf \
+    && ldconfig
 
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
 WORKDIR /home/work
