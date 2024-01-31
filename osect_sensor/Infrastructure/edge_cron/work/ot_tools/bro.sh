@@ -41,9 +41,9 @@ merge_log "cclink-ie-tsn-ptp.*.log" "cclink-ie-tsn-ptp.log"
 
 if [ $4 = "True" ]; then
     # tsharkでの出力と同じにするため
-    merge_log "bacnet.*.log" "bacnet.log"
-    sed -i '/^#/d' bacnet.log
-    sed -i '1i #' bacnet.log
+    merge_log "bacnet_service.*.log" "bacnet_service.log"
+    sed -i '/^#/d' bacnet_service.log
+    sed -i '1i #' bacnet_service.log
 fi
 
 if [ $5 = "True" ]; then

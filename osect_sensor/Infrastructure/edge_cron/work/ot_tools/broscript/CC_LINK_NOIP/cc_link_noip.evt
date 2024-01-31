@@ -68,11 +68,11 @@ on NO_IP::Packet::cyclicM -> event raw::cyclicM($packet);
 on NO_IP::Packet::cyclicS -> event raw::cyclicS($packet);
 on NO_IP::Packet::acyclicPriority -> event raw::acyclicPriority($packet);
 on NO_IP::Packet::acyclicDetection -> event raw::acyclicDetection($packet, self.acyclicDetection.detectionVer);
-on NO_IP::Packet::acyclicDetectionAck -> event raw::acyclicDetectionAck($packet, 
-                                                                        self.acyclicDetectionAck.nodeType, 
-                                                                        self.acyclicDetectionAck.detectionAckVer, 
-                                                                        self.acyclicDetectionAck.deviceType, 
-                                                                        self.acyclicDetectionAck.functionName.x1, 
+on NO_IP::Packet::acyclicDetectionAck -> event raw::acyclicDetectionAck($packet,
+                                                                        self.acyclicDetectionAck.nodeType,
+                                                                        self.acyclicDetectionAck.detectionAckVer,
+                                                                        self.acyclicDetectionAck.deviceType,
+                                                                        self.acyclicDetectionAck.functionName.x1,
                                                                         self.acyclicDetectionAck.functionName.x2,
                                                                         self.acyclicDetectionAck.functionName.x3,
                                                                         self.acyclicDetectionAck.functionName.x4,

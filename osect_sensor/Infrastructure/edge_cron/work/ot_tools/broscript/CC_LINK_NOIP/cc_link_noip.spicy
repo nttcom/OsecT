@@ -283,7 +283,7 @@ public function arrangement_transient1(msg: NO_IP::Transient1):
         sub_command_8: bytes,
         ct: bytes
         >{
-    
+
     local command_7: bytes;
     local subCommand_7: bytes;
     local command_8: bytes;
