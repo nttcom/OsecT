@@ -932,7 +932,7 @@ event raw::transient2(p: raw_pkt_hdr, dataType: string, serviceVerType: string, 
 	}
 
 	aggregationData_noip = create_aggregationData_noip(info_noip);
-	insert_res_aggregationData_noip(aggregationData_noip, info_noip);	
+	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
 
 event raw::paramCheck(p: raw_pkt_hdr, dataType: string, serviceVerType: string, srcNodeNumber: string, connectionInfo: string, nodeId: int)
@@ -957,7 +957,7 @@ event raw::paramCheck(p: raw_pkt_hdr, dataType: string, serviceVerType: string, 
 	} else {
 		info_noip$service="unknownserviceVerType" + serviceVerType;
 	}
-	
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -984,7 +984,7 @@ event raw::parameter(p: raw_pkt_hdr, dataType: string, serviceVerType: string, s
 	} else {
 		info_noip$service="unknownserviceVerType" + serviceVerType;
 	}
-	
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1054,7 +1054,7 @@ event raw::connect(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string)
 	info_noip$pdu_type = "connect";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1069,7 +1069,7 @@ event raw::connectAck(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string)
 	info_noip$pdu_type = "connectAck";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1084,7 +1084,7 @@ event raw::scan(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string)
 	info_noip$pdu_type = "scan";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1099,7 +1099,7 @@ event raw::collect(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string)
 	info_noip$pdu_type = "collect";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1114,7 +1114,7 @@ event raw::select(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string)
 	info_noip$pdu_type = "select";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1129,7 +1129,7 @@ event raw::launch(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string)
 	info_noip$pdu_type = "launch";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1144,7 +1144,7 @@ event raw::token(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string)
 	info_noip$pdu_type = "token";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1159,7 +1159,7 @@ event raw::dummy(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string)
 	info_noip$pdu_type = "dummy";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1174,7 +1174,7 @@ event raw::nTNTest(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string)
 	info_noip$pdu_type = "nTNTest";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1192,7 +1192,7 @@ event raw::cyclicDataW(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string
 	info_noip$pdu_type = "cyclicDataW";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1207,7 +1207,7 @@ event raw::cyclicDataB(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: string
 	info_noip$pdu_type = "cyclicDataB";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1222,7 +1222,7 @@ event raw::cyclicDataOut1(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: str
 	info_noip$pdu_type = "cyclicDataOut1";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1237,7 +1237,7 @@ event raw::cyclicDataOut2(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: str
 	info_noip$pdu_type = "cyclicDataOut2";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1252,7 +1252,7 @@ event raw::cyclicDataIn1(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: stri
 	info_noip$pdu_type = "cyclicDataIn1";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1267,7 +1267,7 @@ event raw::cyclicDataIn2(p: raw_pkt_hdr, c_priority: string, srcNodeNumber: stri
 	info_noip$pdu_type = "cyclicDataIn2";
 	info_noip$service="cclink_ie_control";
 	info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -1285,7 +1285,7 @@ event raw::cyclicM(p: raw_pkt_hdr)
 	info_tsn$service = "cclink_ie_tsn";
 	info_tsn$flame_type = "cyclic";
 	info_tsn$pdu_type = "cyclicM/cyclicMs";
-		
+
 	aggregationData_tsn = create_aggregationData_tsn(info_tsn);
 	insert_res_aggregationData_tsn(aggregationData_tsn, info_tsn);
 }
@@ -1301,7 +1301,7 @@ event raw::cyclicS(p: raw_pkt_hdr)
 	info_tsn$service = "cclink_ie_tsn";
 	info_tsn$flame_type = "cyclic";
 	info_tsn$pdu_type = "cyclicS/cyclicSs";
-		
+
 	aggregationData_tsn = create_aggregationData_tsn(info_tsn);
 	insert_res_aggregationData_tsn(aggregationData_tsn, info_tsn);
 }
@@ -1317,7 +1317,7 @@ event raw::acyclicPriority(p: raw_pkt_hdr)
 	info_tsn$service = "cclink_ie_tsn";
 	info_tsn$flame_type = "acyclic";
 	info_tsn$pdu_type = "acyclicPriority";
-		
+
 	aggregationData_tsn = create_aggregationData_tsn(info_tsn);
 	insert_res_aggregationData_tsn(aggregationData_tsn, info_tsn);
 }
@@ -1338,7 +1338,7 @@ event raw::acyclicDetection(p: raw_pkt_hdr, detectionVer: string)
 	else if ( detectionVer == "\x01" ) {
 		info_tsn$pdu_type = "acyclicDetection Ver.1";
 	}
-		
+
 	aggregationData_tsn = create_aggregationData_tsn(info_tsn);
 	insert_res_aggregationData_tsn(aggregationData_tsn, info_tsn);
 }
@@ -1451,7 +1451,7 @@ event raw::acyclicData(p: raw_pkt_hdr)
 	info_tsn$service = "cclink_ie_tsn";
 	info_tsn$flame_type = "acyclic";
 	info_tsn$pdu_type = "acyclicData";
-		
+
 	aggregationData_tsn = create_aggregationData_tsn(info_tsn);
 	insert_res_aggregationData_tsn(aggregationData_tsn, info_tsn);
 }
