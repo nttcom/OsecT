@@ -76,11 +76,11 @@ export {
 							  ["\x04"] = "acquiresDetailedNodeInformation",
 							  ["\x0a"] = "acquiresOptionalInformation",};
 
-	global res_command_8: table[string] of string = { ["\x01"] = "communicationCycleSetting", 
+	global res_command_8: table[string] of string = { ["\x01"] = "communicationCycleSetting",
 	                                                  ["\x02"] = "objectRead",
 							  ["\x03"] = "objectWrite",};
 
-	global res_subCommand: table[string] of string = { ["\x80"] = "Response", 
+	global res_subCommand: table[string] of string = { ["\x80"] = "Response",
 	                                                   ["\x00"] = "Request",};
 
         global res_devicetype: table[string] of string = { ["\x00\x00"] = "not applicable",
@@ -500,7 +500,7 @@ event raw::testDataAck(p: raw_pkt_hdr, dataType: string, serviceVerType: string,
 		insert_res_aggregationData_tsn(aggregationData_tsn_1, info_tsn_1);
 	}
 	else if ( serviceVerType == "\x03" )
-	{	
+	{
 		local info_tsn_2: Info_TSN;
 		local aggregationData_tsn_2: AggregationData_TSN;
 		info_tsn_2$ts = network_time();
@@ -556,13 +556,13 @@ event raw::setupAck(p: raw_pkt_hdr, dataType: string, serviceVerType: string, sr
 		info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
 	}
 	else if ( serviceVerType == "\x01" )
-	{	
+	{
 		info_noip$service="cclink_ie_field";
 		info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
 	} else {
 		info_noip$service="unknownserviceVerType" + serviceVerType;
 	}
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -576,13 +576,13 @@ event raw::myStatus(p: raw_pkt_hdr, dataType: string, serviceVerType: string, sr
 	info_noip$dst_mac = p$l2$dst;
 	info_noip$pdu_type = "myStatus";
 	if ( serviceVerType == "\x00" )
-	{	
+	{
 		info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
 		info_noip$node_id=nodeId;
 		info_noip$service = "cclink_ie_control";
 	}
 	else if ( serviceVerType == "\x01" )
-	{	
+	{
 		info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
 		info_noip$node_id=nodeId;
 		if (nodetype in res_nodetype_field){
@@ -594,7 +594,7 @@ event raw::myStatus(p: raw_pkt_hdr, dataType: string, serviceVerType: string, sr
 	} else {
 		info_noip$service = "unknownserviceVerType" + serviceVerType;
 	}
-			
+
 	aggregationData_noip = create_aggregationData_noip(info_noip);
 	insert_res_aggregationData_noip(aggregationData_noip, info_noip);
 }
@@ -694,7 +694,7 @@ event raw::update(p: raw_pkt_hdr, dataType: string, serviceVerType: string, srcN
 		info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
 	}
 	else if ( serviceVerType == "\x01" )
-	{	
+	{
 		info_noip$service="cclink_ie_field";
 		info_noip$src_node_number="0x" + string_to_ascii_hex(srcNodeNumber);
 		info_noip$node_id=nodeId;
