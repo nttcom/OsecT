@@ -169,7 +169,7 @@ event tsn_slmp::reqLMT(c: connection, command: string, subcommand: string)
 		aggregationData = create_aggregationData(info);
 		insert_res_aggregationData(aggregationData, info);
 		c$CCLINK_IE_TSN_SLMP = info;
-	}	
+	}
 }
 
 

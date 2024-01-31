@@ -98,7 +98,7 @@ event raw::ptpSync(p: raw_pkt_hdr)
 	info$service = "cclink_ie_tsn";
 	info$flame_type = "ptp";
 	info$pdu_type = "ptpSync";
-		
+
 	aggregationData = create_aggregationData(info);
 	insert_res_aggregationData(aggregationData, info);
 	}
@@ -114,7 +114,7 @@ event raw::ptpPdelayReq(p: raw_pkt_hdr)
 	info$service = "cclink_ie_tsn";
 	info$flame_type = "ptp";
 	info$pdu_type = "ptpPdelayReq";
-		
+
 	aggregationData = create_aggregationData(info);
 	insert_res_aggregationData(aggregationData, info);
 	}
@@ -130,7 +130,7 @@ event raw::ptpPdelayResp(p: raw_pkt_hdr)
 	info$service = "cclink_ie_tsn";
 	info$flame_type = "ptp";
 	info$pdu_type = "ptpPdelayResp";
-		
+
 	aggregationData = create_aggregationData(info);
 	insert_res_aggregationData(aggregationData, info);
 	}
@@ -146,7 +146,7 @@ event raw::ptpFollowUp(p: raw_pkt_hdr)
 	info$service = "cclink_ie_tsn";
 	info$flame_type = "ptp";
 	info$pdu_type = "ptpFollowUp";
-		
+
 	aggregationData = create_aggregationData(info);
 	insert_res_aggregationData(aggregationData, info);
 	}
@@ -178,7 +178,7 @@ event raw::ptpAnnounce(p: raw_pkt_hdr)
 	info$service = "cclink_ie_tsn";
 	info$flame_type = "ptp";
 	info$pdu_type = "ptpAnnounce";
-		
+
 	aggregationData = create_aggregationData(info);
 	insert_res_aggregationData(aggregationData, info);
 	}
@@ -194,7 +194,7 @@ event raw::ptpdelayReq(p: raw_pkt_hdr)
 	info$service = "cclink_ie_tsn";
 	info$flame_type = "ptp";
 	info$pdu_type = "ptpdelayReq";
-		
+
 	aggregationData = create_aggregationData(info);
 	insert_res_aggregationData(aggregationData, info);
 	}
@@ -210,7 +210,7 @@ event raw::ptpdelayResp(p: raw_pkt_hdr)
 	info$service = "cclink_ie_tsn";
 	info$flame_type = "ptp";
 	info$pdu_type = "ptpdelayResp";
-		
+
 	aggregationData = create_aggregationData(info);
 	insert_res_aggregationData(aggregationData, info);
 	}

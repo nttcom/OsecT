@@ -16,7 +16,7 @@ public type Packet = unit {
         MType::PtpdelayReq            ->  ptpdelayReq:  PtpdelayReq;
         MType::PtpdelayResp           ->  ptpdelayResp:  PtpdelayResp;
         *                             ->  unk:  Unknown;
-        };     
+        };
 };
 
 type MType = enum {
