@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 As build-env
+FROM ubuntu:22.04 As build-env
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 ENV DEBIAN_FRONTEND noninteractive
@@ -56,9 +56,9 @@ RUN apt-get update \
 # pip関係のインストール
 WORKDIR /home/work
 RUN apt-get purge -y python3-yaml \
-    && python3.8 -m pip install --upgrade pip --no-cache-dir \
-    && python3.8 -m pip install setuptools==59.8.0 --no-cache-dir \
-    && python3.8 -m pip install -r requirements.txt --no-cache-dir
+    && python3.10 -m pip install --upgrade pip --no-cache-dir \
+    && python3.10 -m pip install setuptools==59.8.0 --no-cache-dir \
+    && python3.10 -m pip install -r requirements.txt --no-cache-dir
 
 WORKDIR /home/work
 # Yafのインストール
