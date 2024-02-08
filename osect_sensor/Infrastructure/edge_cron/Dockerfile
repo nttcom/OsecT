@@ -171,7 +171,9 @@ RUN zkg install icsnpp-modbus --version 03de54df8b0a8c1e6264876167f80dccae74902a
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin \
     zeek-parser-CCLinkFieldBasic \
-    zeek-parser-CCLinkField-CCLinkControl \
+    zeek-parser-CCLinkIENoIP \
+    zeek-parser-CCLinkTSNPTP \
+    zeek-parser-CCLinkTSNSLMP \
     zeek-parser-CIFS-COM \
     zeek-parser-CIFS-NBNS-COM \
     zeek-parser-DHCPv4-COM \
