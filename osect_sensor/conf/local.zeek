@@ -120,14 +120,14 @@ redef LogAscii::enable_utf_8 = F;
 @load zeek-long-connections
 @load zeek-af_packet-plugin
 @load zeek-parser-CCLinkFieldBasic
+@load zeek-parser-CCLinkIENoIP
+@load zeek-parser-CCLinkTSNPTP
+@load zeek-parser-CCLinkTSNSLMP
 @load zeek-parser-CIFS-COM
 @load zeek-parser-CIFS-NBNS-COM
 @load zeek-parser-DHCPv4-COM
 @load zeek-parser-DHCPv6-COM
 @load zeek-parser-SSDP-COM
-@load cc_link_noip
-@load cc_link_tsn_slmp
-@load cc_link_tsn_ptp
 
 # セッション接続されたままパケットが1分以上流れない場合はセッションを閉じる
 redef Conn::analyzer_inactivity_timeouts += {

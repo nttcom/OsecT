@@ -171,29 +171,14 @@ RUN zkg install icsnpp-modbus --version 03de54df8b0a8c1e6264876167f80dccae74902a
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin \
     zeek-parser-CCLinkFieldBasic \
+    zeek-parser-CCLinkIENoIP \
+    zeek-parser-CCLinkTSNPTP \
+    zeek-parser-CCLinkTSNSLMP \
     zeek-parser-CIFS-COM \
     zeek-parser-CIFS-NBNS-COM \
     zeek-parser-DHCPv4-COM \
     zeek-parser-DHCPv6-COM \
     zeek-parser-SSDP-COM
-
-# spicyのコンパイル
-WORKDIR /home/work/ot_tools/broscript/CC_LINK_NOIP/
-RUN spicyz -o cc_link_noip.hlto cc_link_noip.spicy cc_link_noip.evt
-
-WORKDIR /home/work/ot_tools/broscript/CC_LINK_TSN_SLMP/
-RUN spicyz -o cc_link_tsn_slmp.hlto cc_link_tsn_slmp.spicy cc_link_tsn_slmp.evt
-
-WORKDIR /home/work/ot_tools/broscript/CC_LINK_TSN_PTP/
-RUN spicyz -o cc_link_tsn_ptp.hlto cc_link_tsn_ptp.spicy cc_link_tsn_ptp.evt
-
-WORKDIR /home/work
-RUN cp -p ot_tools/broscript/CC_LINK_TSN_SLMP/cc_link_tsn_slmp.hlto /usr/local/zeek/lib/zeek-spicy/modules \
-    && cp -p ot_tools/broscript/CC_LINK_TSN_SLMP/cc_link_tsn_slmp.zeek /usr/local/zeek/share/zeek/site \
-    && cp -p ot_tools/broscript/CC_LINK_TSN_PTP/cc_link_tsn_ptp.hlto /usr/local/zeek/lib/zeek-spicy/modules \
-    && cp -p ot_tools/broscript/CC_LINK_TSN_PTP/cc_link_tsn_ptp.zeek /usr/local/zeek/share/zeek/site \
-    && cp -p ot_tools/broscript/CC_LINK_NOIP/cc_link_noip.hlto /usr/local/zeek/lib/zeek-spicy/modules \
-    && cp -p ot_tools/broscript/CC_LINK_NOIP/cc_link_noip.zeek /usr/local/zeek/share/zeek/site
 
 # Yafを含むバイナリファイルをコピー
 RUN mkdir /var/log/yaf
