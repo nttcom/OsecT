@@ -197,9 +197,9 @@ WORKDIR /home/work
 # suricataのインストール
 # suricata のバージョンアップに追随するためにリリース前には最新のバージョンであることを確認すること
 # https://redmine.openinfosecfoundation.org/projects/suricata/wiki/Debian_Installation
-RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.15.tar.gz \
-    && tar -xvzf suricata-6.0.15.tar.gz \
-    && cd suricata-6.0.15 \
+RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.16.tar.gz \
+    && tar -xvzf suricata-6.0.16.tar.gz \
+    && cd suricata-6.0.16 \
     && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-gccmarch-native \
     && make \
     && make install \
