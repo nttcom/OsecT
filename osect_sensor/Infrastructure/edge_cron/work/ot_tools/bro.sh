@@ -36,6 +36,9 @@ merge_log "bacnet.*.log" "bacnet.log"
 # OTプロトコル: CC-Link
 merge_log "cclink-ief-basic.*.log" "cclink-ief-basic.log"
 merge_log "cclink-ie.*.log" "cclink-ie.log"
+merge_log "cclink-ie-tsn.*.log" "cclink-ie-tsn.log"
+merge_log "cclink-ie-tsn-slmp.*.log" "cclink-ie-tsn-slmp.log"
+merge_log "cclink-ie-tsn-ptp.*.log" "cclink-ie-tsn-ptp.log"
 
 if [ $4 = "True" ]; then
     # tsharkでの出力と同じにするため

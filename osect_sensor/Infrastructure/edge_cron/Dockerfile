@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 As build-env
+FROM ubuntu:22.04 As build-env
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 ENV DEBIAN_FRONTEND noninteractive
@@ -17,7 +17,7 @@ RUN apt-get update \
     flex \
     kmod \
     gawk \
-    git \
+    # git \
     libmount-dev \
     libpcre3-dev \
     libyaml-dev \
@@ -56,9 +56,9 @@ RUN apt-get update \
 # pip関係のインストール
 WORKDIR /home/work
 RUN apt-get purge -y python3-yaml \
-    && python3.8 -m pip install --upgrade pip --no-cache-dir \
-    && python3.8 -m pip install setuptools==59.8.0 --no-cache-dir \
-    && python3.8 -m pip install -r requirements.txt --no-cache-dir
+    && python3.10 -m pip install --upgrade pip --no-cache-dir \
+    && python3.10 -m pip install setuptools==59.8.0 --no-cache-dir \
+    && python3.10 -m pip install -r requirements.txt --no-cache-dir
 
 WORKDIR /home/work
 # Yafのインストール
@@ -135,6 +135,10 @@ RUN apt-get update \
     libevent-dev \
     # python-yaml \
     rustc \
+    autoconf \
+    automake \
+    libtool \
+    libjansson-dev \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
@@ -154,8 +158,9 @@ ENV PATH $PATH:/root/.cargo/bin
 # zkgパッケージ（必要なものだけ入れる）
 ENV PATH $PATH:/usr/local/zeek/bin
 # RUN zkg autoconfig
-RUN zkg refresh && \
-    zkg install --force --skiptest \
+RUN zkg install icsnpp-modbus --version 03de54df8b0a8c1e6264876167f80dccae74902a --force --skiptest \
+    && zkg refresh \
+    && zkg install --force --skiptest \
 #    zeek-plugin-bacnet \
 #    zeek-plugin-enip \
 #    zeek-plugin-profinet \
@@ -167,7 +172,9 @@ RUN zkg refresh && \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin \
     zeek-parser-CCLinkFieldBasic \
-    zeek-parser-CCLinkField-CCLinkControl \
+    zeek-parser-CCLinkIENoIP \
+    zeek-parser-CCLinkTSNPTP \
+    zeek-parser-CCLinkTSNSLMP \
     zeek-parser-CIFS-COM \
     zeek-parser-CIFS-NBNS-COM \
     zeek-parser-DHCPv4-COM \
@@ -188,12 +195,17 @@ COPY --from=build-env /var/lib/suricata/rules/suricata.rules /var/lib/suricata/r
 
 WORKDIR /home/work
 
-# suricataのインストール（eBPFなし）
-RUN apt-get update \
-    && 	apt-get install -y --no-install-recommends suricata \
-    && 	apt-get --purge remove -y software-properties-common \
-    && 	apt-get -y clean \
-    && rm -rf /var/lib/apt/lists/*
+# suricataのインストール
+# suricata のバージョンアップに追随するためにリリース前には最新のバージョンであることを確認すること
+# https://redmine.openinfosecfoundation.org/projects/suricata/wiki/Debian_Installation
+RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.16.tar.gz \
+    && tar -xvzf suricata-6.0.16.tar.gz \
+    && cd suricata-6.0.16 \
+    && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-gccmarch-native \
+    && make \
+    && make install \
+    && make install-conf \
+    && ldconfig
 
 # Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
 WORKDIR /home/work
@@ -205,7 +217,6 @@ RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/broscript/arp.zeek /usr/local/zeek/share/zeek/site \
     && cp -p ot_tools/broscript/ns.zeek /usr/local/zeek/share/zeek/site \
     && cp -p ot_tools/broscript/zeek_long_connections/main.zeek /usr/local/zeek/share/zeek/site/zeek-long-connections/ \
-    && cp -p ot_tools/broscript/dns.zeek /usr/local/zeek/share/zeek/base/protocols/dns/main.zeek \
     && cp -p ot_tools/*.sh /opt/ot_tools/ \
     && cp -p ot_tools/yaf.awk /opt/ot_tools/ \
     && cp -pr ot_tools/p0f /opt/ \
