@@ -1,9 +1,11 @@
 #!/bin/bash
 
 merge_log () {
-    cat $1 > $2
+    files=$(ls $1)
+    cat ${files} > $2
     sed -i '/^#/d' $2
     sed -i '1i #ts     start-time      end-time        duration        rtt     proto   sip     sp      dip     dp srcMacAddress    destMacAddress  iflags  uflags  riflags ruflags isn     risn    tag     rtag    pktoct      rpkt    roct    end-reason' $2
+    rm ${files}
 }
 
 cd $1/$2 || exit
@@ -16,4 +18,3 @@ for flowfile in $flow; do
 done
 
 merge_log "/var/log/yaf/flow*.log" "yaf_flow.log"
-rm /var/log/yaf/flow*.log
