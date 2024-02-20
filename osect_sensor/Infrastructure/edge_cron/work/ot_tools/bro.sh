@@ -1,6 +1,6 @@
 #!/bin/bash
 
-merge_log () {
+merge_and_remove_log () {
     files=$(find /usr/local/zeek/logs -name $1)
     cat ${files} > $2
     sed -i '/^#/d' $2
@@ -20,35 +20,35 @@ tmp_files=$(find /usr/local/zeek/logs -name "conn.*.log")
 awk '$9<60{print}' ${tmp_files} > "/usr/local/zeek/logs/conn_replace.log"
 rm ${tmp_files}
 # conn.logとconn_long.logの両方を回収
-merge_log "conn*.log" "conn.log"
-merge_log "arp.*.log" "arp.log"
-merge_log "ns.*.log" "ns.log"
-merge_log "dns.*.log" "dns.log"
-merge_log "http.*.log" "http.log"
-merge_log "cifs.*.log" "mswin-browser.log"
+merge_and_remove_log "conn*.log" "conn.log"
+merge_and_remove_log "arp.*.log" "arp.log"
+merge_and_remove_log "ns.*.log" "ns.log"
+merge_and_remove_log "dns.*.log" "dns.log"
+merge_and_remove_log "http.*.log" "http.log"
+merge_and_remove_log "cifs.*.log" "mswin-browser.log"
 reformat_log "mswin-browser.log"
-merge_log "mydhcp.*.log" "dhcp2.log"
+merge_and_remove_log "mydhcp.*.log" "dhcp2.log"
 reformat_log "dhcp2.log"
-merge_log "dhcpv6.*.log" "dhcpv6.log"
+merge_and_remove_log "dhcpv6.*.log" "dhcpv6.log"
 reformat_log "dhcpv6.log"
-merge_log "nbns.*.log" "netbios-ns.log"
+merge_and_remove_log "nbns.*.log" "netbios-ns.log"
 reformat_log "netbios-ns.log"
-merge_log "ssdp.*.log" "ssdp.log"
+merge_and_remove_log "ssdp.*.log" "ssdp.log"
 reformat_log "ssdp.log"
 # OTプロトコル: CC-Link
-merge_log "cclink-ief-basic.*.log" "cclink-ief-basic.log"
-merge_log "cclink-ie.*.log" "cclink-ie.log"
-merge_log "cclink-ie-tsn.*.log" "cclink-ie-tsn.log"
-merge_log "cclink-ie-tsn-slmp.*.log" "cclink-ie-tsn-slmp.log"
-merge_log "cclink-ie-tsn-ptp.*.log" "cclink-ie-tsn-ptp.log"
+merge_and_remove_log "cclink-ief-basic.*.log" "cclink-ief-basic.log"
+merge_and_remove_log "cclink-ie.*.log" "cclink-ie.log"
+merge_and_remove_log "cclink-ie-tsn.*.log" "cclink-ie-tsn.log"
+merge_and_remove_log "cclink-ie-tsn-slmp.*.log" "cclink-ie-tsn-slmp.log"
+merge_and_remove_log "cclink-ie-tsn-ptp.*.log" "cclink-ie-tsn-ptp.log"
 
 if [ $4 = "True" ]; then
     # tsharkでの出力と同じにするため
-    merge_log "bacnet_service.*.log" "bacnet_service.log"
+    merge_and_remove_log "bacnet_service.*.log" "bacnet_service.log"
     sed -i '/^#/d' bacnet_service.log
     sed -i '1i #' bacnet_service.log
 fi
 
 if [ $5 = "True" ]; then
-    merge_log "modbus_detailed.*.log" "modbus_detailed.log"
+    merge_and_remove_log "modbus_detailed.*.log" "modbus_detailed.log"
 fi

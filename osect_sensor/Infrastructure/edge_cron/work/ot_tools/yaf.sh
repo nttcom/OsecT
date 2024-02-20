@@ -1,6 +1,6 @@
 #!/bin/bash
 
-merge_log () {
+merge_and_remove_log () {
     files=$(ls $1)
     cat ${files} > $2
     sed -i '/^#/d' $2
@@ -17,4 +17,4 @@ for flowfile in $flow; do
     rm "$flowfile" flow.csv
 done
 
-merge_log "/var/log/yaf/flow*.log" "yaf_flow.log"
+merge_and_remove_log "/var/log/yaf/flow*.log" "yaf_flow.log"
