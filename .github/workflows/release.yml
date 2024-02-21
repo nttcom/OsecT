@@ -1,0 +1,107 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'release-v*.*.*'
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Check out code from GitHub
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Get the pushed release tag
+        id: get_pushed_tag
+        run: |
+          echo ::set-output name=tag::${{ github.ref }}
+          echo ::set-output name=tag_short::$(echo ${{ github.ref }} | grep -ioP '/\K[^/]+$')
+      - name: Get the latest release tag
+        id: get_latest_release
+        run: |
+          result=$(gh release view --json tagName)
+          echo $result
+          if [ $result -eq "release not found" ]; then
+            LATEST_RELEASE_TAG=""
+          else
+            LATEST_RELEASE_TAG=$(echo $result | jq -r .tagName)
+          fi
+
+          echo "::set-output name=tag::${LATEST_RELEASE_TAG}"
+          echo "::set-output name=tag_short::$(echo $LATEST_RELEASE_TAG | grep -ioP '/\K[^/]+$')"
+      - name: Create a release note
+        id: get_release_note
+        run: |
+          previous_tag=${{ steps.get_latest_release.outputs.tag }}
+          pushed_tag=${{ steps.get_pushed_tag.outputs.tag }}
+
+          # リリースノートの内容を保存する変数
+          BUG_PR_LIST=""
+          ENHANCEMENT_PR_LIST=""
+          OTHER_PR_LIST=""
+
+          # PRマージ時のコメントからPR番号を抽出
+          pr_num_list=$(git log --pretty=format:"%s" $previous_tag..$pushed_tag | grep -oP 'Merge pull request #\K\d+')
+
+          while read pr; do
+            echo "PR: #$pr"
+            # プルリクエスト情報を取得 -------------------------------------------------
+            pr_info=$(gh pr view --json number,title,body $pr)
+            number=$(echo $pr_info | jq -r '.number')
+            title=$(echo $pr_info | jq -r '.title')
+            echo -e "title: $title"
+
+            # issueからラベルを取得して分類 --------------------------------------------
+            # プルリクエスト情報からissue番号を抽出
+            body=$(echo $pr_info | jq -r '.body')
+            issue=$(echo $body | grep -ioP 'close #\K\d+' | head -1)
+            if [ -z "$issue" ]; then
+              issue=$(echo $title | grep -ioP '#\K\d+' | head -1)
+            fi
+            if [ -z "$issue" ]; then
+              # issueが見つからない場合はOtherに分類
+              echo "issue not found"
+              OTHER_PR_LIST+="- $title\n"
+              echo ""
+              continue
+            fi
+            echo -e "issue: #$issue"
+
+            # issueの情報を取得
+            issue_info=$(gh issue view --json number,title,labels $issue)
+            labels=$(echo $issue_info | jq -r '.labels[].name')
+            echo -e "labels: $labels"
+
+            # ラベルで分類
+            if echo "$labels" | grep -q "bug"; then
+              BUG_PR_LIST+="- $title\n"
+            elif echo "$labels" | grep -q "enhancement"; then
+              ENHANCEMENT_PR_LIST+="- $title\n"
+            else
+              OTHER_PR_LIST+="- $title\n"
+            fi
+            echo ""
+          done < <(echo "$pr_num_list")
+
+          # リリースノートの内容を出力
+          cat <<EOF > release_note.txt
+          ## Enhancements
+          $(echo -e $ENHANCEMENT_PR_LIST)
+          ## Bug fixes
+          $(echo -e $BUG_PR_LIST)
+          ## Other
+          $(echo -e $OTHER_PR_LIST)
+          EOF
+      - name: Create a release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_pushed_tag.outputs.tag_short }}
+          release_name: ${{ steps.get_pushed_tag.outputs.tag_short }}
+          body_path: release_note.txt
+          draft: false
+          prerelease: false
