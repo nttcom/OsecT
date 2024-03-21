@@ -1,2 +1,3 @@
 work
 *.pcap
+!yaf/data/init/udplite.pcap
