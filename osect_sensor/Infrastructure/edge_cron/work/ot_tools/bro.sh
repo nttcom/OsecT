@@ -1,7 +1,7 @@
 #!/bin/bash
 
 merge_and_remove_log () {
-    files=$(find /usr/local/zeek/logs -name $1)
+    files=$(find /usr/local/zeek/logs -name "$1")
     cat ${files} > $2
     sed -i '/^#/d' $2
     sed -i '1i #\n#\n#\n#\n#\n#\n#\n#' $2
