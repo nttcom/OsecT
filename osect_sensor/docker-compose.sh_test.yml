@@ -2,7 +2,7 @@ version: '3'
 services:
   sh_test_env:
     container_name: osect_sensor_sh_test_env
-    image: cron:rev2.9.0
+    image: cron:revxxx
     build: "./Infrastructure/edge_cron/"
     volumes:
       - ./Application/edge_cron:/opt/edge_cron
@@ -10,5 +10,4 @@ services:
       - ./Infrastructure/edge_cron/work/ot_tools/:/opt/ot_tools/:ro
     environment:
       - DEBUG=False
-    network_mode: none
     command: bash -c 'if [[ "$DEBUG" == "True" ]]; then sleep infinity; else bash /home/work/sh_tests/test_all.sh; fi'
