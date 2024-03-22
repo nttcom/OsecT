@@ -1,11 +1,12 @@
 #!/bin/bash
 
-merge_and_remove_log () {
-    files=$(ls $1)
-    cat ${files} > $2
+# ログファイルの欠損が生じる可能性があるスクリプト
+# Commit ID: 8d5a01080f3fae323ae83505f44e3cbb221ca489
+
+merge_log () {
+    cat $1 > $2
     sed -i '/^#/d' $2
     sed -i '1i #ts     start-time      end-time        duration        rtt     proto   sip     sp      dip     dp srcMacAddress    destMacAddress  iflags  uflags  riflags ruflags isn     risn    tag     rtag    pktoct      rpkt    roct    end-reason' $2
-    rm ${files}
 }
 
 cd $1/$2 || exit
@@ -17,4 +18,5 @@ for flowfile in $flow; do
     rm "$flowfile" flow.csv
 done
 
-merge_and_remove_log "/var/log/yaf/flow*.log" "yaf_flow.log"
+merge_log "/var/log/yaf/flow*.log" "yaf_flow.log"
+rm /var/log/yaf/flow*.log
