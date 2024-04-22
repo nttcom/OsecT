@@ -50,3 +50,6 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 
 ### メディア掲載
 - [OT環境向けセキュリティ対策「OsecT」 既存システムに影響を与えずネットワーク可視化・セキュリティリスク検知](https://www.newww-media.co.jp/backnumber/202401/202401p26.pdf)
+
+### 認定団体
+- [技術研究組合制御システムセキュリティセンター：ビルシステムにおけるサイバー・フィジカル・セキュリティ対策カタログ](https://www.css-center.or.jp/ja/info/documents/press/press_202309.pdf)
