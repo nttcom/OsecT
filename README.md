@@ -30,6 +30,11 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 
 ## 紹介記事・関連記事
 
+### プレスリリース
+- [「Global InfoSec Awards」においてNTT Comの「OsecT」が「Market Leader OT Security」賞を含む5部門受賞](https://www.ntt.com/about-us/press-releases/news/article/2024/0508.html)
+- [生産ラインなどを支える制御システムのセキュリティリスクを可視化・検知する「WideAngle プロフェッショナルサービス OsecT」を提供開始](https://www.ntt.com/about-us/press-releases/news/article/2022/0425.html)
+- [制御システムに影響を与えることなくセキュリティリスクを可視化する技術「OsecT」の実証実験を開始](https://ntt.com/about-us/press-releases/news/article/2021/0524.html)
+
 ### 開発者ブログ
 - [OsecTにおける運用の自動化](https://engineers.ntt.com/entry/2023/12/23/090934)
 - [OTセキュリティリスク可視化サービス OsecT、リニューアルしました](https://engineers.ntt.com/entry/2023/08/31/100633)
@@ -53,3 +58,7 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 
 ### 認定団体
 - [技術研究組合制御システムセキュリティセンター：ビルシステムにおけるサイバー・フィジカル・セキュリティ対策カタログ](https://www.css-center.or.jp/ja/info/documents/press/press_202309.pdf)
+
+### 受賞
+- [Global Infosec Award 2024](https://cyberdefenseawards.com/global-infosec-awards-for-2024-winners-by-company/)
+    - Market Leader OT Security, Next Gen ICS/SCADA Security, Most Innovative Internet of Things (IoT) Security, Cutting Edge Operational Technology (OT) Security, Best Product OT Asset Visibility
