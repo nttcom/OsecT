@@ -16,6 +16,7 @@ from subprocess import Popen
 
 import requests
 import zstandard as zstd
+import serial
 from common.common_config import (
     ALLOWED_LOG_EXT,  # BACNET_SHELL_COMMAND,
     ALLOWED_PCAP_EXT,
@@ -146,7 +147,17 @@ class Command(BaseCommand):
         # logger.info("sleep " + str(sleep_time) + "s")
 
         try:
-            send_server(tar_list)
+            # コア網チェック
+            with serial.Serial('/dev/ttyUSB1', baudrate=115200, timeout=1) as sara:
+                sara.write(b'at\r\n')
+                b=sara.read(16)
+                cnum=b.decode().split("\n")
+
+            if "OK\r" in cnum:
+                # ログ送信
+                send_server(tar_list)
+            else:
+                logger.error("can not send compressed file. Unable to connect to closed network. ")
         except Exception as e:
             logger.error("can not send compressed file. " + str(e))
 
