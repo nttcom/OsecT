@@ -150,16 +150,18 @@ class Command(BaseCommand):
         try:
             if IS_CLOSED_NETWORK:
                 # コア網チェック
-                with serial.Serial('/dev/ttyUSB1', baudrate=115200, timeout=1) as sara:
-                    sara.write(b'at\r\n')
-                    b=sara.read(16)
-                    cnum=b.decode().split("\n")
+                with serial.Serial("/dev/ttyUSB1", baudrate=115200, timeout=1) as sara:
+                    sara.write(b"at\r\n")
+                    b = sara.read(16)
+                    cnum = b.decode().split("\n")
 
                 if "OK\r" in cnum:
                     # ログ送信
                     send_server(tar_list)
                 else:
-                    logger.error("can not send compressed file. Unable to connect to closed network. ")
+                    logger.error(
+                        "can not send compressed file. Unable to connect to closed network. "
+                    )
             else:
                 # ログ送信
                 send_server(tar_list)
