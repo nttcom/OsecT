@@ -201,6 +201,39 @@ NTT Comから提供されたクライアント証明書を以下に格納しま�
 $ ~/osect_sensor/keys/client.pem
 ```
 
+### 3.5. ログ送信方式の設定
+
+有線経由でログを送信する場合は以下の設定をします。
+
+設定ファイル:
+
+```bash
+$ vi Application/edge_cron/common/common_config.py
+```
+
+変更箇所:
+
+```python
+IS_CLOSED_NETWORK = True
+↓
+IS_CLOSED_NETWORK = False
+```
+
+設定ファイル:
+
+```bash
+$ vi docker-compose.yml
+```
+
+変更箇所:
+
+```yml
+    devices:
+      - "/dev/ttyUSB1:/dev/ttyUSB1"
+↓
+（削除）
+```
+
 ## 4. コンテナの構築・起動
 
 コンテナを構築、起動します。

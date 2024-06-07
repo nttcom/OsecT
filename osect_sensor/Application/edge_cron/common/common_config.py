@@ -86,3 +86,6 @@ SEND_VERSION_API_URL = "https://your url/paper/api/v1/sensor_status/post"
 
 SEND_REQUST_TIMEOUT = 180
 """ ログ送信時のタイムアウト値 """
+
+IS_CLOSED_NETWORK = True
+""" ログ送信時のタイムアウト値 """

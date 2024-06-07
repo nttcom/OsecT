@@ -47,6 +47,7 @@ from common.common_config import (
     API_URL,
     LABEL_ID,
     CLIENT_CERTIFICATE_PATH,
+    IS_CLOSED_NETWORK,
 )
 
 # from common.common_function import pcap2log
@@ -147,17 +148,21 @@ class Command(BaseCommand):
         # logger.info("sleep " + str(sleep_time) + "s")
 
         try:
-            # コア網チェック
-            with serial.Serial('/dev/ttyUSB1', baudrate=115200, timeout=1) as sara:
-                sara.write(b'at\r\n')
-                b=sara.read(16)
-                cnum=b.decode().split("\n")
+            if IS_CLOSED_NETWORK:
+                # コア網チェック
+                with serial.Serial('/dev/ttyUSB1', baudrate=115200, timeout=1) as sara:
+                    sara.write(b'at\r\n')
+                    b=sara.read(16)
+                    cnum=b.decode().split("\n")
 
-            if "OK\r" in cnum:
+                if "OK\r" in cnum:
+                    # ログ送信
+                    send_server(tar_list)
+                else:
+                    logger.error("can not send compressed file. Unable to connect to closed network. ")
+            else:
                 # ログ送信
                 send_server(tar_list)
-            else:
-                logger.error("can not send compressed file. Unable to connect to closed network. ")
         except Exception as e:
             logger.error("can not send compressed file. " + str(e))
 
