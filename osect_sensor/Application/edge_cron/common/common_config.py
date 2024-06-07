@@ -88,4 +88,4 @@ SEND_REQUST_TIMEOUT = 180
 """ ログ送信時のタイムアウト値 """
 
 IS_CLOSED_NETWORK = True
-""" 有線経由のフラグ """
+""" モバイル経由のフラグ """
