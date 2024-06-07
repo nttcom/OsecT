@@ -214,8 +214,10 @@ $ vi Application/edge_cron/common/common_config.py
 変更箇所:
 
 ```python
+# 無線経由で送信
 IS_CLOSED_NETWORK = True
 ↓
+# 有線経由で送信
 IS_CLOSED_NETWORK = False
 ```
 
