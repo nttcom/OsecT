@@ -167,7 +167,7 @@ RUN zkg install icsnpp-modbus --version 03de54df8b0a8c1e6264876167f80dccae74902a
 #    zeek-plugin-s7comm \
 #    icsnpp-ethercat \
 #    icsnpp-opcua-binary \
-    icsnpp-modbus \
+#    icsnpp-modbus \
     icsnpp-bacnet \
     zeek/corelight/zeek-long-connections \
     zeek-af_packet-plugin \

@@ -3,6 +3,8 @@ services:
   edge_cron:
     image: cron:revxxx
     build: "./Infrastructure/edge_cron/"
+    devices:
+      - "/dev/ttyUSB1:/dev/ttyUSB1"
     volumes:
       - ./Application/edge_cron:/opt/edge_cron
       - pcap-logs-volume:/opt/edge_cron/paper/sc_src/input/pcap/complete/
