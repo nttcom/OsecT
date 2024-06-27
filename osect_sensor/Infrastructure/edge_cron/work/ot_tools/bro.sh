@@ -49,3 +49,5 @@ fi
 
 if [ $5 = "True" ]; then
     merge_and_remove_log "modbus_detailed.*.log" "modbus_detailed.log"
+fi
+
