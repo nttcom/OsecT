@@ -35,8 +35,6 @@ merge_and_remove_log "nbns.*.log" "netbios-ns.log"
 reformat_log "netbios-ns.log"
 merge_and_remove_log "ssdp.*.log" "ssdp.log"
 reformat_log "ssdp.log"
-# OTプロトコル: Bacnet/IP
-merge_and_remove_log "bacnet.*.log" "bacnet.log"
 # OTプロトコル: CC-Link
 merge_and_remove_log "cclink-ief-basic.*.log" "cclink-ief-basic.log"
 merge_and_remove_log "cclink-ie.*.log" "cclink-ie.log"
@@ -44,11 +42,10 @@ merge_and_remove_log "cclink-ie-tsn.*.log" "cclink-ie-tsn.log"
 merge_and_remove_log "cclink-ie-tsn-slmp.*.log" "cclink-ie-tsn-slmp.log"
 merge_and_remove_log "cclink-ie-tsn-ptp.*.log" "cclink-ie-tsn-ptp.log"
 
+# OTプロトコル: Bacnet/IP
 if [ $4 = "True" ]; then
-    # tsharkでの出力と同じにするため
     merge_and_remove_log "bacnet.*.log" "bacnet.log"
 fi
 
 if [ $5 = "True" ]; then
     merge_and_remove_log "modbus_detailed.*.log" "modbus_detailed.log"
-fi
