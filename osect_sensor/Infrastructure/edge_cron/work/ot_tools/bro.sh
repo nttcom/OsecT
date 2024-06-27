@@ -35,7 +35,8 @@ merge_and_remove_log "nbns.*.log" "netbios-ns.log"
 reformat_log "netbios-ns.log"
 merge_and_remove_log "ssdp.*.log" "ssdp.log"
 reformat_log "ssdp.log"
-merge_log "bacnet.*.log" "bacnet.log"
+# OTプロトコル: Bacnet/IP
+merge_and_remove_log "bacnet.*.log" "bacnet.log"
 # OTプロトコル: CC-Link
 merge_and_remove_log "cclink-ief-basic.*.log" "cclink-ief-basic.log"
 merge_and_remove_log "cclink-ie.*.log" "cclink-ie.log"
@@ -45,9 +46,7 @@ merge_and_remove_log "cclink-ie-tsn-ptp.*.log" "cclink-ie-tsn-ptp.log"
 
 if [ $4 = "True" ]; then
     # tsharkでの出力と同じにするため
-    merge_log "bacnet.*.log" "bacnet.log"
-    sed -i '/^#/d' bacnet.log
-    sed -i '1i #' bacnet.log
+    merge_and_remove_log "bacnet.*.log" "bacnet.log"
 fi
 
 if [ $5 = "True" ]; then
