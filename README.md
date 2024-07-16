@@ -49,8 +49,10 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 - [NTTコミュニケーションズ サステナビリティレポート2022](https://www.ntt.com/content/dam/nttcom/hq/jp/about-us/csr/report/pdf/nttcom_sr2022_web.pdf) P.21
 
 ### 社外発表
+- [安全な工場環境の鍵：生産現場向け資産＆脅威管理](https://speakerdeck.com/nttcom/the-key-to-a-safe-factory-environment-asset-and-threat-management-for-production-sites)
 - [制御システムネットワークの実態とセキュリティ課題](https://speakerdeck.com/nttcom/revelation-and-security-issues-of-control-system-networks)
 - [中堅・中小企業におけるOT可視化・常時監視の課題とソリューション](https://speakerdeck.com/nttcom/challenges-and-solutions-for-ot-visualization-and-constant-monitoring-in-small-and-medium-sized-enterprises)
+
 - [誰もがOT機器/危機を管理できる世界へ](https://speakerdeck.com/nttcom/empowering-ot-security-enabling-universal-control-device-management-and-countering-cyber-attacks)
 
 ### メディア掲載
