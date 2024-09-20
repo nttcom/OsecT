@@ -49,7 +49,7 @@ from common.common_config import (
     CLIENT_CERTIFICATE_PATH,
     IS_CLOSED_NETWORK,
     SENSOR_INTEGRATED_TYPE,
-    PCAP_SERVER_UPLOADED_FILE_PATH
+    PCAP_SERVER_UPLOADED_FILE_PATH,
 )
 
 # from common.common_function import pcap2log
@@ -410,6 +410,7 @@ def send_server(zip_list):
         logger.info("send compressed file: " + file_name)
         # ファイルが正常に送信できた場合は、tar.zstファイルを削除する
         os.remove(zip_file)
+
 
 def move_server(zip_list):
     """
