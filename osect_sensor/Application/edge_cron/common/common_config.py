@@ -1,5 +1,6 @@
 LABEL_ID = ""
 """ 複数スイッチ対応用のラベルID """
+""" せんさー一体型である場合はラベルネームを入力 """
 
 PCAP_UPLOADING_FILE_PATH = "paper/sc_src/input/pcap/uploading/"
 """pcapのアップロード先の配置パス"""
@@ -18,6 +19,9 @@ PCAP_COMPLETE_ARCHIVES_FILE_PATH = "paper/sc_src/input/pcap/complete_archives/"
 
 PCAP_SERVER_UPLOADING_FILE_PATH = "paper/sc_src/input/pcap/server_uploading/"
 """ ログ解析が終わったディレクトリをuploadするための一時領域 """
+
+PCAP_SERVER_UPLOADED_FILE_PATH = "paper/sc_src/input/pcap/server_uploaded"
+""" センサー一体型のコアのアップロード先 """
 
 SURICATA_ENABLE = True
 """ SURICATA使用フラグ（リアルタイム処理の場合はログを転送） """
@@ -89,3 +93,6 @@ SEND_REQUST_TIMEOUT = 180
 
 IS_CLOSED_NETWORK = True
 """ モバイル経由のフラグ """
+
+SENSOR_INTEGRATED_TYPE = False
+""" センサー一体型のフラグ """
