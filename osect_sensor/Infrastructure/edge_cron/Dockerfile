@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim As build-env
+FROM debian:bookworm-slim AS build-env
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 ENV DEBIAN_FRONTEND noninteractive
@@ -6,59 +6,52 @@ ENV DEBIAN_FRONTEND noninteractive
 WORKDIR /home/work
 COPY work/ /home/work
 RUN mkdir /home/work/django && mkdir /home/work/uwsgi
-
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
+    # yaf関連インストールにbison, meson, libmount-dev, python3-dev, python3-pipは必要
+    autoconf \
+    automake \
     bison \
-    cmake \
-    cron \
-    cargo \
     build-essential \
-    flex \
-    kmod \
-    gawk \
-    # git \
-    libmount-dev \
-    libpcre3-dev \
-    libyaml-dev \
-    libpcap0.8-dev \
+    cargo \
+    cbindgen \
+    gcc \
+    git \
+    g++ \
     libjansson-dev \
+    libmount-dev \
     libpcap-dev \
-    libssl-dev \
-    libmaxminddb-dev \
+    libpcre2-dev \
+    libtool \
+    libyaml-dev \
+    make \
+    meson \
     ninja-build \
     pkg-config \
     python3-dev \
     python3-pip \
     python3-yaml \
-    python3-semantic-version \
-    python3-setuptools \
-    python3-git \
     rustc \
-    supervisor \
-    swig \
-    tshark \
     tzdata \
     wget \
     zlib1g-dev \
-    libpcre3 \
-    libpcre3-dbg \
-    libyaml-0-2 \
-    zlib1g \
-    libmagic-dev \
-    software-properties-common \
-    libfl-dev \
+#    libcap-ng-dev \
+#    libevent-dev \
+#    libgeoip-dev \
+#    libhiredis-dev \
+#    liblua5.1-dev \
+#    libmagic-dev \
+#    libmaxminddb-dev \
+#    libnet-dev \
+#    libnss3-dev \
+#    libpcre3-dev \
+#    flex \
+#    libfl-dev \
+#    libssl-dev \
  && apt-get -y clean \
  && rm -rf /var/lib/apt/lists/* \
  && echo "${TZ}" > /etc/timezone \
  && dpkg-reconfigure -f noninteractive tzdata
-
-# pip関係のインストール
-WORKDIR /home/work
-RUN apt-get purge -y python3-yaml \
-    && python3.9 -m pip install --upgrade pip --no-cache-dir \
-    && python3.9 -m pip install setuptools==59.8.0 --no-cache-dir \
-    && python3.9 -m pip install -r requirements.txt --no-cache-dir
 
 WORKDIR /home/work
 # Yafのインストール
@@ -70,19 +63,25 @@ RUN wget -q https://download.gnome.org/sources/glib/2.60/glib-2.60.7.tar.xz \
  && cd /home/work/ot_tools/ && tar xvzf yaf-2.11.0.tar.gz \
  && cd /home/work/ot_tools/yaf-2.11.0/ && ./configure && make && make install && ldconfig
 
-# suricata rules
-RUN wget -q http://rules.emergingthreats.net/open/suricata-6.0/emerging.rules.tar.gz \
-    && tar -xzvf emerging.rules.tar.gz \
-    && mkdir -p /var/lib/suricata/rules \
-    && rm rules/*ja3.rules \
-    && grep -h -ve "^#" -ve "^$" rules/*.rules > /var/lib/suricata/rules/suricata.rules
+WORKDIR /home/work
+# suricataのインストール
+# suricata のバージョンアップに追随するためにリリース前には最新のバージョンであることを確認すること
+# https://redmine.openinfosecfoundation.org/projects/suricata/wiki/Debian_Installation
+RUN wget https://www.openinfosecfoundation.org/download/suricata-7.0.7.tar.gz \
+    && tar -xvzf suricata-7.0.7.tar.gz \
+    && cd suricata-7.0.7 \
+    && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-gccmarch-native \
+    && make \
+    && make install \
+    && make install-conf \
+    && ldconfig
 
 # zeek-parser-Bacnetのclone
 # WORKDIR /home/work
 # RUN git clone https://github.com/nttcom/zeek-parser-Bacnet.git
 
 # 本番イメージ
-FROM zeek/zeek:5.0.0
+FROM zeek/zeek:7.0.0
 ENV LANG C.UTF-8
 ENV TZ Asia/Tokyo
 ENV DEBIAN_FRONTEND noninteractive
@@ -93,67 +92,40 @@ RUN mkdir /home/work/django && mkdir /home/work/uwsgi
 
 RUN apt-get update \
 && apt-get install -y --no-install-recommends \
+    # cmake, build-essential, libpcap-devはzeek-parserインストールに必須
+    # libyaml-dev, libmagic-dev, libpcre3-dev, libnet-dev, libnss3-devはsuricata実行に必須?
+    build-essential \
+    cmake \
     cron \
-    cargo \
-    libpcap0.8-dev \
+    gcc \
     libssl-dev \
-    libmaxminddb-dev \
+#    libnet-dev \
+#    libnss3-dev \
+#    libmagic-dev \
+    libpcap-dev \
+#    libpcre3-dev \
+    libyaml-dev \
     python3-dev \
     python3-pip \
     python3-semantic-version \
     python3-git \
+    python3-yaml \
     supervisor \
     tzdata \
     wget \
-    cmake \
-    make \
-    gcc \
-    g++ \
-    flex \
-    libfl-dev \
-    bison \
-    libpcap-dev \
-    build-essential \
-    libpcap0.8-dev \
-    software-properties-common \
-    libpcre3 \
-    libpcre3-dbg \
-    libpcre3-dev \
-    libnet1-dev \
-    libyaml-0-2 \
-    libyaml-dev \
-    pkg-config \
-    zlib1g \
-    zlib1g-dev \
-    libcap-ng-dev \
-    libcap-ng0 \
-    libmagic-dev \
-    libnss3-dev \
-    libgeoip-dev \
-    liblua5.1-dev \
-    libhiredis-dev \
-    libevent-dev \
-    # python-yaml \
-    rustc \
-    autoconf \
-    automake \
-    libtool \
-    libjansson-dev \
- && apt-get -y clean \
- && rm -rf /var/lib/apt/lists/* \
- && echo "${TZ}" > /etc/timezone \
- && dpkg-reconfigure -f noninteractive tzdata
-#  && cargo install --force cbindgen
+    && apt-get -y clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && echo "${TZ}" > /etc/timezone \
+    && dpkg-reconfigure -f noninteractive tzdata
 
 # pip関係のインストール
 WORKDIR /home/work
 RUN apt-get update \
-    && apt-get purge -y python3-yaml \
-    && python3.9 -m pip install --upgrade pip --no-cache-dir \
-    && python3.9 -m pip install setuptools==59.8.0 --no-cache-dir \
-    && python3.9 -m pip install -r requirements.txt --no-cache-dir
+    && python3.11 -m pip install --upgrade pip --no-cache-dir --break-system-packages \
+    && python3.11 -m pip install setuptools==59.8.0 --no-cache-dir --break-system-packages \
+    && python3.11 -m pip install -r requirements.txt --no-cache-dir --break-system-packages
 
-ENV PATH $PATH:/root/.cargo/bin
+#ENV PATH $PATH:/root/.cargo/bin
 
 # zkgパッケージ（必要なものだけ入れる）
 ENV PATH $PATH:/usr/local/zeek/bin
@@ -169,44 +141,32 @@ RUN zkg install icsnpp-modbus --version 03de54df8b0a8c1e6264876167f80dccae74902a
 #    icsnpp-opcua-binary \
 #    icsnpp-bacnet \
     zeek/corelight/zeek-long-connections \
-    zeek-af_packet-plugin \
+#    zeek-af_packet-plugin \
     zeek-parser-CCLinkFieldBasic \
-    zeek-parser-CCLinkIENoIP \
-    zeek-parser-CCLinkTSNPTP \
     zeek-parser-CCLinkTSNSLMP \
-    zeek-parser-CIFS-COM \
     zeek-parser-CIFS-NBNS-COM \
-    zeek-parser-DHCPv4-COM \
     zeek-parser-DHCPv6-COM \
-    zeek-parser-SSDP-COM
+    zeek-parser-SSDP-COM \
+    && zkg install zeek-parser-CIFS-COM --version 5e67a7a324075fe25a85cc3a4e1414cbef64ebe3 --force --skiptest \
+    && zkg install zeek-parser-CCLinkTSNPTP --version 5c5c1264763b1dde2e0f7f057e50fe44524f4d84 --force --skiptest \
+    && zkg install zeek-parser-CCLinkIENoIP --version 160ef68b489cc37545ad5ce90fbb6ea7ae204061 --force --skiptest \
+    && zkg install zeek-parser-DHCPv4-COM --version 87004bbf8649089fa7d0dc0c153882d94c657dff --force --skiptest
 
 # Yafを含むバイナリファイルをコピー
-RUN mkdir /var/log/yaf
 COPY --from=build-env /usr/local/bin /usr/local/bin
 COPY --from=build-env /usr/local/lib /usr/local/lib
+COPY --from=build-env /etc/suricata /etc/suricata
+COPY --from=build-env /bin/suricata* /bin/
+COPY --from=build-env /var/lib/suricata /var/lib/suricata
+COPY --from=build-env /usr/lib/suricata /usr/lib/suricata
+COPY --from=build-env /usr/share/suricata /usr/share/suricata
+COPY --from=build-env /lib/libhtp.so.2 /lib/
+RUN mkdir -p /var/log/yaf && mkdir -p /var/log/suricata && mkdir -p /var/lib/suricata/rules && ldconfig
+
 # zeek-parser-Bacnetのコピー
 # COPY --from=build-env /home/work/zeek-parser-Bacnet /home/work/zeek-parser-Bacnet
 
-# Suricataはほぼ無駄がないためそのままインストール
-# Suricata rulesをコピー
-RUN mkdir -p /var/lib/suricata/rules
-COPY --from=build-env /var/lib/suricata/rules/suricata.rules /var/lib/suricata/rules/suricata.rules
-
-WORKDIR /home/work
-
-# suricataのインストール
-# suricata のバージョンアップに追随するためにリリース前には最新のバージョンであることを確認すること
-# https://redmine.openinfosecfoundation.org/projects/suricata/wiki/Debian_Installation
-RUN wget https://www.openinfosecfoundation.org/download/suricata-6.0.16.tar.gz \
-    && tar -xvzf suricata-6.0.16.tar.gz \
-    && cd suricata-6.0.16 \
-    && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-gccmarch-native \
-    && make \
-    && make install \
-    && make install-conf \
-    && ldconfig
-
-# Zeel、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
+# Zeek、Suricata、Yafの資材配置。SaaS版ではコメントアウトすること。
 WORKDIR /home/work
 RUN mkdir /opt/ot_tools \
     && cp -p ot_tools/broscript/conn/__load__.zeek /usr/local/zeek/share/zeek/base/protocols/conn/ \

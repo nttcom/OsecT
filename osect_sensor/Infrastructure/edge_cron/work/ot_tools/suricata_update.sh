@@ -4,8 +4,8 @@ source /opt/ot_tools/proxy_env.txt
 
 source /etc/suricata_update.conf
 
-if [ -z "$DOWNLOAD_URL_PREFIX"]; then
-    DOWNLOAD_URL_PREFIX=https://rules.emergingthreats.net/open/suricata-6.0/
+if [ -z "$DOWNLOAD_URL_PREFIX" ]; then
+    DOWNLOAD_URL_PREFIX=https://rules.emergingthreats.net/open/suricata-7.0.7/
 fi
 
 if [ -z "$DOWNLOAD_SIG_FILE"]; then
@@ -34,7 +34,7 @@ wget ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_VER_FILE}
 if [ $? -ne 0 ]; then
     export SURICATA_UPDATE_STATUS="failed to download ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_VER_FILE}"
     echo $SURICATA_UPDATE_STATUS
-    python3.9 /opt/edge_cron/manage.py send_version
+    python3.11 /opt/edge_cron/manage.py send_version
     exit 1
 fi
 
@@ -43,17 +43,18 @@ diff current_version $DOWNLOAD_VER_FILE > /dev/null 2>&1
 if [ $? -eq 0 ]; then
     export SURICATA_UPDATE_STATUS="current version is the latest"
     echo $SURICATA_UPDATE_STATUS
-    python3.9 /opt/edge_cron/manage.py send_version
+    python3.11 /opt/edge_cron/manage.py send_version
     exit 0
 fi
 
-# Download signature rules
-rm -f $DOWNLOAD_SIG_FILE
-wget ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_SIG_FILE}
-if [ $? -ne 0 ]; then
-    export SURICATA_UPDATE_STATUS="failed to download ${DOWNLOAD_URL_PREFIX}${DOWNLOAD_SIG_FILE}"
-    echo $SURICATA_UPDATE_STATUS
-    python3.9 /opt/edge_cron/manage.py send_version
+# suricata-update
+# enable-rules:/etc/suricata/enable.conf
+# disable-rules:/etc/suricata/disable.conf
+SURICATA_UPDATE_RESULT=$(suricata-update --suricata-conf /opt/ot_tools/suricata.yaml 2>&1)
+#echo "$SURICATA_UPDATE_RESULT"
+if [ "$(echo "$SURICATA_UPDATE_RESULT" | grep -c "Error")" -ne 0 ]; then
+    export SURICATA_UPDATE_STATUS="failed to suricata-update"
+    python3.11 /opt/edge_cron/manage.py send_version
     exit 1
 fi
 
@@ -79,7 +80,7 @@ mv $DOWNLOAD_VER_FILE current_version
 export SIGNATURE_VERSION=`cat current_version`
 export SURICATA_UPDATE_STATUS="success"
 
-python3.9 /opt/edge_cron/manage.py send_version
+python3.11 /opt/edge_cron/manage.py send_version
 if [ $? -ne 0 ]; then
   echo "failed to send version"
   exit 1
