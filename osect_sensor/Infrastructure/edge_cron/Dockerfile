@@ -156,7 +156,7 @@ RUN zkg install icsnpp-modbus --version 03de54df8b0a8c1e6264876167f80dccae74902a
 COPY --from=build-env /usr/local/bin /usr/local/bin
 COPY --from=build-env /usr/local/lib /usr/local/lib
 COPY --from=build-env /etc/suricata /etc/suricata
-COPY --from=build-env /bin/suricata* /bin/
+COPY --from=build-env /usr/bin/suricata* /bin/
 COPY --from=build-env /var/lib/suricata /var/lib/suricata
 COPY --from=build-env /usr/lib/suricata /usr/lib/suricata
 COPY --from=build-env /usr/share/suricata /usr/share/suricata
