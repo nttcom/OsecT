@@ -31,11 +31,16 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 ## 紹介記事・関連記事
 
 ### プレスリリース
+- [「Global InfoSec Awards 2025」においてNTT Comの「OsecT」が、「The Most Promising OT Security」賞を含む5部門受賞](https://www.ntt.com/about-us/press-releases/news/article/2025/0430.html)
+- [アライドテレシスとNTT Comによる産業分野におけるセキュリティビジネスの協業開始](https://www.ntt.com/about-us/press-releases/news/article/2024/1004.html)
 - [「Global InfoSec Awards」においてNTT Comの「OsecT」が「Market Leader OT Security」賞を含む5部門受賞](https://www.ntt.com/about-us/press-releases/news/article/2024/0508.html)
 - [生産ラインなどを支える制御システムのセキュリティリスクを可視化・検知する「WideAngle プロフェッショナルサービス OsecT」を提供開始](https://www.ntt.com/about-us/press-releases/news/article/2022/0425.html)
 - [制御システムに影響を与えることなくセキュリティリスクを可視化する技術「OsecT」の実証実験を開始](https://ntt.com/about-us/press-releases/news/article/2021/0524.html)
 
 ### 開発者ブログ
+- [OTネットワーク向け国産IDS「OsecT」の台帳連携機能について](https://engineers.ntt.com/entry/202504-osect_register_part1/entry)
+- [OsecT アセスメントレポート 自動生成機能のご紹介](https://engineers.ntt.com/entry/202503-osect_assessment_report_introduction/entry)
+- [OsecT 自動遮断 連携機能のご紹介](https://engineers.ntt.com/entry/202412-osect-auto-blocking-func/entry)
 - [OsecTにおける運用の自動化](https://engineers.ntt.com/entry/2023/12/23/090934)
 - [OTセキュリティリスク可視化サービス OsecT、リニューアルしました](https://engineers.ntt.com/entry/2023/08/31/100633)
 - [【日本初紹介】Zeek・Spicyの使い方まとめ](https://engineers.ntt.com/entry/2023/06/23/095042)
@@ -44,6 +49,7 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 - [制御システムのセキュリティと対策技術OsecTのご紹介（前編）](https://engineers.ntt.com/entry/2021/07/27/112539)
 
 ### NTTグループ内レポート
+- [NTTコミュニケーションズ サステナビリティレポート2024](https://www.ntt.com/content/dam/nttcom/hq/jp/about-us/csr/report/pdf/nttcom_sr2024_web.pdf) P.13, 34
 - [NTT-CERT サイバーセキュリティ アニュアルレポート2023](https://www.rd.ntt/sil/overview/NTTannual2023_j_web.pdf) P.18
 - [NTTコミュニケーションズ サステナビリティレポート2023](https://www.ntt.com/content/dam/nttcom/hq/jp/about-us/csr/report/pdf/nttcom_sr2023_web.pdf) P.23, 39
 - [NTTコミュニケーションズ サステナビリティレポート2022](https://www.ntt.com/content/dam/nttcom/hq/jp/about-us/csr/report/pdf/nttcom_sr2022_web.pdf) P.21
@@ -60,12 +66,18 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 - [OT環境を可視化するミクロとマクロの技術〜ツラいSBOM・OT-IDS運用とその対策〜](https://speakerdeck.com/nttcom/micro-and-macro-technologies-for-visualizing-ot-environments-difficult-sbom-and-ot-ids-operations-and-countermeasures)
 
 ### メディア掲載
-- [OT環境向けセキュリティ対策「OsecT」 既存システムに影響を与えずネットワーク可視化・セキュリティリスク検知](https://www.newww-media.co.jp/backnumber/202401/202401p26.pdf)
+- [OTセキュリティのリスクを可視化、シンプルで低コストな独自開発IDS](https://monoist.itmedia.co.jp/mn/articles/2408/06/news072.html)
 - [OTセキュリティで重要度が高まるSBOMとOT-IDSの運用課題の解決ポイント](https://dcross.impress.co.jp/docs/column/column20250313/003984-2.html)
+- [OT環境向けセキュリティ対策「OsecT」 既存システムに影響を与えずネットワーク可視化・セキュリティリスク検知](https://www.newww-media.co.jp/backnumber/202401/202401p26.pdf)
+
 
 ### 認定団体
 - [技術研究組合制御システムセキュリティセンター：ビルシステムにおけるサイバー・フィジカル・セキュリティ対策カタログ](https://www.css-center.or.jp/ja/info/documents/press/press_202309.pdf)
 
 ### 受賞
-- [Global Infosec Award 2024](https://cyberdefenseawards.com/global-infosec-awards-for-2024-winners-by-company/)
+- [Global Infosec Awards 2025](https://cyberdefenseawards.com/global-infosec-awards-for-2025-winners-by-company/)
+    - The Most Promising OT Security, Most Advanced OT Asset Visibility, Editor’s Choice ICS/SCADA Security, Hot Company Industrial Cybersecurity, Innovative Internet of Things (IoT) Security
+- [Cybersecurity Excellence Awards 2025](https://cybersecurity-excellence-awards.com/2025-cybersecurity-product-service-awards-winners/?subcategory=0&region=0&company-size=0&search-term=OsecT&orderby=title&winner-parent-category=20)
+    - OT Security, ICS / SCADA Security, OT Cyber Risk Management, Internet of Things Security (IoT) 
+- [Global Infosec Awards 2024](https://cyberdefenseawards.com/global-infosec-awards-for-2024-winners-by-company/)
     - Market Leader OT Security, Next Gen ICS/SCADA Security, Most Innovative Internet of Things (IoT) Security, Cutting Edge Operational Technology (OT) Security, Best Product OT Asset Visibility
