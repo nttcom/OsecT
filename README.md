@@ -75,9 +75,9 @@ OsecT（オーセクト）は、多様なプロトコルが存在する制御シ
 - [技術研究組合制御システムセキュリティセンター：ビルシステムにおけるサイバー・フィジカル・セキュリティ対策カタログ](https://www.css-center.or.jp/ja/info/documents/press/press_202309.pdf)
 
 ### 受賞
-- [Global Infosec Awards 2025](https://cyberdefenseawards.com/global-infosec-awards-for-2025-winners-by-company/)
+- [Global InfoSec Awards 2025](https://cyberdefenseawards.com/global-infosec-awards-for-2025-winners-by-company/)
     - The Most Promising OT Security, Most Advanced OT Asset Visibility, Editor’s Choice ICS/SCADA Security, Hot Company Industrial Cybersecurity, Innovative Internet of Things (IoT) Security
 - [Cybersecurity Excellence Awards 2025](https://cybersecurity-excellence-awards.com/2025-cybersecurity-product-service-awards-winners/?subcategory=0&region=0&company-size=0&search-term=OsecT&orderby=title&winner-parent-category=20)
     - OT Security, ICS / SCADA Security, OT Cyber Risk Management, Internet of Things Security (IoT) 
-- [Global Infosec Awards 2024](https://cyberdefenseawards.com/global-infosec-awards-for-2024-winners-by-company/)
+- [Global InfoSec Awards 2024](https://cyberdefenseawards.com/global-infosec-awards-for-2024-winners-by-company/)
     - Market Leader OT Security, Next Gen ICS/SCADA Security, Most Innovative Internet of Things (IoT) Security, Cutting Edge Operational Technology (OT) Security, Best Product OT Asset Visibility
