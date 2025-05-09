@@ -236,6 +236,56 @@ $ vi docker-compose.yml
 （削除）
 ```
 
+センサー一体型OsecTの場合は以下の設定をします。
+
+```bash
+$ vi Application/edge_cron/common/common_config.py
+```
+
+変更箇所:
+
+```python
+# センサー一体型のフラグ False
+SENSOR_INTEGRATED_TYPE = False
+↓
+# センサー一体型のフラグ True
+SENSOR_INTEGRATED_TYPE = True
+```
+
+設定ファイル:
+
+```bash
+$ vi docker-compose.yml
+```
+
+変更箇所:
+
+```yml
+    volumes:
+      ...
+      ...
+      - ./conf/local.zeek:/usr/local/zeek/share/zeek/site/local.zeek # zeek realtime
+↓
+    volumes:
+      ...
+      ...
+      - ./conf/local.zeek:/usr/local/zeek/share/zeek/site/local.zeek # zeek realtime
+      - ~/edgesec_on_docker/logs/pcap/uploaded:/opt/edge_cron/paper/sc_src/input/pcap/server_uploaded # multiport
+```
+
+（参考）
+
+センサー一体型OsecTである場合の```Application/edge_cron/common/common_config.py```の```LABEL_ID```設定は```label_name```を設定することです。
+
+```
+common_db=# select * from label_master;
+ id | label_id | label_name | label_display_name 
+----+----------+------------+--------------------
+  1 | sensor1（ここを指定するではなく）  | default（ここを指定する）    | デフォルト
+  2 | sensor2（ここを指定するではなく）  | sensor_1（ここを指定する）   | センサー１
+(2 rows)
+```
+
 ## 4. コンテナの構築・起動
 
 コンテナを構築、起動します。
