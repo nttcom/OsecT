@@ -15,10 +15,10 @@ redef LogAscii::enable_utf_8 = F;
 #@load tuning/defaults
 
 # Estimate and log capture loss.
-@load misc/capture-loss
+#@load misc/capture-loss
 
 # Enable logging of memory, packet and lag statistics.
-@load misc/stats
+#@load misc/stats
 
 # Load the scan detection script.  It's disabled by default because
 # it often causes performance issues.
@@ -118,7 +118,6 @@ redef LogAscii::enable_utf_8 = F;
 #@load icsnpp-ethercat
 @load icsnpp-modbus
 @load zeek-long-connections
-@load zeek-af_packet-plugin
 @load zeek-parser-CCLinkFieldBasic
 @load zeek-parser-CCLinkIENoIP
 @load zeek-parser-CCLinkTSNPTP
